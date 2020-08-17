@@ -1,0 +1,33 @@
+image: 172.16.1.99/frontend/data-manager-frontend/build/data-manager-frontend-ci:latest
+before_script:
+  - echo "Namespace" $CI_PROJECT_NAMESPACE
+  - echo "Project" $CI_PROJECT_NAME
+
+stages:
+  - build
+
+build-prod:
+  stage: test
+  script:
+    - chmod +x buildprod.sh
+    - ./buildprod.sh
+  only:
+    - merge_requests
+  tags:
+    - k8s
+
+postcommit:
+  stage: build
+  script:
+    - echo "build artifacts"
+    - cd /$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+    - cp -r /usr/src/app/node_modules /$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/node_modules
+    - npm run build
+  artifacts:
+    expire_in: 6 mos
+    paths:
+      - dist
+  only:
+    - master
+  tags:
+    - k8s
