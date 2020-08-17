@@ -4,6 +4,7 @@ before_script:
   - echo "Project" $CI_PROJECT_NAME
 
 stages:
+  - test
   - build
 
 build-prod:
