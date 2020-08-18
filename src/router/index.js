@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import layout from '@/layout/layout'
 
-const demo = () => import(/* webpackChunkName: "demo" */ '@/demo/demo')
+const search = () => import(/* webpackChunkName: "search" */ '@/search/search')
 
 Vue.use(Router)
 
@@ -10,13 +10,15 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    },
-    {
-      path: '/demo',
-      name: 'demo',
-      component: demo
+      name: 'layout',
+      component: layout,
+      children: [
+        {
+          path: 'search',
+          name: 'search',
+          component: search
+        }
+      ],
     }
   ]
 })
