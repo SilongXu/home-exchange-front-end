@@ -35,6 +35,10 @@
     <el-row>
       <bitcoin></bitcoin>
     </el-row>
+    <el-row>
+      <svg-icon icon="folder-close"/>
+      <svg-icon icon="folder-open" size="sm"/>
+    </el-row>
   </div>
 </template>
 
