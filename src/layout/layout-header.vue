@@ -98,7 +98,6 @@ export default {
   computed: {
     currentNavItem() {
       const path = this.$route.path;
-      console.log(path);
       const navItem = [...this.leftNavItems, ...this.rightNavItems, ...this.extraNavItems].find((_navItem) => {
         return _navItem.path === path;
       });
