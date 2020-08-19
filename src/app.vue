@@ -11,6 +11,8 @@ export default {
 </script>
 
 <style>
+@import './styles/element-ui.css';
+
 ::-webkit-scrollbar {
   width: .5rem;
   height: .5rem;

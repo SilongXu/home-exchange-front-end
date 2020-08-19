@@ -1,0 +1,95 @@
+.el-tree .el-tree-node__content {
+  height: 40px;
+  color: #c4d1dd;
+  border-bottom: 1px solid #01202F;
+}
+.el-tree .el-tree-node__content:hover {
+  background: transparent;
+}
+.el-tree .el-tree-node:focus > .el-tree-node__content {
+  background: transparent;
+}
+.el-tree .el-tree-node__children {
+  background: #01202f;
+}
+.el-checkbox__inner {
+  background-color: transparent;
+  border-color: #c4d1dd;
+}
+
+.el-cascader__dropdown {
+  background: #0c2d40;
+  border-color: #4a637c;
+}
+.el-cascader-menu {
+  color: #c4d1dd;
+  border-color: #4a637c;
+}
+.el-cascader-node {
+  padding: 0 20px 0 0;
+}
+.el-cascader-node:not(.is-disabled):focus, .el-cascader-node:not(.is-disabled):hover {
+  background: #004e66;
+}
+.el-cascader:not(.is-disabled):hover .el-input__inner {
+  border-color: #4a637c;
+}
+.el-input__inner {
+  background: #0c2d40;
+  border-color: #4a637c;
+  color: #c4d1dd;
+}
+.el-popper[x-placement^=bottom] .popper__arrow::after {
+  border-bottom-color: #0c2d40;
+}
+.el-input__inner:hover {
+  border-color: #4a637c;
+}
+.el-date-editor .el-range-input {
+  background: #0c2d40;
+  color: #c4d1dd; 
+}
+.el-date-editor .el-range-input::placeholder {
+  color: #4A637C;
+}
+.el-date-editor .el-range-separator {
+  color: #c4d1dd; 
+}
+.el-input .el-input__inner::placeholder {
+  color: #4A637C;
+}
+.el-picker-panel {
+  background: #0c2d40;
+  border-color: #4a637c;
+  color: #c4d1dd;
+}
+.el-picker-panel__icon-btn {
+  color: #c4d1dd;
+}
+.el-date-range-picker__content.is-left {
+  border-color: #4a637c;
+}
+.el-date-table th {
+  color: #4A637C;
+  border-color: #4a637c;
+}
+.el-date-table td.next-month, .el-date-table td.prev-month {
+  color: #4A637C; 
+}
+.el-date-table td.in-range div, .el-date-table td.in-range div:hover, .el-date-table.is-week-mode .el-date-table__row.current div, .el-date-table.is-week-mode .el-date-table__row:hover div {
+  background: #004e66;
+}
+
+.el-select-dropdown {
+  background: #0c2d40;
+  border-color: #4a637c;
+}
+.el-select-dropdown__item {
+  color: #c4d1dd;
+}
+.el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
+  background: #004e66;
+}
+.el-select:hover .el-input__inner {
+  border-color: #4a637c;
+}

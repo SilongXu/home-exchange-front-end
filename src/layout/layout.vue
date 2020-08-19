@@ -43,7 +43,7 @@ export default {
 }
 .layout-footer {
   flex-shrink: 0;
-  height: 32px;
+  height: 40px;
   background: center no-repeat url(../assets/images/bottom-img1.png), left repeat-x url(../assets/images/bottom-img2.png) #020B0F;
 }
 </style>

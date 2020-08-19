@@ -58,8 +58,5 @@ export default {
   color: #C4D1DD;
   font-size: 1rem;
 }
-.el-input ::v-deep .el-input__inner::placeholder {
-  color: #4A637C;
-}
 
 </style>

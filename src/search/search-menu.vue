@@ -78,27 +78,9 @@ export default {
 .el-tree {
   background: #0c2d40;
 }
-.el-tree ::v-deep .el-tree-node__content {
-  height: 40px;
-  color: #e6eef5;
-  border-bottom: 1px solid #01202F;
-}
-.el-tree ::v-deep .el-tree-node__content:hover {
-  background: transparent;
-}
-.el-tree ::v-deep .el-tree-node:focus > .el-tree-node__content {
-  background: transparent;
-}
-.el-tree ::v-deep .el-tree-node__children {
-  background: #01202f;
-}
 .el-tree ::v-deep > .el-tree-node > .el-tree-node__children {
   margin-left: -18px;
   background: #0c2d40;
-}
-::v-deep .el-checkbox__inner {
-  background-color: transparent;
-  border-color: #c4d1dd;
 }
 .el-tree ::v-deep .search-menu-node {
   display: flex;
@@ -110,7 +92,7 @@ export default {
 .el-tree ::v-deep .search-menu-node .svg-icon {
   flex-shrink: 0;
   margin-right: 8px;
-  fill: #e6eef5;
+  fill: #c4d1dd;
 }
 .el-tree ::v-deep .search-menu-node span {
   overflow: hidden;
