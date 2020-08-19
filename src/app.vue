@@ -11,6 +11,25 @@ export default {
 </script>
 
 <style>
+::-webkit-scrollbar {
+  width: .5rem;
+  height: .5rem;
+}
+  
+::-webkit-scrollbar-track {
+  background-color: inherit;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: inherit;
+}
+
+::-webkit-scrollbar-thumb {
+  outline: 0;
+  background-color: #034866;
+  border-radius: .25rem;
+}
+
 body {
   margin: 0;
   background: #020B0F;

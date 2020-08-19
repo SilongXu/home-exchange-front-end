@@ -108,6 +108,32 @@ export default {
 </script>
 
 <style scoped>
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: #C4D1DD;
+  font-size: 18px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.nav-item:hover,
+.nav-item.active {
+  color: #00AADD;
+}
+.nav-item:not(:last-of-type) {
+  margin-right: 32px;
+}
+.nav-item .svg-icon {
+  margin-right: 4px;
+  fill: #C4D1DD;
+}
+.nav-item:hover .svg-icon,
+.nav-item.active .svg-icon {
+  fill: #00AADD;
+}
+
 .layout-header {
   position: relative;
   background: #01202F;
@@ -134,6 +160,9 @@ export default {
   justify-content: flex-end;
   padding-right: 20px;
 }
+.layout-header-top-profile .nav-item {
+  font-size: 14px;
+}
 .layout-header-top-profile .nav-item:not(:last-of-type) {
   margin-right: 32px;
 }
@@ -144,49 +173,21 @@ export default {
   justify-content: space-between;
   height: 65px;
 }
-
 .layout-header-nav-left {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex: 1;
-  max-width: calc(50% - 240px);
+  max-width: calc(50% - 260px);
   padding-left: 20px;
 }
-
 .layout-header-nav-right {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex: 1;
-  max-width: calc(50% - 280px);
-  padding-right: 20px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
   justify-content: flex-start;
-  max-width: 120px;
-  color: #C4D1DD;
-  font-size: 14px;
-  white-space: nowrap;
-  cursor: pointer;
-}
-.nav-item:hover,
-.nav-item.active {
-  color: #00AADD;
-}
-.nav-item:not(:last-of-type) {
-  margin-right: 8px;
-}
-.nav-item .svg-icon {
-  margin-right: 4px;
-  fill: #C4D1DD;
-}
-.nav-item:hover .svg-icon,
-.nav-item.active .svg-icon {
-  fill: #00AADD;
+  flex: 1;
+  max-width: calc(50% - 300px);
+  padding-right: 20px;
 }
 
 .layout-header-banner {
@@ -220,5 +221,21 @@ export default {
   border-left: 45px solid transparent;
   border-right: 45px solid transparent;
   filter: drop-shadow(0 4px 2px rgba(0,0,0,0.26));
+}
+
+@media screen and (max-width: 1700px) {
+  .layout-header-nav .nav-item:not(:last-of-type) {
+    margin-right: 16px;
+  }
+}
+@media screen and (max-width: 1500px) {
+  .nav-item {
+    font-size: 16px;
+  }
+}
+@media screen and (max-width: 1400px) {
+  .nav-item {
+    font-size: 14px;
+  }
 }
 </style>

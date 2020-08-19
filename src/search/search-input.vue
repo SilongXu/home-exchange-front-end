@@ -49,7 +49,7 @@ export default {
   width: 100%;
 }
 
-.el-input /deep/ .el-input__inner {
+.el-input ::v-deep .el-input__inner {
   height: 48px;
   padding-right: 40px;
   border-color: rgba(74, 99, 124, 1);
@@ -58,7 +58,7 @@ export default {
   color: #C4D1DD;
   font-size: 1rem;
 }
-.el-input /deep/ .el-input__inner::placeholder {
+.el-input ::v-deep .el-input__inner::placeholder {
   color: #4A637C;
 }
 
