@@ -136,7 +136,7 @@ export default {
   align-items: flex-start;
   justify-content: flex-start;
   flex-wrap: wrap;
-  padding: 20px;
+  padding: 20px 20px 12px 20px;
 }
 .search-filter-entry {
   display: flex;
@@ -144,6 +144,7 @@ export default {
   justify-content: flex-start;
   height: 32px;
   line-height: 32px;
+  margin-bottom: 8px;
   font-size: 14px;
   color: #c4d1dd;
 }
