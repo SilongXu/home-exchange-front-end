@@ -93,3 +93,26 @@
 .el-select:hover .el-input__inner {
   border-color: #4a637c;
 }
+
+.el-pagination {
+  color: #4A637C;
+}
+.el-pagination__total {
+  color: #4A637C;
+}
+.el-pagination .btn-next, .el-pagination .btn-prev {
+  background: transparent;
+  color: #4A637C;
+}
+.el-pagination button:disabled {
+  background: transparent;
+}
+.el-dialog, .el-pager li {
+  background: transparent;
+}
+.el-pager li.btn-quicknext, .el-pager li.btn-quickprev {
+  color: #4A637C;
+}
+.el-pagination__jump {
+  color: #4A637C;
+}
