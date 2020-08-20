@@ -1,0 +1,17 @@
+@import './variables.scss';
+
+.el-tree .el-tree-node__content {
+  height: 40px;
+}
+
+.el-cascader-node {
+  padding: 0 20px 0 20px;
+}
+
+.el-date-editor .el-range-input {
+  background: $bg-light;
+}
+
+.el-checkbox__inner {
+  background: transparent;
+}

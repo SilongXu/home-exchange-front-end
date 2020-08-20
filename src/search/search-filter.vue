@@ -130,31 +130,34 @@ export default {
   },
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
+@import '@/styles/util.scss';
+
 .search-filter {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
+  @include flex-align(flex-start, flex-start);
   flex-wrap: wrap;
   padding: 20px 20px 12px 20px;
+
+  &-entry {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 32px;
+    line-height: 32px;
+    margin-bottom: 8px;
+    font-size: $font-md;
+
+    &:not(:last-of-type) {
+      margin-right: 32px;
+    }
+
+    .label {
+      margin-right: 12px;
+      white-space: nowrap;
+    }
+  }
 }
-.search-filter-entry {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  height: 32px;
-  line-height: 32px;
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: #c4d1dd;
-}
-.search-filter-entry:not(:last-of-type) {
-  margin-right: 32px;
-}
-.search-filter-entry .label {
-  margin-right: 12px;
-  white-space: nowrap;
-}
+
 .el-cascader {
   width: 360px;
 }

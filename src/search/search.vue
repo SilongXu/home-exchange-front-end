@@ -44,28 +44,34 @@ export default {
   },
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
+@import '@/styles/util.scss';
+
 .search {
   flex: 1;
   overflow: auto;
-}
-.search-content {
-  display: flex;
-  align-items: stretch;
-  border-top: 1px solid #034866;
-  background: #0c2d40;
-}
-.search-content-left {
-  flex-shrink: 0;
-  width: 400px;
-  min-height: 100vh;
-  border-right: 1px solid #034866;
-}
-.search-content-right {
-  flex: 1;
-  min-width: 0;
-}
-.search-filter {
-  border-bottom: 1px solid #034866;
+
+  &-content {
+    display: flex;
+    align-items: stretch;
+    border-top: 1px solid $border-dark;
+    background: $bg-light;
+
+    &-left {
+      flex-shrink: 0;
+      width: 400px;
+      min-height: 100vh;
+      border-right: 1px solid $border-dark;
+    }
+
+    &-right {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  &-filter {
+    border-bottom: 1px solid $border-dark;
+  }
 }
 </style>

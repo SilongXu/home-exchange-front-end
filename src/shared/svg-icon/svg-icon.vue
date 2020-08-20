@@ -41,11 +41,13 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+@import '@/styles/util.scss';
+
 .svg-icon {
   width: 16px;
   height: 16px;
-  fill: currentColor;
+  fill: $icon-default;
   overflow: hidden;
 }
 </style>
