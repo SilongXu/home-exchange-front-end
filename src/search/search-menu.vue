@@ -28,7 +28,7 @@ export default {
     };
   },
   methods: {
-    onCheckChange: debounce(function(data, checked, indeterminate) {
+    onCheckChange: debounce(function() {
       this.$emit('menuChange', this.$refs.searchMenuTree.getCheckedNodes());
     }),
     loadNode(node, resolve) {
@@ -56,7 +56,7 @@ export default {
         resolve(data);
       }, 500);
     },
-    renderContent(h, { node, data, store }) {
+    renderContent(h, { node }) {
       return (
         <span class="search-menu-node">
           {
