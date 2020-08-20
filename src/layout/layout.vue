@@ -21,7 +21,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/styles/util.scss';
+
 .layout {
   display: flex;
   flex-direction: column;
@@ -29,21 +31,24 @@ export default {
   height: 100%;
   min-height: 0px;
   overflow: hidden;
-}
-.layout-header {
-  flex-shrink: 0;
-  height: 110px;
-}
-.layout-content {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-}
-.layout-footer {
-  flex-shrink: 0;
-  height: 40px;
-  background: center no-repeat url(../assets/images/bottom-img1.png), left repeat-x url(../assets/images/bottom-img2.png) #020B0F;
+
+  &-header {
+    flex-shrink: 0;
+    height: 110px;
+  }
+
+  &-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  &-footer {
+    flex-shrink: 0;
+    height: 40px;
+    background: center no-repeat url(../assets/images/bottom-img1.png), left repeat-x url(../assets/images/bottom-img2.png) $bg-body;
+  }
 }
 </style>

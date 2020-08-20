@@ -26,37 +26,33 @@ export default {
   },
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
+@import '@/styles/util.scss';
+
 .search-input {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flex-xy-center();
   padding: 48px 0;
 }
 .search-input-group {
   position: relative;
   width: 600px;
-}
-.search-input-group .svg-icon {
-  position: absolute;
-  top: 14px;
-  right: 16px;
-  fill: rgba(74, 99, 124, 1);
+
+  .svg-icon {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    fill: rgba(74, 99, 124, 1);
+  }
 }
 
 .el-input {
   height: 48px;
   width: 100%;
 }
-
 .el-input ::v-deep .el-input__inner {
   height: 48px;
   padding-right: 40px;
-  border-color: rgba(74, 99, 124, 1);
   border-radius: 24px;
-  background-color: rgba(12, 45, 64, 1);
-  color: #C4D1DD;
   font-size: 1rem;
 }
-
 </style>

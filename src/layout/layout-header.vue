@@ -107,120 +107,120 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/styles/util.scss';
 
 .nav-item {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  color: #C4D1DD;
-  font-size: 18px;
+  @include flex-align(center, flex-start);
+  font-size: $font-lg;
   white-space: nowrap;
   cursor: pointer;
-}
-.nav-item:hover,
-.nav-item.active {
-  color: #00AADD;
-}
-.nav-item:not(:last-of-type) {
-  margin-right: 32px;
-}
-.nav-item .svg-icon {
-  margin-right: 4px;
-  fill: #C4D1DD;
-}
-.nav-item:hover .svg-icon,
-.nav-item.active .svg-icon {
-  fill: #00AADD;
+
+  &:hover,
+  &.active {
+    color: $brand-primary;
+  }
+
+  &:not(:last-of-type) {
+    margin-right: 32px;
+  }
+
+  .svg-icon {
+    margin-right: 4px;
+  }
+
+  &:hover .svg-icon,
+  &.active .svg-icon {
+    fill: $brand-primary;
+  }
 }
 
 .layout-header {
   position: relative;
-  background: #01202F;
-  border-bottom: 1px solid #0C2D40;
-}
+  background: $bg-default;
+  border-bottom: 1px solid $border-dark;
 
-.layout-header-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 45px;
-  background: #0C2D40;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.26);
-}
-.layout-header-top-current {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding-left: 20px;
-}
-.layout-header-top-profile {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 20px;
-}
-.layout-header-top-profile .nav-item {
-  font-size: 14px;
-}
-.layout-header-top-profile .nav-item:not(:last-of-type) {
-  margin-right: 32px;
-}
+  &-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 45px;
+    background: $bg-light;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.26);
 
-.layout-header-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 65px;
-}
-.layout-header-nav-left {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex: 1;
-  max-width: calc(50% - 260px);
-  padding-left: 20px;
-}
-.layout-header-nav-right {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex: 1;
-  max-width: calc(50% - 300px);
-  padding-right: 20px;
-}
+    &-current {
+      @include flex-align(center, flex-start);
+      padding-left: 20px;
+    }
 
-.layout-header-banner {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  height: 90px;
-  width: 480px;
-  transform: translateX(-50%);
-}
-.layout-header-banner-content {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 90px;
-  color: #EEF5FB;
-  font-size: 24px;
-  z-index: 1;
-}
-.layout-header-banner-content img {
-  height: 36px;
-  width: 36px;
-}
-.layout-header-banner-box {
-  position: absolute;
-  top: 45px;
-  width: calc(100% - 90px);
-  border-top: 45px solid #0C2D40;
-  border-left: 45px solid transparent;
-  border-right: 45px solid transparent;
-  filter: drop-shadow(0 4px 2px rgba(0,0,0,0.26));
+    &-profile {
+      @include flex-align(center, flex-end);
+      padding-right: 20px;
+
+      .nav-item {
+        font-size: $font-md;
+
+        &:not(:last-of-type) {
+          margin-right: 32px;
+        }
+      }
+    }
+  }
+
+  &-nav {
+    @include flex-align(center, space-between);
+    height: 65px;
+
+    &-left {
+      @include flex-align(center, flex-start);
+      flex: 1;
+      max-width: calc(50% - 260px);
+      padding-left: 20px;
+    }
+
+    &-right {
+      @include flex-align(center, flex-start);
+      flex: 1;
+      max-width: calc(50% - 300px);
+      padding-right: 20px;
+    }
+  }
+
+  &-banner {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    height: 90px;
+    width: 480px;
+    transform: translateX(-50%);
+
+    &-content {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 90px;
+      color: #EEF5FB;
+      font-size: 24px;
+      z-index: 1;
+
+      img {
+        height: 36px;
+        width: 36px;
+      }
+    }
+
+    &-box {
+      position: absolute;
+      top: 45px;
+      width: calc(100% - 90px);
+      border-top: 45px solid $bg-light;
+      border-left: 45px solid transparent;
+      border-right: 45px solid transparent;
+      filter: drop-shadow(0 4px 2px rgba(0,0,0,0.26));
+    }
+  }
 }
 
 @media screen and (max-width: 1700px) {
@@ -230,12 +230,12 @@ export default {
 }
 @media screen and (max-width: 1500px) {
   .nav-item {
-    font-size: 16px;
+    font-size: 1rem;
   }
 }
 @media screen and (max-width: 1400px) {
   .nav-item {
-    font-size: 14px;
+    font-size: $font-md;
   }
 }
 </style>

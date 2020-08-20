@@ -114,82 +114,84 @@ export default {
   },
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
+@import '@/styles/util.scss';
+
 .search-result-footer {
-  display: flex;
-  justify-content: flex-end;
+  @include flex-align(center, flex-end);
   padding: 16px;
 }
 .entry {
   padding: 20px;
-  border-bottom: 1px solid #01202F;
+  border-bottom: 1px solid $bg-default;
+
+  &-top {
+    @include flex-align(center, space-between);
+    margin-bottom: 8px;
+    font-size: $font-md;
+
+    &-info {
+      @include flex-align(center, flex-start);
+      padding-right: 16px;
+      font-weight: 600;
+      overflow: hidden;
+
+      .svg-icon {
+        margin-right: 8px;
+        flex-shrink: 0;
+      }
+
+      span {
+        @include text-ellipsis();
+      }
+    }
+
+    &-operation {
+      @include flex-align(center, flex-end);
+      flex-shrink: 0;
+    }
+  }
+
+  &-path {
+    margin-bottom: 8px;
+  }
+
+  &-property {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: -8px;
+  }
 }
-.entry-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  font-size: 14px;
-}
-.entry-top-info {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding-right: 16px;
-  font-weight: 600;
-  color: #C4D1DD;
-  overflow: hidden;
-}
-.entry-top-info .svg-icon {
-  margin-right: 8px;
-  flex-shrink: 0;
-}
-.entry-top-info span {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.entry-top-operation {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-shrink: 0;
-}
-.entry-path {
-  margin-bottom: 8px;
-}
-.entry-property {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: -8px;
-}
+
 .link-btn {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  color: #00AADD;
+  @include flex-align(center, flex-start);
+  color: $brand-primary;
   cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:not(:last-of-type) {
+    margin-right: 24px;
+  }
+
+  .svg-icon {
+    margin-right: 4px;
+    fill: $brand-primary;
+  }
 }
-.link-btn:hover {
-  text-decoration: underline;
-}
-.link-btn:not(:last-of-type) {
-  margin-right: 24px;
-}
-.link-btn .svg-icon {
-  margin-right: 4px;
-}
+
 .property {
+  @include text-ellipsis();
   height: 24px;
   line-height: 24px;
   min-width: 120px;
-  font-size: 12px;
-  color: #5B748C;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.property:not(:last-of-type) {
-  margin-right: 32px;
+  font-size: $font-sm;
+  color: $text-mute;
+
+  &:not(:last-of-type) {
+    margin-right: 32px;
+  }
 }
 </style>

@@ -74,29 +74,37 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
+@import '@/styles/util.scss';
+
 .el-tree {
-  background: #0c2d40;
+  background: $bg-light;
+}
+
+.el-tree ::v-deep .el-tree-node__content:hover {
+  background: transparent;
+}
+.el-tree ::v-deep .el-tree-node:focus > .el-tree-node__content {
+  background: transparent;
+}
+.el-tree ::v-deep .el-tree-node__children {
+  background: $bg-default;
 }
 .el-tree ::v-deep > .el-tree-node > .el-tree-node__children {
   margin-left: -18px;
-  background: #0c2d40;
+  background: $bg-light;
 }
 .el-tree ::v-deep .search-menu-node {
-  display: flex;
-  align-items: center;
+  @include flex-align(center, flex-start);
   padding-right: 4px;
-  font-size: 14px;
+  font-size: $font-md;
   overflow: hidden;
 }
 .el-tree ::v-deep .search-menu-node .svg-icon {
   flex-shrink: 0;
   margin-right: 8px;
-  fill: #c4d1dd;
 }
 .el-tree ::v-deep .search-menu-node span {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  @include text-ellipsis;
 }
 </style>
