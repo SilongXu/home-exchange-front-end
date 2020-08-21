@@ -19,7 +19,7 @@
     </div>
     <div class="layout-header-nav">
       <div class="layout-header-nav-left">
-        <div class="nav-item" v-for="navItem in leftNavItems" :key="navItem.name">
+        <div class="nav-item" v-for="navItem in leftNavItems" :key="navItem.name" @click="navPath(navItem.path)">
           <svg-icon :icon="navItem.icon"/>
           {{navItem.name}}
         </div>
@@ -57,6 +57,7 @@ export default {
         {
           icon: 'import-manage',
           name: '导入管理',
+          path: '/import'
         },
         {
           icon: 'export-manage',
@@ -92,14 +93,16 @@ export default {
   },
   methods: {
     navPath(path) {
-      this.$router.push(path);
+      if (path) {
+        this.$router.push(path, () => {});
+      }
     }
   },
   computed: {
     currentNavItem() {
       const path = this.$route.path;
       const navItem = [...this.leftNavItems, ...this.rightNavItems, ...this.extraNavItems].find((_navItem) => {
-        return _navItem.path === path;
+        return _navItem.path && path.indexOf(_navItem.path) > -1;
       });
       return navItem;
     }
@@ -201,7 +204,7 @@ export default {
       justify-content: center;
       width: 100%;
       height: 90px;
-      color: #EEF5FB;
+      color: $text-light;
       font-size: 24px;
       z-index: 1;
 

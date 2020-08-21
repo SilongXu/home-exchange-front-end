@@ -1,5 +1,5 @@
 <template>
-  <svg class="svg-icon" :style="{ height: unit, width: unit }" aria-hidden="true">
+  <svg class="svg-icon" :style="{ height: unit, width: unit, fill: iconColor }" aria-hidden="true">
     <use :xlink:href="iconName"></use>
   </svg>
 </template>
@@ -9,16 +9,45 @@ export default {
   name: 'svg-icon',
   props: {
     icon: {
-      type: String,
-      required: true
+      type: String
     },
     size: {
       type: String,
+    },
+    type: {
+      type: String,
     }
+  },
+  data() {
+    return {
+      iconMappings: {
+        TASKFLOW: 'taskflow',
+        SQL: 'sql',
+        DATALOAD: 'dataload',
+        DATASYNC: 'datasync',
+      },
+      colorMappings: {
+        TASKFLOW: '#1D96F3',
+        SQL: '#EC9D27',
+        DATALOAD: '#65C1E9',
+        DATASYNC: '#8265e4',
+      }
+    };
   },
   computed: {
     iconName () {
-      return `#${this.icon}`
+      if (this.icon) {
+        return `#${this.icon}`
+      } else if (this.type) {
+        const icon = this.iconMappings[this.type];
+        return `#${icon}`;
+      }
+    },
+    iconColor() {
+      if (this.type) {
+        const color = this.colorMappings[this.type];
+        return color;
+      }
     },
     unit () {
       let unit;
