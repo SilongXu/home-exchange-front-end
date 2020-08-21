@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import layout from '@/layout/layout'
 
 const search = () => import(/* webpackChunkName: "search" */ '@/search/search')
+const _import = () => import(/* webpackChunkName: "import" */ '@/import/import')
 
 Vue.use(Router)
 
@@ -17,6 +18,11 @@ export default new Router({
           path: 'search',
           name: 'search',
           component: search
+        },
+        {
+          path: 'import**',
+          name: 'import',
+          component: _import,
         }
       ],
     }

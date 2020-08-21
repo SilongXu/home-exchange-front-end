@@ -78,6 +78,7 @@ export default {
 @import '@/styles/util.scss';
 
 .el-tree {
+  padding-left: 8px;
   background: $bg-light;
 }
 

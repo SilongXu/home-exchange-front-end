@@ -15,3 +15,20 @@
 .el-checkbox__inner {
   background: transparent;
 }
+
+.el-pager li {
+  background: transparent;
+}
+
+.el-pagination .btn-prev, .el-pagination .btn-next {
+  background: transparent;
+}
+
+.el-pagination button:disabled {
+  background: transparent;
+}
+
+.el-table-column--selection .cell {
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+}
