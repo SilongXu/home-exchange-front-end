@@ -251,21 +251,6 @@ export default {
 
     .row-operation {
       @include flex-align(center, flex-start);
-
-      .icon-btn {
-        @include flex-xy-center();
-        cursor: pointer;
-
-        &:hover {
-          .svg-icon {
-            fill: $brand-primary;
-          }
-        }
-
-        &:not(:last-of-type) {
-          margin-right: 16px;
-        }
-      }
     }
   }
 

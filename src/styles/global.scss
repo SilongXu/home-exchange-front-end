@@ -20,3 +20,42 @@ body {
   margin: 0;
   background: $bg-body;
 }
+
+.icon-btn {
+  @include flex-xy-center;
+  cursor: pointer;
+
+  &:not(:last-of-type) {
+    margin-right: 16px
+  }
+
+  &:hover {
+    svg {
+      fill: $brand-primary
+    }
+  }
+    
+  &.disabled {
+    cursor: not-allowed;
+
+    svg {
+      fill: $text-mute;
+    }
+  }
+}
+  
+.link-btn {
+  font-size: $font-md;
+  color: $brand-primary;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &.disabled {
+    color: $text-mute;
+    cursor: not-allowed;
+  }
+}
+  

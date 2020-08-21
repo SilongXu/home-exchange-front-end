@@ -1,5 +1,10 @@
 <template>
-  <svg class="svg-icon" :style="{ height: unit, width: unit, fill: iconColor }" aria-hidden="true">
+  <svg
+    class="svg-icon"
+    :class="iconColorTheme"
+    :style="{ height: iconUnit, width: iconUnit, fill: iconColor }"
+    aria-hidden="true"
+  >
     <use :xlink:href="iconName"></use>
   </svg>
 </template>
@@ -12,6 +17,9 @@ export default {
       type: String
     },
     size: {
+      type: String,
+    },
+    color: {
       type: String,
     },
     type: {
@@ -31,7 +39,10 @@ export default {
         SQL: '#EC9D27',
         DATALOAD: '#65C1E9',
         DATASYNC: '#8265e4',
-      }
+      },
+      colorThemes: [
+        'primary',
+      ],
     };
   },
   computed: {
@@ -44,12 +55,20 @@ export default {
       }
     },
     iconColor() {
-      if (this.type) {
+      if (this.color) {
+        if (!this.iconColorTheme) {
+          return this.color;
+        }
+      } else if (this.type) {
         const color = this.colorMappings[this.type];
         return color;
       }
     },
-    unit () {
+    iconColorTheme() {
+      const matchTheme = this.colorThemes.indexOf(this.color) > -1;
+      return matchTheme ? `svg-icon-${this.color}` : '';
+    },
+    iconUnit () {
       let unit;
       switch (this.size) {
         case 'lg':
@@ -79,4 +98,12 @@ export default {
   fill: $icon-default;
   overflow: hidden;
 }
+
+@mixin svg-icon-mixin($type, $color) {
+  .svg-icon-#{$type} {
+    fill: $color
+  }
+}
+
+@include svg-icon-mixin(primary, $brand-primary)
 </style>
