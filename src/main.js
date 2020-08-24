@@ -15,5 +15,3 @@ new Vue({
 }).$mount('#app')
 
 Vue.config.productionTip = false
-
-document.title = 'Data Manager'
