@@ -8,7 +8,7 @@ import ImportNew from './import-new';
 import router from './import-router';
 
 export default {
-  name: 'import',
+  name: 'Import',
   components: {
     ImportList,
     ImportNew,

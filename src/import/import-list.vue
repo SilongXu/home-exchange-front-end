@@ -6,7 +6,7 @@
         <el-tab-pane :label="'已完成' + ' (56)'" name="completed"></el-tab-pane>
       </el-tabs>
       <el-button type="primary" size="mini" @click="goToNew()">
-        <svg-icon icon="import-manage"/>
+        <svg-icon icon="import-manage"></svg-icon>
         数据导入
       </el-button>
     </div>
@@ -37,7 +37,7 @@
           min-width="300">
           <template slot-scope="scope">
             <div class="row-name">
-              <svg-icon :type="scope.row.type"/>
+              <svg-icon :type="scope.row.type"></svg-icon>
               <span>{{ scope.row.name }}</span>
             </div>
           </template>
@@ -112,7 +112,7 @@
 
 <script>
 export default {
-  name: 'import-list',
+  name: 'ImportList',
   data() {
     return {
       activeTab: 'ongoing',

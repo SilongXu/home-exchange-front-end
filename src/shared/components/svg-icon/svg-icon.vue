@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: 'svg-icon',
+  name: 'SvgIcon',
   props: {
     icon: {
       type: String

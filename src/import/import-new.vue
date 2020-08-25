@@ -3,9 +3,9 @@
     <div class="import-new-form">
       <div class="import-new-form-title">
         <div class="title-nav icon-btn" @click="navBack()">
-          <svg-icon icon="collapser"/>
+          <svg-icon icon="collapser"></svg-icon>
         </div>
-        <svg-icon class="title-icon" icon="import-manage" color="primary" size="lg"/>
+        <svg-icon class="title-icon" icon="import-manage" color="primary" size="lg"></svg-icon>
         <span class="title-text">新建数据导入</span>
       </div>
       <el-form ref="form" :model="form" label-position="left" label-width="120px" size="small">
@@ -91,7 +91,7 @@
 
 <script>
 export default {
-  name: 'import-new',
+  name: 'ImportNew',
   data() {
     return {
       form: {
@@ -145,7 +145,7 @@ export default {
         <span class="directory-node">
           {
             (() => {
-              return node.expanded ? <svg-icon icon="folder-open"/> : <svg-icon icon="folder-close"/>;
+              return node.expanded ? <svg-icon icon="folder-open"></svg-icon> : <svg-icon icon="folder-close"></svg-icon>;
             })() 
           }
           <span domPropsTitle={node.label}>{node.label}</span>
