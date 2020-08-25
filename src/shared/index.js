@@ -1,7 +1,9 @@
+import OverflowContainer from './components/overflow-container/index'
 import SvgIcon from './components/svg-icon/index';
 import http from './services/http';
 
 const components = [
+  OverflowContainer,
   SvgIcon,
 ];
 
