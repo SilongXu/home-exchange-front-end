@@ -29,7 +29,7 @@ export default {
    methods: {
     loadNode(node, resolve) {
       if (node.level === 0) {
-        return resolve([{ name: 'region1' }, { name: 'region2' }]);
+        return resolve([{ name: 'region1', id: -1, type: 'directory' }, { name: 'region2', id: -2, type: 'directory' }]);
       }
       if (node.level > 2) return resolve([]);
 
@@ -40,8 +40,12 @@ export default {
         if (hasChild) {
           for (let i = 0; i < 5; i++) {
             data.push({
-              name: 'zone' + this.count++,
+              name: 'zone' + this.count,
+              id: this.count,
+              leaf: node.level > 1,
+              type: node.level > 1 ? 'file' : 'directory',
             });
+            this.count ++;
           }
         }
 
@@ -53,14 +57,18 @@ export default {
         <span class="menu-tree-node">
           {
             (() => {
-              return node.expanded ? <svg-icon icon="folder-open"></svg-icon> : <svg-icon icon="folder-close"></svg-icon>;
+              if (data.type === 'directory') {
+                return node.expanded ? <svg-icon icon="folder-open"></svg-icon> : <svg-icon icon="folder-close"></svg-icon>;
+              } else {
+                return <svg-icon icon="file"></svg-icon>;
+              }
             })() 
           }
           <span domPropsTitle={node.label}>{node.label}</span>
         </span>);
     },
     onNodeClick(data, node) {
-      
+      this.$store.dispatch('menuNodes/addMenuNode', data);
     },
   },
 }

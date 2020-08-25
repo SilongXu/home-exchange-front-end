@@ -9,8 +9,10 @@ Vue.use(Shared)
 
 import router from './router'
 import app from './app.vue'
+import store from './store';
 new Vue({
   render: h => h(app),
+  store,
   router
 }).$mount('#app')
 

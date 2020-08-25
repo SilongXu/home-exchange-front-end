@@ -6,14 +6,12 @@
 </template>
 
 <script>
-import MenuTable from './menu-table';
 import MenuTabs from './menu-tabs';
 import MenuTree from './menu-tree';
 
 export default {
   name: 'MenuManage',
   components: {
-    MenuTable,
     MenuTabs,
     MenuTree,
   },
