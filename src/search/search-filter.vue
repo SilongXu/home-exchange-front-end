@@ -48,7 +48,7 @@
 </template>
 <script>
 export default {
-  name: 'search-filter',
+  name: 'SearchFilter',
   data() {
     return {
       dataType: [],

@@ -19,7 +19,7 @@ import SearchMenu from './search-menu'
 import SearchResult from './search-result'
 
 export default {
-  name: 'search',
+  name: 'Search',
   components: {
     SearchFilter,
     SearchInput,

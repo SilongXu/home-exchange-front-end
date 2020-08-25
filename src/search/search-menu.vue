@@ -16,7 +16,7 @@
 import debounce from "lodash-es/debounce";
 
 export default {
-  name: 'search-menu',
+  name: 'SearchMenu',
   data: () => {
     return {
       treeProps: {
@@ -64,7 +64,7 @@ export default {
               if (node.level === 1 || node.isLeaf) {
                 return null;
               } else {
-                return node.expanded ? <svg-icon icon="folder-open"/> : <svg-icon icon="folder-close"/>;
+                return node.expanded ? <svg-icon icon="folder-open"></svg-icon> : <svg-icon icon="folder-close"></svg-icon>;
               }
             })() 
           }

@@ -7,13 +7,13 @@
         @change="search"
       >
       </el-input>
-      <svg-icon icon="search" size="21px"/>
+      <svg-icon icon="search" size="21px"></svg-icon>
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: 'search-input',
+  name: 'SearchInput',
   data() {
     return {
       inputFilter: '',

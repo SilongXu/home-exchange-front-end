@@ -3,16 +3,16 @@
     <div class="entry" v-for="entry in searchResult" :key="entry.id">
       <div class="entry-top">
         <div class="entry-top-info">
-          <svg-icon icon="file"/>
+          <svg-icon icon="file"></svg-icon>
           <span :title="entry.name">{{entry.name}}</span>
         </div>
         <div class="entry-top-operation">
           <div class="link-btn">
-            <svg-icon icon="view-detail"/>
+            <svg-icon icon="view-detail"></svg-icon>
             查看详情
           </div>
           <div class="link-btn">
-            <svg-icon icon="download"/>
+            <svg-icon icon="download"></svg-icon>
             下载
           </div>
         </div>
@@ -43,7 +43,7 @@
 </template>
 <script>
 export default {
-  name: 'search-result',
+  name: 'SearchResult',
   data() {
     return {
       pagination: {

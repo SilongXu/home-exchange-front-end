@@ -14,7 +14,7 @@
 import LayoutHeader from './layout-header';
 
 export default {
-  name: 'layout',
+  name: 'Layout',
   components: {
     LayoutHeader,
   },

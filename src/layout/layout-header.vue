@@ -3,16 +3,16 @@
     <div class="layout-header-top">
       <div class="layout-header-top-current">
         <div class="nav-item active" v-if="currentNavItem">
-          <svg-icon :icon="currentNavItem.icon"/>
+          <svg-icon :icon="currentNavItem.icon"></svg-icon>
           {{currentNavItem.name}}
         </div>
       </div>
       <div class="layout-header-top-profile">
         <div class="nav-item" @click="navPath('/search')">
-          <svg-icon icon="search"/>
+          <svg-icon icon="search"></svg-icon>
         </div>
         <div class="nav-item">
-          <svg-icon icon="avator"/>
+          <svg-icon icon="avator"></svg-icon>
           admin
         </div>
       </div>
@@ -20,13 +20,13 @@
     <div class="layout-header-nav">
       <div class="layout-header-nav-left">
         <div class="nav-item" v-for="navItem in leftNavItems" :key="navItem.name" @click="navPath(navItem.path)">
-          <svg-icon :icon="navItem.icon"/>
+          <svg-icon :icon="navItem.icon"></svg-icon>
           {{navItem.name}}
         </div>
       </div>
       <div class="layout-header-nav-right">
         <div class="nav-item" v-for="navItem in rightNavItems" :key="navItem.name">
-          <svg-icon :icon="navItem.icon"/>
+          <svg-icon :icon="navItem.icon"></svg-icon>
           {{navItem.name}}
         </div>
       </div>
@@ -42,13 +42,14 @@
 </template>
 <script>
 export default {
-  name: 'layout-header',
+  name: 'LayoutHeader',
   data: () => {
     return {
       leftNavItems: [
         {
           icon: 'folder-open',
           name: '目录管理',
+          path: '/menu',
         },
         {
           icon: 'transfer',

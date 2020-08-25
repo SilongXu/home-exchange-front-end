@@ -4,6 +4,7 @@ import layout from '@/layout/layout'
 
 const search = () => import(/* webpackChunkName: "search" */ '@/search/search')
 const _import = () => import(/* webpackChunkName: "import" */ '@/import/import')
+const menu = () => import(/* webpackChunkName: "menu" */ '@/menu/menu')
 
 Vue.use(Router)
 
@@ -23,7 +24,12 @@ export default new Router({
           path: 'import**',
           name: 'import',
           component: _import,
-        }
+        },
+        {
+          path: 'menu',
+          name: 'menu-manage',
+          component: menu,
+        },
       ],
     }
   ]
