@@ -67,7 +67,7 @@ export default {
           <span domPropsTitle={node.label}>{node.label}</span>
         </span>);
     },
-    onNodeClick(data, node) {
+    onNodeClick(data) {
       this.$store.dispatch('menuNodes/addMenuNode', data);
     },
   },

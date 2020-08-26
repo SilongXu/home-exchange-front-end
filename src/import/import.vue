@@ -10,8 +10,10 @@ import router from './import-router';
 export default {
   name: 'Import',
   components: {
+    /* eslint-disable */
     ImportList,
     ImportNew,
+    /* eslint-enable */
   },
   router
 }

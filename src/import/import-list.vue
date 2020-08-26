@@ -161,16 +161,16 @@ export default {
       this.$router.push('/import/new');
     },
     startImport(name) {
-
+      console.log(name);
     },
     stopImport(name) {
-
+      console.log(name);
     },
     cancelImport(name) {
-
+      console.log(name);
     },
     refreshImport(name) {
-
+      console.log(name);
     },
     stopAllImports() {
       this.$confirm('确定暂停全部选中的导入进程？', '提示', {

@@ -140,7 +140,7 @@ export default {
         resolve(data);
       }, 500);
     },
-    renderContent(h, { node, data }) {
+    renderContent(h, { node }) {
       return (
         <span class="directory-node">
           {

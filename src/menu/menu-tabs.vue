@@ -60,7 +60,7 @@ export default {
     }
   },
   created() {
-    this.nodesWatcher = this.$store.watch((state, getter) => {
+    this.nodesWatcher = this.$store.watch((state) => {
       return state.menuNodes.nodes;
     }, (currentNodes) => {
       this.nodes = currentNodes;
@@ -69,7 +69,7 @@ export default {
       });
     });
 
-    this.activeNodeWatcher = this.$store.watch((state, getter) => {
+    this.activeNodeWatcher = this.$store.watch((state) => {
       return state.menuNodes.activeNode;
     }, (currentActiveNode) => {
       this.activeNode = currentActiveNode;

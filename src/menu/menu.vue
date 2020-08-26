@@ -10,8 +10,10 @@ import router from './menu-router';
 export default {
   name: 'Menu',
   components: {
+    /* eslint-disable */
     MenuAbstract,
     MenuManage,
+    /* eslint-enable */
   },
   router,
 }

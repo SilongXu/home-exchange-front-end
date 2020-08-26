@@ -53,6 +53,7 @@ export default {
         const icon = this.iconMappings[this.type];
         return `#${icon}`;
       }
+      return '';
     },
     iconColor() {
       if (this.color) {
@@ -63,6 +64,7 @@ export default {
         const color = this.colorMappings[this.type];
         return color;
       }
+      return '';
     },
     iconColorTheme() {
       const matchTheme = this.colorThemes.indexOf(this.color) > -1;

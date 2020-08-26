@@ -106,6 +106,7 @@ export default {
   },
   methods: {
     checkDetail(entry) {
+      console.log(entry);
       this.$router.push('/menu/manage');
     },
     onSizeChange() {
