@@ -94,9 +94,6 @@ export default {
 .el-tree ::v-deep .menu-tree-node span {
   @include text-ellipsis;
 }
-.el-tree ::v-deep .el-tree-node:focus:not(.is-current) > .el-tree-node__content {
-  background: transparent;
-}
 .el-tree ::v-deep .el-tree-node > .el-tree-node__content {
   border-left: 2px solid transparent;
 }
