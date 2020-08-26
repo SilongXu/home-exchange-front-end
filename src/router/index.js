@@ -26,8 +26,8 @@ export default new Router({
           component: _import,
         },
         {
-          path: 'menu',
-          name: 'menu-manage',
+          path: 'menu**',
+          name: 'menu',
           component: menu,
         },
       ],

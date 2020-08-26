@@ -73,8 +73,14 @@ export default {
       return state.menuNodes.activeNode;
     }, (currentActiveNode) => {
       this.activeNode = currentActiveNode;
-      this.$refs.menuTabsContainer.updateActiveContent(`#node_${this.activeNode.id}`);
+      if (this.activeNode) {
+        this.$refs.menuTabsContainer.updateActiveContent(`#node_${this.activeNode.id}`);
+      }
     });
+  },
+  mounted() {
+    this.nodes = this.$store.state.menuNodes.nodes;
+    this.activeNode = this.$store.state.menuNodes.activeNode;
   },
   destroyed() {
     if (this.nodesWatcher) {

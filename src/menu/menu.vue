@@ -1,39 +1,22 @@
 <template>
-  <div class="menu">
-    <menu-tree></menu-tree>
-    <menu-tabs></menu-tabs>
-  </div>
+  <router-view></router-view>
 </template>
 
 <script>
-import MenuTabs from './menu-tabs';
-import MenuTree from './menu-tree';
+import MenuAbstract from './menu-abstract';
+import MenuManage from './menu-manage';
+import router from './menu-router';
 
 export default {
-  name: 'MenuManage',
+  name: 'Menu',
   components: {
-    MenuTabs,
-    MenuTree,
+    MenuAbstract,
+    MenuManage,
   },
+  router,
 }
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/util.scss';
 
-.menu {
-  @include flex-align(stretch, flex-start);
-  flex: 1;
-  overflow: auto;
-
-  &-tree {
-    flex-shrink: 0;
-    width: 400px;
-    border-right: 1px solid $border-dark;
-  }
-
-  &-tabs {
-    flex: 1;
-  }
-}
 </style>
