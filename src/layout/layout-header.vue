@@ -95,7 +95,7 @@ export default {
   methods: {
     navPath(path) {
       if (path) {
-        this.$router.push(path, () => {});
+        location.hash = path;
       }
     }
   },

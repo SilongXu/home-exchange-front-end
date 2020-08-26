@@ -7,7 +7,7 @@
           <span :title="entry.name">{{entry.name}}</span>
         </div>
         <div class="entry-top-operation">
-          <div class="link-btn">
+          <div class="link-btn" @click="checkDetail(entry)">
             <svg-icon icon="view-detail"></svg-icon>
             查看详情
           </div>
@@ -105,6 +105,9 @@ export default {
     };
   },
   methods: {
+    checkDetail(entry) {
+      this.$router.push('/menu/manage');
+    },
     onSizeChange() {
 
     },
