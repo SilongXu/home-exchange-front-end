@@ -1,5 +1,40 @@
 <template>
   <div class="search-result">
+
+    <el-dialog
+      title="批量添加"
+      :visible.sync="tagDialogVisible"
+      width="500px"
+      class="search-result-dialog-tag"
+    >
+      <el-form ref="form" :model="tagForm" label-position="left" label-width="80px" size="small">
+        <el-form-item label="标签" :required="true">
+          <el-select
+            v-model="tagForm.tags"
+            multiple
+            filterable
+            allow-create
+            placeholder="请选择标签">
+            <el-option
+              v-for="tag in tags"
+              :key="tag"
+              :label="tag"
+              :value="tag">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer">
+        <el-button size="small" @click="tagDialogVisible = false">取消</el-button>
+        <el-button type="primary" size="small" @click="confirmTag">确定</el-button>
+      </span>
+    </el-dialog>
+
+    <div class="search-result-operation">
+      <el-button type="primary" size="mini" @click="addTag()">
+        批量添加标签
+      </el-button>
+    </div>
     <div class="entry" v-for="entry in searchResult" :key="entry.id">
       <div class="entry-top">
         <div class="entry-top-info">
@@ -46,6 +81,7 @@ export default {
   name: 'SearchResult',
   data() {
     return {
+      tagDialogVisible: false,
       pagination: {
         page: 1,
         total: 400,
@@ -102,12 +138,27 @@ export default {
           importTime: '2020/08/18 12:43:21',
         },
       ],
+      tagForm: {
+        tags: [],
+      },
+      tags: [
+        'tag1',
+        'tag2',
+        'tag3',
+      ],
     };
   },
   methods: {
     checkDetail(entry) {
       console.log(entry);
       this.$router.push('/menu/manage');
+    },
+    addTag() {
+      this.tagForm.tags = [];
+      this.tagDialogVisible = true;
+    },
+    confirmTag() {
+      this.tagDialogVisible = false;
     },
     onSizeChange() {
 
@@ -121,9 +172,29 @@ export default {
 <style lang="scss" scoped>
 @import '@/styles/util.scss';
 
-.search-result-footer {
-  @include flex-align(center, flex-end);
-  padding: 16px;
+.search-result {
+
+  &-dialog {
+
+    &-tag {
+
+      .el-select {
+        width: 100%;
+      }
+    }
+  }
+
+  &-operation {
+    @include flex-align(center, flex-end);
+    height: 48px;
+    padding: 0 20px;
+    border-bottom: 1px solid $border-dark;
+  }
+
+  &-footer {
+    @include flex-align(center, flex-end);
+    padding: 16px;
+  }
 }
 .entry {
   padding: 20px;
