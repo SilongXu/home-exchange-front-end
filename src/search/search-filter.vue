@@ -24,23 +24,42 @@
     </div>
     <div class="search-filter-entry">
       <div class="label">文件大小</div>
-      <el-select v-model="fileSizeRelation" placeholder="请选择" size="small">
+      <div class="input-group">
+        <el-select v-model="fileSizeRelation" placeholder="请选择" size="small">
+          <el-option
+            v-for="item in fileSizeRelationOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+        <el-input v-model="fileSizeValue" min="0" placeholder="请输入大小" size="small"></el-input>
+        <el-select v-model="fileSizeUnit" placeholder="请选择" size="small">
+          <el-option
+            v-for="item in fileSizeUnitOptions"
+            :key="item.value"
+            :label="item.value"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </div>
+    </div>
+    <div class="search-filter-entry">
+      <div class="label">标签</div>
+       <el-select
+        v-model="tags"
+        multiple
+        filterable
+        placeholder="请选择标签"
+        size="small"
+      >
         <el-option
-          v-for="item in fileSizeRelationOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        >
-        </el-option>
-      </el-select>
-      <el-input v-model="fileSizeValue" min="0" placeholder="请输入大小" size="small"></el-input>
-      <el-select v-model="fileSizeUnit" placeholder="请选择" size="small">
-        <el-option
-          v-for="item in fileSizeUnitOptions"
-          :key="item.value"
-          :label="item.value"
-          :value="item.value"
-        >
+          v-for="tag in tagOptions"
+          :key="tag"
+          :label="tag"
+          :value="tag">
         </el-option>
       </el-select>
     </div>
@@ -121,6 +140,8 @@ export default {
           value: 'GB',
         }
       ],
+      tags: [],
+      tagOptions: ['tag1', 'tag2', 'tag3'],
     };
   },
   methods: {
@@ -136,7 +157,7 @@ export default {
 .search-filter {
   @include flex-align(flex-start, flex-start);
   flex-wrap: wrap;
-  padding: 20px 20px 12px 20px;
+  padding: 20px 20px 4px 20px;
 
   &-entry {
     display: flex;
@@ -144,7 +165,7 @@ export default {
     justify-content: flex-start;
     height: 32px;
     line-height: 32px;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
     font-size: $font-md;
 
     &:not(:last-of-type) {
@@ -152,6 +173,7 @@ export default {
     }
 
     .label {
+      min-width: 60px;
       margin-right: 12px;
       white-space: nowrap;
     }
@@ -162,13 +184,19 @@ export default {
   width: 360px;
 }
 .el-select {
-  width: 120px;
+  width: 360px;
 }
-.el-input {
-  width: 120px;
+.input-group {
+  .el-select {
+    width: 120px;
+  }
+  .el-input {
+    width: 120px;
+  }
+  .el-select:not(:last-child),
+  .el-input:not(:last-child) {
+    margin-right: 8px;
+  }
 }
-.el-select:not(:last-child),
-.el-input:not(:last-child) {
-  margin-right: 8px;
-}
+
 </style>
