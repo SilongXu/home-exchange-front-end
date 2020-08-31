@@ -168,7 +168,91 @@ export default {
         page: 1,
         total: 400,
       },
-      searchResult: [
+      searchResult: [],
+
+      metaData: [
+        {
+          id: 1,
+          name:'一级节点',
+          desc:'升降轨',
+          type:'String',
+          annex:'TH03-01',
+        }, 
+        {
+          id: 2,
+          name:'一级节点',
+          desc:'升降轨',
+          type:'String',
+          annex:'TH03-02',
+        }, 
+        {
+          id: 3,
+          name:'一级节点',
+          desc: '升降轨',
+          type:'String',
+          annex:'TH03-03',
+          children: [
+            {
+              id: 31,
+              name:'二级节点',
+              desc:'升降轨',
+              type:'String',
+              annex:'TH03--031',
+            }, 
+            {
+              id: 32,
+              name:'二级节点',
+              desc:'升降轨',
+              type:'String',
+              annex:'TH03--032',
+              children:[
+                {
+                  id:321,
+                  name:'三级节点',
+                  desc:'升降轨',
+                  type:'String',
+                  annex:'TH03-033',
+                }
+              ],
+            },
+          ],
+        },
+      ],
+      tagForm: {
+        tags: [],
+      },
+      tags: [
+        'tag1',
+        'tag2',
+        'tag3',
+      ],
+      currentEntry: {},
+    };
+  },
+  methods: {
+    viewDetail(entry) {
+      this.currentEntry = entry;
+      this.dialogVisible = true;
+    },
+    addTag() {
+      this.tagForm.tags = [];
+      this.tagDialogVisible = true;
+    },
+
+    onSizeChange() {
+
+    },
+    onPageChange() {
+
+    },
+    addNewTag(){
+
+    },
+    confirmTag() {
+      
+    },
+    fetchResult() {
+      this.searchResult = [
         {
           id: 1,
           name: 'JB20-01_SXZ_20200725_00000005_001_003_L2_001.C1.TIF',
@@ -290,87 +374,7 @@ export default {
             }
           ]
         },
-      ],
-
-      metaData: [
-        {
-          id: 1,
-          name:'一级节点',
-          desc:'升降轨',
-          type:'String',
-          annex:'TH03-01',
-        }, 
-        {
-          id: 2,
-          name:'一级节点',
-          desc:'升降轨',
-          type:'String',
-          annex:'TH03-02',
-        }, 
-        {
-          id: 3,
-          name:'一级节点',
-          desc: '升降轨',
-          type:'String',
-          annex:'TH03-03',
-          children: [
-            {
-              id: 31,
-              name:'二级节点',
-              desc:'升降轨',
-              type:'String',
-              annex:'TH03--031',
-            }, 
-            {
-              id: 32,
-              name:'二级节点',
-              desc:'升降轨',
-              type:'String',
-              annex:'TH03--032',
-              children:[
-                {
-                  id:321,
-                  name:'三级节点',
-                  desc:'升降轨',
-                  type:'String',
-                  annex:'TH03-033',
-                }
-              ],
-            },
-          ],
-        },
-      ],
-      tagForm: {
-        tags: [],
-      },
-      tags: [
-        'tag1',
-        'tag2',
-        'tag3',
-      ],
-      currentEntry: {},
-    };
-  },
-  methods: {
-    viewDetail(entry) {
-      this.currentEntry = entry;
-      this.dialogVisible = true;
-    },
-    addTag() {
-      this.tagForm.tags = [];
-      this.tagDialogVisible = true;
-    },
-    confirmTag() {
-      this.tagDialogVisible = false;
-    },
-    onSizeChange() {
-
-    },
-    onPageChange() {
-
-    },
-    addNewTag(){
-
+      ];
     },
   },
 }
