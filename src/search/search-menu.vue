@@ -4,57 +4,68 @@
     :props="treeProps"
     :load="loadNode"
     lazy
-    show-checkbox
     icon-class="el-icon-arrow-right"
     node-key="id"
     :render-content="renderContent"
-    :default-expanded-keys="[1]"
-    @check-change="onCheckChange">
+    :default-expanded-keys="['all']"
+    :expand-on-click-node="false"
+    @node-click="onNodeClick"
+  >
   </el-tree>
 </template>
 <script>
 import debounce from "lodash-es/debounce";
+import http from '../shared/services/http'
 
 export default {
   name: 'SearchMenu',
   data: () => {
     return {
       treeProps: {
+        id: 'id',
         label: 'name',
         children: 'children',
-        isLeaf: 'leaf'
+        disabled: 'disabled',
+        isLeaf: 'isLeaf'
       },
       count: 1
     };
   },
   methods: {
-    onCheckChange: debounce(function() {
-      this.$emit('menuChange', this.$refs.searchMenuTree.getCheckedNodes());
-    }),
+    onNodeClick(node) {
+      this.$store.dispatch('menuNodes/addMenuNode', node);
+      this.$emit('menuChange', node.id);
+    },
+    activateNode(node) {
+      this.$store.dispatch('menuNodes/activateMenuNode', node);
+    },
     loadNode(node, resolve) {
       if (node.level === 0) {
-        return resolve([{ name: '全部', id: 1 }]);
+        return resolve([{ name: '全部', id: 'all' }]);
       }
       if (node.level === 1) {
-        return resolve([{ name: 'region1' }, { name: 'region2' }]);
+        http.get('retrieval/system/directory')
+        .then((tree) => {
+          return resolve(tree);
+        })
+        .catch(() => {
+          resolve([]);
+        });
+
+        return;
       }
-      if (node.level > 3) return resolve([]);
 
-      const hasChild = true;
+      if (!node.isLeaf) {
+        http.get(`retrieval/system/directory/${node.id}`)
+        .then((tree) => {
+          return resolve(tree);
+        })
+        .catch(() => {
+          resolve([]);
+        });
 
-      setTimeout(() => {
-        const data = [];
-        if (hasChild) {
-          for (let i = 0; i < 5; i++) {
-            data.push({
-              name: 'zone' + this.count++,
-              leaf: node.level > 2,
-            });
-          }
-        }
-
-        resolve(data);
-      }, 500);
+        return;
+      }
     },
     renderContent(h, { node }) {
       return (
@@ -92,8 +103,11 @@ export default {
   background: $bg-default;
 }
 .el-tree ::v-deep > .el-tree-node > .el-tree-node__children {
-  margin-left: -18px;
   background: $bg-light;
+}
+.el-tree ::v-deep .el-tree-node.is-current > .el-tree-node__content {
+  background: $bg-hover;
+  border-left: 2px solid $brand-primary;
 }
 .el-tree ::v-deep .search-menu-node {
   @include flex-align(center, flex-start);

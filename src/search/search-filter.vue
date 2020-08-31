@@ -1,5 +1,24 @@
 <template>
   <div class="search-filter">
+    <div class="search-filter-entry" v-for="(filter, index) in filterList" :key="index">
+      <div class="label">{{filter.name}}{{filter.queryType}}</div>
+      <el-select v-if="filter.queryType === 11" v-model="filter.value" placeholder="请选择" size="small">
+        <el-option
+          v-for="item in filter.options"
+          :key="item"
+          :label="item"
+          :value="item"
+        >
+        </el-option>
+      </el-select>
+      <el-input v-if="filter.queryType === 12" v-model="filter.value" placeholder="请输入" size="small"></el-input>
+      <el-input-number v-if="filter.queryType === 21" v-model="filter.value" :min="0" placeholder="请输入数字" size="small"></el-input-number>
+      <div class="input-group" v-if="filter.queryType === 22">
+        <el-input-number v-model="filter.fromValue" :min="0" placeholder="请输入数字" size="small"></el-input-number>
+        至
+        <el-input-number v-model="filter.toValue" :min="0" placeholder="请输入数字" size="small"></el-input-number>
+      </div>
+    </div>
     <div class="search-filter-entry">
       <div class="label">数据类型</div>
       <el-cascader
@@ -66,10 +85,13 @@
   </div>
 </template>
 <script>
+import http from '../shared/services/http'
+
 export default {
   name: 'SearchFilter',
   data() {
     return {
+      filterList: [],
       dataType: [],
       dataTypeOptions: [{
         value: 'zhinan',
@@ -146,7 +168,18 @@ export default {
   },
   methods: {
     onFilterChange() {
+      this.$emit('filterChange', 'filter');
+    },
+    fetchFilterList(nodeId) {
+      // 获取过滤条件列表
+      http.get(`retrieval/system/search/forms/${nodeId}`)
+      .then((filters) => {
+        console.log(JSON.parse(JSON.stringify(filters)))
+        this.filterList = filters;
+      })
+      .catch(() => {
 
+      });
     },
   },
 }
@@ -176,6 +209,18 @@ export default {
       min-width: 60px;
       margin-right: 12px;
       white-space: nowrap;
+    }
+  }
+
+  .input-group {
+    display: flex;
+    flex-wrap: nowrap;
+
+    .el-input-number:not(:last-of-type) {
+      margin-right: 10px;
+    }
+    .el-input-number:not(:first-of-type) {
+      margin-left: 10px;
     }
   }
 }

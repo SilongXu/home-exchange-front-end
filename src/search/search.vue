@@ -6,8 +6,8 @@
         <search-menu @menuChange="onMenuChange"></search-menu>
       </div>
       <div class="search-content-right">
-        <search-filter></search-filter>
-        <search-result></search-result>
+        <search-filter ref="filter" @filterChange="onFilterChange"></search-filter>
+        <search-result ref="result"></search-result>
       </div>
     </div>
   </div>
@@ -17,6 +17,8 @@ import SearchFilter from './search-filter'
 import SearchInput from './search-input'
 import SearchMenu from './search-menu'
 import SearchResult from './search-result'
+
+import http from '../shared/services/http'
 
 export default {
   name: 'Search',
@@ -29,18 +31,27 @@ export default {
   data: () => {
     return {
       inputFilter: '',
-      menuFilter: [],
+      menuFilter: null,
     };
+  },
+  mounted() {
+    this.fetchResult();
   },
   methods: {
     onInputChange(filter) {
       this.inputFilter = filter;
       console.log(this.inputFilter);
     },
-    onMenuChange(nodes) {
-      this.menuFilter = nodes;
-      console.log(this.menuFilter);
-    }
+    onMenuChange(node) {
+      this.menuFilter = node;
+      this.$refs.filter.fetchFilterList(this.menuFilter);
+    },
+    onFilterChange(filter) {
+      this.fetchResult();
+    },
+    fetchResult() {
+      this.$refs.result.fetchResult();
+    },
   },
 }
 </script>
