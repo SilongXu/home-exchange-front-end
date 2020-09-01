@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="layout-header-nav-right">
-        <div class="nav-item" v-for="navItem in rightNavItems" :key="navItem.name">
+        <div class="nav-item" v-for="navItem in rightNavItems" :key="navItem.name" @click="navPath(navItem.path)">
           <svg-icon :icon="navItem.icon"></svg-icon>
           {{navItem.name}}
         </div>
@@ -77,6 +77,7 @@ export default {
         {
           icon: 'user-admin',
           name: '用户与权限管理',
+          path:'/userAuthority'
         },
         {
           icon: 'life-cycle',

@@ -6,6 +6,8 @@
       lazy
       icon-class="el-icon-arrow-right"
       node-key="id"
+      :default-expanded-keys="[-1]"
+      :current-node-key="-1"
       :expand-on-click-node="false"
       :render-content="renderContent"
       @node-click="onNodeClick">
@@ -14,53 +16,59 @@
 </template>
 
 <script>
+import apiService from './menu.service';
+
 export default {
   name: 'MenuTree',
   data() {
     return {
       treeProps: {
+        id: 'id',
         label: 'name',
         children: 'children',
-        isLeaf: 'leaf'
+        disabled: 'disabled',
+        isLeaf: 'isLeaf'
       },
-      count: 1
     }
   },
    methods: {
     loadNode(node, resolve) {
       if (node.level === 0) {
-        return resolve([{ name: 'region1', id: -1, type: 'directory' }, { name: 'region2', id: -2, type: 'directory' }]);
+        return resolve([{ name: '目录管理', id: -1 }]);
       }
-      if (node.level > 2) return resolve([]);
+      if (node.level === 1) {
+        apiService.getMenuNodeByParentId(-1)
+        .then((tree) => {
+          return resolve(tree.data);
+        })
+        .catch(() => {
+          resolve([]);
+        });
 
-      const hasChild = true;
+        return;
+      }
+      
+      if (!node.isLeaf) {
+        apiService.getMenuNodeByParentId(node.id)
+        .then((tree) => {
+          return resolve(tree.data);
+        })
+        .catch(() => {
+          resolve([]);
+        });
 
-      setTimeout(() => {
-        const data = [];
-        if (hasChild) {
-          for (let i = 0; i < 5; i++) {
-            data.push({
-              name: 'zone' + this.count,
-              id: this.count,
-              leaf: node.level > 1,
-              type: node.level > 1 ? 'file' : 'directory',
-            });
-            this.count ++;
-          }
-        }
-
-        resolve(data);
-      }, 500);
+        return;
+      }
     },
     renderContent(h, { node, data }) {
       return (
         <span class="menu-tree-node">
           {
             (() => {
-              if (data.type === 'directory') {
-                return node.expanded ? <svg-icon icon="folder-open"></svg-icon> : <svg-icon icon="folder-close"></svg-icon>;
+              if (node.level === 1 || node.isLeaf) {
+                return null;
               } else {
-                return <svg-icon icon="file"></svg-icon>;
+                return node.expanded ? <svg-icon icon="folder-open"></svg-icon> : <svg-icon icon="folder-close"></svg-icon>;
               }
             })() 
           }
@@ -68,7 +76,8 @@ export default {
         </span>);
     },
     onNodeClick(data) {
-      this.$store.dispatch('menuNodes/addMenuNode', data);
+      // 通知父节点
+      this.$emit('clickNode', data);
     },
   },
 }
@@ -79,6 +88,7 @@ export default {
 
 .menu-tree {
   overflow: auto;
+  margin-left: 2px;
 }
 
 .el-tree ::v-deep .menu-tree-node {

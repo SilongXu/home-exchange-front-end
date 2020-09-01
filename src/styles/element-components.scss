@@ -16,6 +16,10 @@
   background: transparent;
 }
 
+.el-checkbox__input.is-disabled .el-checkbox__inner {
+  background: $bg-disabled;
+}
+
 .el-pager li {
   background: transparent;
 }

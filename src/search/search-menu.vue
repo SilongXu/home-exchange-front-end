@@ -45,7 +45,7 @@ export default {
         return resolve([{ name: '全部', id: -1 }]);
       }
       if (node.level === 1) {
-        apiService.getMenuRootNode()
+        apiService.getMenuNodeByParentId(-1)
         .then((tree) => {
           return resolve(tree.data);
         })

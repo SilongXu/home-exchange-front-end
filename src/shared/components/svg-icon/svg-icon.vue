@@ -73,8 +73,11 @@ export default {
     iconUnit () {
       let unit;
       switch (this.size) {
-        case 'lg':
+        case 'xlg':
           unit = '24px';
+          break;
+        case 'lg':
+          unit = '20px';
           break;
         case 'md':
           unit = '16px';

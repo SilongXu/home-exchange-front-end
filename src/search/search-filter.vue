@@ -194,7 +194,7 @@ export default {
       if (visible) {
         this.loadingCountry = true;
         this.fetchDivisionById(-1).then((options) => {
-          this.countries = options;
+          this.countries = options.data;
           this.loadingCountry = false;
         })
         .catch(() => {
@@ -206,7 +206,7 @@ export default {
     onSelectCountry(country) {
       this.loadingProvince = true;
       this.fetchDivisionById(country).then((options) => {
-        this.provinces = options;
+        this.provinces = options.data;
         this.loadingProvince = false;
       })
       .catch(() => {
@@ -217,7 +217,7 @@ export default {
     onSelectProvince(province) {
       this.loadingCity = true;
       this.fetchDivisionById(province).then((options) => {
-        this.cities = options;
+        this.cities = options.data;
         this.loadingCity = false;
       })
       .catch(() => {
@@ -228,7 +228,7 @@ export default {
     onSelectCity(city) {
       this.loadingDistrict = true;
       this.fetchDivisionById(city).then((options) => {
-        this.districts = options;
+        this.districts = options.data;
         this.loadingDistrict = false;
       })
       .catch(() => {
@@ -244,6 +244,9 @@ export default {
       shapefile.append('shapefile', _file);
       apiService.uploadShapefile(shapefile)
       .then((res) => {});
+    },
+    handleRemove() {
+      
     },
     fetchDivisionById(divisionId) {
       return apiService.getDivisionById(divisionId);

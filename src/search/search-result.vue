@@ -63,6 +63,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import apiService from './search.service';
 import saveAs from 'file-saver';
@@ -94,7 +95,7 @@ export default {
       .then((href) => {
         const blob = new Blob([href.data], {type: 'application/octet-stream'});
         const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
-        const fileNameFinal = fileName.substring(0, fileName.length-1);
+        const fileNameFinal = fileName.substring(0, fileName.length - 1);
         saveAs(blob, fileNameFinal);
       }).catch(() => {
       });

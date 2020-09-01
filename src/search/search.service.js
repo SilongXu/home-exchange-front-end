@@ -1,37 +1,36 @@
 import http from '../shared/services/http'
 
-const searchService = {
+const prefix = 'retrieval';
+const catalogPrefix = 'catalog';
 
-  getMenuRootNode() {
-    return http.get('/retrieval/system/directory');
-  },
+const SearchService = {
 
   getMenuNodeByParentId(parentId) {
-    return http.get(`/retrieval/system/directory/${parentId}`);
-  },
-
-  getTagList() {
-    return http.get(`/retrieval/system/tag`);
+    return http.get(`/${catalogPrefix}/system/directory/${parentId}`);
   },
 
   getSearchFilters(menuId) {
-    return http.get(`/retrieval/system/search/filters/${menuId}`);
+    return http.get(`/${prefix}/system/search/filters/${menuId}`);
   },
 
   getSearchResults(page, size, requestBody) {
-    return http.post(`/retrieval/system/search?page=${page}&size=${size}`, requestBody); 
+    return http.post(`/${prefix}/system/search?page=${page}&size=${size}`, requestBody); 
+  },
+
+  getTagList() {
+    return http.get(`/${catalogPrefix}/system/tag`);
   },
 
   batchAddTag(filters, tags) {
-    return http.post(`/retrieval/system/tag/batch`, { filters, tags }); 
+    return http.post(`/${catalogPrefix}/system/tag/batch`, { filters, tags }); 
   },
 
   addTag(id, tags) {
-    return http.post(`/retrieval/system/tag/${id}`, tags);
+    return http.post(`/${catalogPrefix}/system/tag/${id}`, tags);
   },
 
   getTagByFileId(id) {
-    return http.get(`/retrieval/system/tag/${id}`);
+    return http.get(`/${catalogPrefix}/system/tag/${id}`);
   },
 
   getDivisionById(divisionId = -1) {
@@ -41,10 +40,11 @@ const searchService = {
   uploadShapefile(shapefile) {
     return http.post(`retrieval/system/search/file`, shapefile);
   },
+
   getDetailDownload(id){
     return http.get(`/retrieval/system/data/download/${id}`,
     {responseType: 'blob'});
   }
 };
 
-export default searchService;
+export default SearchService;

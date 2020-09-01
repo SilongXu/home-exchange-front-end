@@ -3,8 +3,10 @@
     <div class="overflow-container-nav left" v-if="canNavLeft" @click="navLeft">
       <svg-icon icon="angle-left"></svg-icon>
     </div>
-    <div class="overflow-container-content" ref="containerContent">
-      <slot></slot>
+    <div>
+      <div class="overflow-container-content" ref="containerContent">
+        <slot></slot>
+      </div>
     </div>
     <div class="overflow-container-nav right" v-if="canNavRight" @click="navRight">
       <svg-icon icon="angle-right"></svg-icon>
@@ -37,7 +39,7 @@ export default {
     },
     navLeft() {
       this.navOffsetX = this.navOffsetX < NAV_STEP ? 0 : this.navOffsetX - NAV_STEP;
-      this.$refs.containerContent.style.transform = `translate(-${this.navOffsetX}px, 0)`;
+      document.querySelector('.overflow-container-content').style.transform = `translate(-${this.navOffsetX}px, 0)`;
       setTimeout(() => { // update view after animation ends
         this.updateNav();
       }, 300);
@@ -45,7 +47,7 @@ export default {
     navRight() {
       const remainOffsetX = this.$refs.container.scrollWidth - this.$refs.container.clientWidth + NAV_WIDTH;
       this.navOffsetX = Math.min(this.navOffsetX + remainOffsetX, this.navOffsetX + NAV_STEP);
-      this.$refs.containerContent.style.transform = `translate(-${this.navOffsetX}px, 0)`;
+      document.querySelector('.overflow-container-content').style.transform = `translate(-${this.navOffsetX}px, 0)`;
       setTimeout(() => { // update view after animation ends
         this.updateNav();
       }, 300);
