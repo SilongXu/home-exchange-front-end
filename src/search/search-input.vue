@@ -4,14 +4,18 @@
       <el-input
         placeholder="请输入关键字搜索"
         v-model="inputFilter"
-        @change="search"
+        @keyup.enter.native="search"
       >
       </el-input>
-      <svg-icon icon="search" size="21px"></svg-icon>
+      <div class="svg" @click="search">
+        <svg-icon icon="search" size="21px"></svg-icon>
+      </div>
     </div>
   </div>
 </template>
 <script>
+import throttle from "lodash-es/throttle";
+
 export default {
   name: 'SearchInput',
   data() {
@@ -20,9 +24,9 @@ export default {
     }
   },
   methods: {
-    search() {
+    search: throttle(function() {
       this.$emit('inputChange', this.inputFilter);
-    }
+    }, 1000),
   },
 }
 </script>
@@ -37,11 +41,14 @@ export default {
   position: relative;
   width: 600px;
 
-  .svg-icon {
+  .svg {
     position: absolute;
     top: 14px;
     right: 16px;
-    fill: rgba(74, 99, 124, 1);
+
+    &-icon {
+      fill: rgba(74, 99, 124, 1);
+    }
   }
 }
 

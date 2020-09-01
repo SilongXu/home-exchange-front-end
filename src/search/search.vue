@@ -18,8 +18,6 @@ import SearchInput from './search-input'
 import SearchMenu from './search-menu'
 import SearchResult from './search-result'
 
-import http from '../shared/services/http'
-
 export default {
   name: 'Search',
   components: {
@@ -32,6 +30,7 @@ export default {
     return {
       inputFilter: '',
       menuFilter: null,
+      needFilter: false,
     };
   },
   mounted() {
@@ -40,7 +39,14 @@ export default {
   methods: {
     onInputChange(filter) {
       this.inputFilter = filter;
-      console.log(this.inputFilter);
+      // 这里执行搜索
+      const filters = this.$refs.filter.filterList;
+      const catalogId = this.menuFilter;
+      this.$refs.result.fetchResult({
+        catalogId,
+        filters,
+        input: this.inputFilter,
+      });
     },
     onMenuChange(node) {
       this.menuFilter = node;
