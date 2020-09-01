@@ -1,7 +1,7 @@
 <template>
   <div class="menu">
     <menu-tree @clickNode="onNodeClick"></menu-tree>
-    <menu-tabs ref="tabs" :avtiveNode="avtiveNode"></menu-tabs>
+    <menu-tabs ref="tabs"></menu-tabs>
   </div>
 </template>
 
@@ -17,12 +17,10 @@ export default {
   },
   data() {
     return {
-      avtiveNode: null,
     };
   },
   methods: {
     onNodeClick(node) {
-      this.activeNode = node;
       this.$store.dispatch('menuNodes/addMenuNode', node);
     },
   },

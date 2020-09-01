@@ -6,9 +6,6 @@ const state = () => ({
 
 // getters
 const getters = {
-  nodes(state) {
-    return state.nodes || [];
-  }
 }
 
 // actions

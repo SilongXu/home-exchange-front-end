@@ -7,7 +7,7 @@
           :class="{active: activeNode && activeNode.id === node.id}"
           :id="'node_' + node.id"
           :key="node.id"
-          v-for="node of nodes"
+          v-for="node in nodes"
           @mousedown="activateNode(node)"
         >
           <div class="menu-tabs-node-name">
@@ -23,8 +23,8 @@
       </div>
     </overflow-container>
 
-    <div class="menu-tabs-content" v-if="!!activeNode">
-      <menu-table ref="table"></menu-table>
+    <div class="menu-tabs-content" v-for="node in nodes" :key="node.id" :class="{hidden: activeNode !== node}">
+      <menu-tab-content :node="node"></menu-tab-content>
     </div>
   </div>
 </template>
@@ -34,7 +34,7 @@
 export default {
   name: 'MenuTabs',
   components: {
-    'menu-table': () => import('./menu-table'),
+    'menu-tab-content': () => import('./menu-tab-content'),
   },
   data() {
     return {
@@ -55,11 +55,6 @@ export default {
     // iconFromType(node) {
     //   return node.type === 'directory' ? 'folder-close' : 'file';
     // }
-    fetchTableDetails(node) {
-      if (this.activeNode) {
-        this.$refs.table.fetchTableDetails(node);
-      }
-    }
   },
   created() {
     this.nodesWatcher = this.$store.watch((state) => {
@@ -187,5 +182,9 @@ export default {
     flex: 1;
     overflow: hidden;
   }
+}
+
+.hidden {
+  display: none;
 }
 </style>
