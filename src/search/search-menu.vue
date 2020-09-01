@@ -7,15 +7,14 @@
     icon-class="el-icon-arrow-right"
     node-key="id"
     :render-content="renderContent"
-    :default-expanded-keys="['all']"
+    :default-expanded-keys="[-1]"
     :expand-on-click-node="false"
     @node-click="onNodeClick"
   >
   </el-tree>
 </template>
 <script>
-import debounce from "lodash-es/debounce";
-import http from '../shared/services/http'
+import apiService from './search.service';
 
 export default {
   name: 'SearchMenu',
@@ -36,15 +35,12 @@ export default {
       this.$store.dispatch('menuNodes/addMenuNode', node);
       this.$emit('menuChange', node.id);
     },
-    activateNode(node) {
-      this.$store.dispatch('menuNodes/activateMenuNode', node);
-    },
     loadNode(node, resolve) {
       if (node.level === 0) {
-        return resolve([{ name: '全部', id: 'all' }]);
+        return resolve([{ name: '全部', id: -1 }]);
       }
       if (node.level === 1) {
-        http.get('retrieval/system/directory')
+        apiService.getMenuRootNode()
         .then((tree) => {
           return resolve(tree);
         })
@@ -56,7 +52,7 @@ export default {
       }
 
       if (!node.isLeaf) {
-        http.get(`retrieval/system/directory/${node.id}`)
+        apiService.getMenuNodeByParentId(node.id)
         .then((tree) => {
           return resolve(tree);
         })

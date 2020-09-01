@@ -1,7 +1,7 @@
 <template>
-  <div class="search-filter">
-    <div class="search-filter-entry" v-for="(filter, index) in filterList" :key="index">
-      <div class="label">{{filter.name}}{{filter.queryType}}</div>
+  <div class="search-filter" >
+    <div class="search-filter-entry" :class="filter.queryType === 54 ? 'large' : ''" v-for="(filter, index) in filterList" :key="index">
+      <div class="label">{{filter.name}}</div>
       <el-select v-if="filter.queryType === 11" v-model="filter.value" placeholder="请选择" size="small">
         <el-option
           v-for="item in filter.options"
@@ -18,169 +18,132 @@
         至
         <el-input-number v-model="filter.toValue" :min="0" placeholder="请输入数字" size="small"></el-input-number>
       </div>
-    </div>
-    <div class="search-filter-entry">
-      <div class="label">数据类型</div>
-      <el-cascader
-        v-model="dataType"
-        :options="dataTypeOptions"
-        :props="{ expandTrigger: 'hover' }"
-        size="small"
-        @change="onFilterChange"
-      ></el-cascader>
-    </div>
-    <div class="search-filter-entry">
-      <div class="label">导入时间</div>
+      <el-input v-if="filter.queryType === 31" v-model="filter.value" type="number" :min="0" placeholder="请输入数字" size="small"></el-input>
+      <div class="input-group" v-if="filter.queryType === 32">
+        <el-input v-model="filter.fromValue" type="number" :min="0" placeholder="请输入数字" size="small"></el-input>
+        至
+        <el-input v-model="filter.toValue" type="number" :min="0" placeholder="请输入数字" size="small"></el-input>
+      </div>
       <el-date-picker
-        v-model="importTime"
+        v-if="filter.queryType === 41"
+        v-model="filter.value"
+        type="date"
+        size="small"
+        placeholder="选择日期"
+      >
+      </el-date-picker>
+      <el-date-picker
+        v-if="filter.queryType === 42"
+        v-model="filter.value"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         size="small"
+        @change="changeDataRange(filter)"
       >
       </el-date-picker>
-    </div>
-    <div class="search-filter-entry">
-      <div class="label">文件大小</div>
-      <div class="input-group">
-        <el-select v-model="fileSizeRelation" placeholder="请选择" size="small">
+      <div class="input-group" v-if="filter.queryType === 51">
+        经度：<el-input v-model="filter.lonValue" type="number" :min="0" placeholder="请输入经度" size="small"></el-input>
+        纬度：<el-input v-model="filter.latValue" type="number" :min="0" placeholder="请输入纬度" size="small"></el-input>
+      </div>
+      <div class="input-group" v-if="filter.queryType === 52">
+        圆心经度：<el-input v-model="filter.centralLon" type="number" :min="0" placeholder="请输入圆心经度" size="small"></el-input>
+        圆心纬度：<el-input v-model="filter.centralLat" type="number" :min="0" placeholder="请输入圆心纬度" size="small"></el-input>
+        半径：<el-input v-model="filter.radius" type="number" :min="0" placeholder="请输入半径" size="small"></el-input>
+      </div>
+      <div class="input-group" v-if="filter.queryType === 54">
+        经度：<el-input v-model="filter.lon" type="number" :min="0" placeholder="请输入经度" size="small"></el-input>
+        纬度：<el-input v-model="filter.lat" type="number" :min="0" placeholder="请输入纬度" size="small"></el-input>
+      </div>
+      <div class="input-group-container" v-if="filter.queryType === 53">
+        <div class="input-group bottom">
+          右上角经度：<el-input v-model="filter.northEastLon" type="number" :min="0" placeholder="请输入右上角经度" size="small"></el-input>
+          右上角纬度：<el-input v-model="filter.northEastLat" type="number" :min="0" placeholder="请输入右上角纬度" size="small"></el-input>
+        </div>
+        <div class="input-group bottom">
+          左上角经度：<el-input v-model="filter.northWestLon" type="number" :min="0" placeholder="请输入左上角经度" size="small"></el-input>
+          左上角纬度：<el-input v-model="filter.northWestLat" type="number" :min="0" placeholder="请输入左上角纬度" size="small"></el-input>
+        </div>
+        <div class="input-group bottom">
+          右下角经度：<el-input v-model="filter.southEastLon" type="number" :min="0" placeholder="请输入右下角经度" size="small"></el-input>
+          右下角纬度：<el-input v-model="filter.southEastLat" type="number" :min="0" placeholder="请输入右下角纬度" size="small"></el-input>
+        </div>
+        <div class="input-group bottom">
+          左下角经度：<el-input v-model="filter.southWestLon" type="number" :min="0" placeholder="请输入左下角经度" size="small"></el-input>
+          左下角纬度：<el-input v-model="filter.southWestLat" type="number" :min="0" placeholder="请输入左下角纬度" size="small"></el-input>
+        </div>
+      </div>
+      <div class="input-group" v-if="filter.queryType === 55">
+        ...
+      </div>
+      <div class="input-group" v-if="filter.queryType === 56">...
+      </div>
+      <div class="input-group" v-if="filter.queryType === 61">
+        <el-select
+          v-model="filter.tags"
+          multiple
+          filterable
+          :loading="loadingTags"
+          placeholder="请选择标签"
+          size="small"
+          @visible-change="onTagsVisibleChange"
+        >
           <el-option
-            v-for="item in fileSizeRelationOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
-        <el-input v-model="fileSizeValue" min="0" placeholder="请输入大小" size="small"></el-input>
-        <el-select v-model="fileSizeUnit" placeholder="请选择" size="small">
-          <el-option
-            v-for="item in fileSizeUnitOptions"
-            :key="item.value"
-            :label="item.value"
-            :value="item.value"
-          >
+            v-for="tag in tagOptions"
+            :key="tag.id"
+            :label="tag.name"
+            :value="tag.id">
           </el-option>
         </el-select>
       </div>
     </div>
-    <div class="search-filter-entry">
-      <div class="label">标签</div>
-       <el-select
-        v-model="tags"
-        multiple
-        filterable
-        placeholder="请选择标签"
-        size="small"
-      >
-        <el-option
-          v-for="tag in tagOptions"
-          :key="tag"
-          :label="tag"
-          :value="tag">
-        </el-option>
-      </el-select>
-    </div>
   </div>
 </template>
 <script>
-import http from '../shared/services/http'
+import apiService from './search.service';
 
 export default {
   name: 'SearchFilter',
   data() {
     return {
       filterList: [],
-      dataType: [],
-      dataTypeOptions: [{
-        value: 'zhinan',
-        label: '指南',
-        children: [{
-          value: 'shejiyuanze',
-          label: '设计原则',
-          children: [{
-            value: 'yizhi',
-            label: '一致'
-          }, {
-            value: 'fankui',
-            label: '反馈'
-          }, {
-            value: 'xiaolv',
-            label: '效率'
-          }, {
-            value: 'kekong',
-            label: '可控'
-          }]
-        }, {
-          value: 'daohang',
-          label: '导航',
-          children: [{
-            value: 'cexiangdaohang',
-            label: '侧向导航'
-          }, {
-            value: 'dingbudaohang',
-            label: '顶部导航'
-          }]
-        }]
-      }, {
-        value: 'ziyuan',
-        label: '资源',
-        children: [{
-          value: 'axure',
-          label: 'Axure Components'
-        }, {
-          value: 'sketch',
-          label: 'Sketch Templates'
-        }, {
-          value: 'jiaohu',
-          label: '组件交互文档'
-        }]
-      }],
-      importTime: '',
-      fileSizeRelation: '',
-      fileSizeRelationOptions: [
-        {
-          value: 'GT',
-          label: '大于',
-        },
-        {
-          value: 'LT',
-          label: '小于',
-        }
-      ],
-      fileSizeValue: '',
-      fileSizeUnit: '',
-      fileSizeUnitOptions: [
-        {
-          value: 'KB',
-        },
-        {
-          value: 'MB',
-        },
-        {
-          value: 'GB',
-        }
-      ],
-      tags: [],
-      tagOptions: ['tag1', 'tag2', 'tag3'],
+      tagOptions: [],
+      loadingTags: false,
     };
   },
   methods: {
     onFilterChange() {
       this.$emit('filterChange', 'filter');
     },
-    fetchFilterList(nodeId) {
+    onTagsVisibleChange(visible) {
+      if (visible) {
+        this.loadingTags = true;
+        apiService.getTagList()
+        .then((tags) => {
+          this.tagOptions = tags;
+          console.log(this.tagOptions)
+          this.loadingTags = false;
+        })
+        .catch(() => {
+          this.loadingTags = false;
+        });
+      }
+    },
+    fetchFilterList(menuId) {
       // 获取过滤条件列表
-      http.get(`retrieval/system/search/forms/${nodeId}`)
+      apiService.getSearchFilters(menuId)
       .then((filters) => {
-        console.log(JSON.parse(JSON.stringify(filters)))
         this.filterList = filters;
       })
-      .catch(() => {
-
-      });
+      .catch(() => {});
     },
+    changeDataRange(filter) {
+      if (filter && filter.value) {
+        filter.fromValue = filter.value[0];
+        filter.toValue = filter.value[1];
+      }
+    }
   },
 }
 </script>
@@ -196,8 +159,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    height: 32px;
-    line-height: 32px;
+
     margin-bottom: 16px;
     font-size: $font-md;
 
@@ -206,7 +168,6 @@ export default {
     }
 
     .label {
-      min-width: 60px;
       margin-right: 12px;
       white-space: nowrap;
     }
@@ -214,7 +175,9 @@ export default {
 
   .input-group {
     display: flex;
+    align-items: center;
     flex-wrap: nowrap;
+    margin-right: 10px;
 
     .el-input-number:not(:last-of-type) {
       margin-right: 10px;
@@ -222,26 +185,37 @@ export default {
     .el-input-number:not(:first-of-type) {
       margin-left: 10px;
     }
+
+    .el-select {
+      width: 360px;
+    }
+
+    .el-input {
+      width: 180px;
+      margin: 0 10px
+    }
+    .el-select:not(:last-child),
+    .el-input:not(:last-child) {
+      margin-right: 8px;
+    }
+  }
+
+  .input-group-container {
+    @include flex-align(flex-start, flex-start);
+    flex-wrap: wrap;
+  }
+
+  .bottom {
+    margin-bottom: 16px;
   }
 }
 
 .el-cascader {
   width: 360px;
 }
+
 .el-select {
   width: 360px;
-}
-.input-group {
-  .el-select {
-    width: 120px;
-  }
-  .el-input {
-    width: 120px;
-  }
-  .el-select:not(:last-child),
-  .el-input:not(:last-child) {
-    margin-right: 8px;
-  }
 }
 
 </style>
