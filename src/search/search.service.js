@@ -33,6 +33,14 @@ const searchService = {
   getTagByFileId(id) {
     return http.get(`/retrieval/system/tag/${id}`);
   },
+
+  getDivisionById(divisionId = -1) {
+    return http.get(`/retrieval/system/options/division/${divisionId}`);
+  },
+
+  uploadShapefile(shapefile) {
+    return http.post(`retrieval/system/search/file`, shapefile);
+  },
 };
 
 export default searchService;

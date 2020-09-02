@@ -1,7 +1,7 @@
 <template>
   <div class="search-filter" >
     <div class="search-filter-entry" :class="filter.queryType === 54 ? 'large' : ''" v-for="(filter, index) in filterList" :key="index">
-      <div class="label">{{filter.fieldName}}</div>
+      <div class="label" :class="{bottom: filter.queryType === 53}">{{filter.fieldName}}</div>
       <el-select v-if="filter.queryType === 11" v-model="filter.value" placeholder="请选择" size="small">
         <el-option
           v-for="item in filter.options"
@@ -44,40 +44,91 @@
       >
       </el-date-picker>
       <div class="input-group" v-if="filter.queryType === 51">
-        经度：<el-input v-model="filter.lonValue" type="number" :min="0" placeholder="请输入经度" size="small"></el-input>
-        纬度：<el-input v-model="filter.latValue" type="number" :min="0" placeholder="请输入纬度" size="small"></el-input>
+        <el-input v-model="filter.lonValue" type="number" :min="0" placeholder="请输入经度" size="small"></el-input>
+        <el-input v-model="filter.latValue" type="number" :min="0" placeholder="请输入纬度" size="small"></el-input>
       </div>
       <div class="input-group" v-if="filter.queryType === 52">
-        圆心经度：<el-input v-model="filter.centralLon" type="number" :min="0" placeholder="请输入圆心经度" size="small"></el-input>
-        圆心纬度：<el-input v-model="filter.centralLat" type="number" :min="0" placeholder="请输入圆心纬度" size="small"></el-input>
-        半径：<el-input v-model="filter.radius" type="number" :min="0" placeholder="请输入半径" size="small"></el-input>
+        <el-input v-model="filter.centralLon" type="number" :min="0" placeholder="请输入圆心经度" size="small"></el-input>
+        <el-input v-model="filter.centralLat" type="number" :min="0" placeholder="请输入圆心纬度" size="small"></el-input>
+        <el-input v-model="filter.radius" type="number" :min="0" placeholder="请输入半径" size="small"></el-input>
       </div>
       <div class="input-group" v-if="filter.queryType === 54">
-        经度：<el-input v-model="filter.lon" type="number" :min="0" placeholder="请输入经度" size="small"></el-input>
-        纬度：<el-input v-model="filter.lat" type="number" :min="0" placeholder="请输入纬度" size="small"></el-input>
+        <el-input v-model="filter.lon" type="number" :min="0" placeholder="请输入经度" size="small"></el-input>
+        <el-input v-model="filter.lat" type="number" :min="0" placeholder="请输入纬度" size="small"></el-input>
       </div>
       <div class="input-group-container" v-if="filter.queryType === 53">
         <div class="input-group bottom">
-          右上角经度：<el-input v-model="filter.northEastLon" type="number" :min="0" placeholder="请输入右上角经度" size="small"></el-input>
-          右上角纬度：<el-input v-model="filter.northEastLat" type="number" :min="0" placeholder="请输入右上角纬度" size="small"></el-input>
+          <el-input v-model="filter.northEastLon" type="number" :min="0" placeholder="请输入右上角经度" size="small"></el-input>
+          <el-input v-model="filter.northEastLat" type="number" :min="0" placeholder="请输入右上角纬度" size="small"></el-input>
         </div>
         <div class="input-group bottom">
-          左上角经度：<el-input v-model="filter.northWestLon" type="number" :min="0" placeholder="请输入左上角经度" size="small"></el-input>
-          左上角纬度：<el-input v-model="filter.northWestLat" type="number" :min="0" placeholder="请输入左上角纬度" size="small"></el-input>
+          <el-input v-model="filter.northWestLon" type="number" :min="0" placeholder="请输入左上角经度" size="small"></el-input>
+          <el-input v-model="filter.northWestLat" type="number" :min="0" placeholder="请输入左上角纬度" size="small"></el-input>
         </div>
         <div class="input-group bottom">
-          右下角经度：<el-input v-model="filter.southEastLon" type="number" :min="0" placeholder="请输入右下角经度" size="small"></el-input>
-          右下角纬度：<el-input v-model="filter.southEastLat" type="number" :min="0" placeholder="请输入右下角纬度" size="small"></el-input>
+          <el-input v-model="filter.southEastLon" type="number" :min="0" placeholder="请输入右下角经度" size="small"></el-input>
+          <el-input v-model="filter.southEastLat" type="number" :min="0" placeholder="请输入右下角纬度" size="small"></el-input>
         </div>
-        <div class="input-group bottom">
-          左下角经度：<el-input v-model="filter.southWestLon" type="number" :min="0" placeholder="请输入左下角经度" size="small"></el-input>
-          左下角纬度：<el-input v-model="filter.southWestLat" type="number" :min="0" placeholder="请输入左下角纬度" size="small"></el-input>
+        <div class="input-group">
+          <el-input v-model="filter.southWestLon" type="number" :min="0" placeholder="请输入左下角经度" size="small"></el-input>
+          <el-input v-model="filter.southWestLat" type="number" :min="0" placeholder="请输入左下角纬度" size="small"></el-input>
         </div>
       </div>
       <div class="input-group" v-if="filter.queryType === 55">
-        ...
+        <el-upload
+          class="upload"
+          action="customize"
+          accept=".zip"
+          :on-remove="handleRemove"
+          :http-request="uploadFile"
+          :limit="1"
+          :file-list="fileList">
+          <el-button size="small" type="primary">点击上传</el-button>
+        </el-upload>
       </div>
-      <div class="input-group" v-if="filter.queryType === 56">...
+      <div class="input-group" v-if="filter.queryType === 56">
+        <el-select
+          v-model="filter.country"
+          placeholder="请选择国家或地区"
+          size="small"
+          :loading="loadingCountry"
+          @visible-change="onCountryVisibleChange"
+          @change="onSelectCountry(filter.country)">
+          <el-option
+            v-for="country in countries"
+            :key="country.id"
+            :label="country.name"
+            :value="country.id"
+          >
+          </el-option>
+        </el-select>
+        <el-select v-model="filter.province" placeholder="请选择省份/州" size="small" :loading="loadingProvince" @change="onSelectProvince">
+          <el-option
+            v-for="province in provinces"
+            :key="province.id"
+            :label="province.name"
+            :value="province.id"
+          >
+          </el-option>
+        </el-select>
+        <el-select v-model="filter.city" placeholder="请选择城市" size="small" :loading="loadingCity" @change="onSelectCity">
+          <el-option
+            v-for="city in cities"
+            :key="city.id"
+            :label="city.name"
+            :value="city.id"
+          >
+          </el-option>
+        </el-select>
+        <el-select v-model="filter.district" placeholder="请选择区县" size="small" :loading="loadingDistrict">
+          <el-option
+            v-for="district in districts"
+            :key="district.id"
+            :label="district.name"
+            :value="district.id"
+          >
+          </el-option>
+        </el-select>
       </div>
       <div class="input-group" v-if="filter.queryType === 61">
         <el-select
@@ -111,6 +162,15 @@ export default {
       filterList: [],
       tagOptions: [],
       loadingTags: false,
+      loadingCountry: false,
+      loadingProvince: false,
+      loadingCity: false,
+      loadingDistrict: false,
+      countries: [],
+      provinces: [],
+      cities: [],
+      districts: [],
+      fileList: [],
     };
   },
   methods: {
@@ -129,6 +189,64 @@ export default {
           this.loadingTags = false;
         });
       }
+    },
+    onCountryVisibleChange(visible) {
+      if (visible) {
+        this.loadingCountry = true;
+        this.fetchDivisionById(-1).then((options) => {
+          this.countries = options;
+          this.loadingCountry = false;
+        })
+        .catch(() => {
+          this.countries = [];
+          this.loadingCountry = false;
+        });
+      }
+    },
+    onSelectCountry(country) {
+      this.loadingProvince = true;
+      this.fetchDivisionById(country).then((options) => {
+        this.provinces = options;
+        this.loadingProvince = false;
+      })
+      .catch(() => {
+        this.cities = [];
+        this.loadingProvince = false;
+      });
+    },
+    onSelectProvince(province) {
+      this.loadingCity = true;
+      this.fetchDivisionById(province).then((options) => {
+        this.cities = options;
+        this.loadingCity = false;
+      })
+      .catch(() => {
+        this.cities = [];
+        this.loadingCity = false;
+      });
+    },
+    onSelectCity(city) {
+      this.loadingDistrict = true;
+      this.fetchDivisionById(city).then((options) => {
+        this.districts = options;
+        this.loadingDistrict = false;
+      })
+      .catch(() => {
+        this.cities = [];
+        this.loadingDistrict = false;
+      });
+    },
+    uploadFile(file) {
+      console.log(file)
+      // const isLt2M = _file.size / 1024 / 1024 < 2;
+      const _file = file.file;
+      const shapefile = new FormData();
+      shapefile.append('shapefile', _file);
+      apiService.uploadShapefile(shapefile)
+      .then((res) => {});
+    },
+    fetchDivisionById(divisionId) {
+      return apiService.getDivisionById(divisionId);
     },
     fetchFilterList(menuId) {
       // 获取过滤条件列表
@@ -187,7 +305,7 @@ export default {
     }
 
     .el-select {
-      width: 360px;
+      width: 250px;
     }
 
     .el-input {
@@ -211,10 +329,6 @@ export default {
 }
 
 .el-cascader {
-  width: 360px;
-}
-
-.el-select {
   width: 360px;
 }
 
