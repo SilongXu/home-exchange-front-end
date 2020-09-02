@@ -104,7 +104,7 @@ export default {
     onAddTag(tags) {
       if (tags && tags.length > 0) {
         apiService.batchAddTag(this.filters.filters || [], tags)
-        .then((res) => {
+        .then(() => {
           this.tagDialogVisible = false;
           this.$message({
             message: '批量添加标签成功',
@@ -126,7 +126,6 @@ export default {
     },
     onDetailClose() {
       this.dialogVisible = false;
-      // this.fetchResult(this.filters);
     },
     fetchResult(searchParam = {}) {
       const { page, size } = this.pagination;
