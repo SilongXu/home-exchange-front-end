@@ -37,26 +37,26 @@ export default {
     this.fetchResult();
   },
   methods: {
-    onInputChange(filter) {
-      this.inputFilter = filter;
+    fetchResult() {
       // 这里执行搜索
       const filters = this.$refs.filter.filterList;
       const catalogId = this.menuFilter;
       this.$refs.result.fetchResult({
         catalogId,
-        filters,
+        filters: JSON.stringify(filters),
         input: this.inputFilter,
       });
+    },
+    onInputChange(filter) {
+      this.inputFilter = filter;
+      this.fetchResult();
     },
     onMenuChange(node) {
       this.menuFilter = node;
       this.$refs.filter.fetchFilterList(this.menuFilter);
     },
-    onFilterChange(filter) {
+    onFilterChange() {
       this.fetchResult();
-    },
-    fetchResult() {
-      this.$refs.result.fetchResult();
     },
   },
 }

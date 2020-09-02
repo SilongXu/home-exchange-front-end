@@ -1,7 +1,7 @@
 <template>
   <div class="search-filter" >
     <div class="search-filter-entry" :class="filter.queryType === 54 ? 'large' : ''" v-for="(filter, index) in filterList" :key="index">
-      <div class="label">{{filter.name}}</div>
+      <div class="label">{{filter.fieldName}}</div>
       <el-select v-if="filter.queryType === 11" v-model="filter.value" placeholder="请选择" size="small">
         <el-option
           v-for="item in filter.options"
@@ -84,6 +84,7 @@
           v-model="filter.tags"
           multiple
           filterable
+          allow-create
           :loading="loadingTags"
           placeholder="请选择标签"
           size="small"
@@ -114,7 +115,7 @@ export default {
   },
   methods: {
     onFilterChange() {
-      this.$emit('filterChange', 'filter');
+      this.$emit('filterChange', this.filterList);
     },
     onTagsVisibleChange(visible) {
       if (visible) {
@@ -122,7 +123,6 @@ export default {
         apiService.getTagList()
         .then((tags) => {
           this.tagOptions = tags;
-          console.log(this.tagOptions)
           this.loadingTags = false;
         })
         .catch(() => {
