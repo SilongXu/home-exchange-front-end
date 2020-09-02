@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-const develop_environment = 'http://192.168.0.167:8888/';
-
-const BASE_URL = `${develop_environment}api/v1`;
+const BASE_URL = `/api/v1`;
 
 const http = axios.create({
   baseURL: BASE_URL,
@@ -21,7 +19,7 @@ http.interceptors.response.use((response) => {
   }
   return response;
 }, (error) => {
-  return error;
+  return Promise.reject(error);
 });
 
 export default http;

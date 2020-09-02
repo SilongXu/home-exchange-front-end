@@ -3,11 +3,11 @@ import http from '../shared/services/http'
 const searchService = {
 
   getMenuRootNode() {
-    return http.get('retrieval/system/directory');
+    return http.get('/retrieval/system/directory');
   },
 
   getMenuNodeByParentId(parentId) {
-    return http.get(`retrieval/system/directory/${parentId}`);
+    return http.get(`/retrieval/system/directory/${parentId}`);
   },
 
   getTagList() {
@@ -18,8 +18,20 @@ const searchService = {
     return http.get(`/retrieval/system/search/filters/${menuId}`);
   },
 
-  getSearchResults(page, size, catalogId, filters, input) {
-    return http.post(`retrieval/system/search?page=${page}&size=${size}`, { catalogId, filters, input }); 
+  getSearchResults(page, size, requestBody) {
+    return http.post(`/retrieval/system/search?page=${page}&size=${size}`, requestBody); 
+  },
+
+  batchAddTag(filters, tags) {
+    return http.post(`/retrieval/system/tag/batch`, { filters, tags }); 
+  },
+
+  addTag(id, tags) {
+    return http.post(`/retrieval/system/tag/${id}`, tags);
+  },
+
+  getTagByFileId(id) {
+    return http.get(`/retrieval/system/tag/${id}`);
   },
 };
 

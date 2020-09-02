@@ -1,112 +1,7 @@
 <template>
   <div class="search-result">
-
-    <el-dialog
-      title="批量添加"
-      :visible.sync="tagDialogVisible"
-      width="500px"
-      class="search-result-dialog-tag"
-    >
-      <el-form ref="form" :model="tagForm" label-position="left" label-width="80px" size="small">
-        <el-form-item label="标签" :required="true">
-          <el-select
-            v-model="tagForm.tags"
-            multiple
-            filterable
-            allow-create
-            placeholder="请选择标签">
-            <el-option
-              v-for="tag in tags"
-              :key="tag"
-              :label="tag"
-              :value="tag">
-            </el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <span slot="footer">
-        <el-button size="small" @click="tagDialogVisible = false">取消</el-button>
-        <el-button type="primary" size="small" @click="confirmTag">确定</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog :title="currentEntry.name" :visible.sync="dialogVisible" width="88%" top="4%">
-      <div class="dialog">
-        <div class="dialog-top">
-          <div class="dialog-top-topside">
-            <div class="dialog-top-topside-title">
-              <svg-icon icon="file" size="32px"></svg-icon>
-              <span :title="currentEntry.name">{{currentEntry.name}}</span>
-            </div>
-            <div class="dialog-top-topside-download">
-              <div class="link-btn">
-                <svg-icon icon="download"></svg-icon>
-                下载
-              </div>
-            </div>
-          </div>
-
-          <div class="dialog-top-info">
-            <div class="dialog-top-info-property" :size="currentEntry.size">文件大小:{{currentEntry.size}}</div>
-            <div class="dialog-top-info-property" :title="currentEntry.importTime">入库时间:{{currentEntry.importTime}}</div>
-          </div>
-          <div class="dialog-top-tags">
-            <div class="dialog-top-tags-property" v-for="tag in currentEntry.tags" :key="tag.id">
-              {{tag.name}}
-            </div>
-            <div class="dialog-top-tags-add">
-              <el-button size="small" @click="addNewTag()">
-                <svg-icon icon="plus" size="sm"></svg-icon>
-              </el-button>
-            </div>
-          </div>
-        </div>
-
-        <div class="dialog-bottom">
-          <div class="dialog-bottom-left">
-            <div class="dialog-bottom-left-title">
-              <div class="dialog-bottom-rectangle"></div>
-              <p>拇指图</p>
-            </div>
-            <div class="dialog-bottom-left-preview">
-              <img src="" alt="图像预览图">
-            </div>
-          </div>
-          <div class="dialog-bottom-right">
-            <div class="dialog-bottom-right-title">
-              <div class="dialog-bottom-rectangle"></div>
-              <p>元数据</p>
-            </div>
-            <div class="dialog-bottom-right-metadata">
-              <el-table
-                :data="metaData"                
-                row-key="id"
-                :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-                <el-table-column
-                  prop="name"
-                  label="元数据名称"
-                  min-width="300">
-                </el-table-column>
-                <el-table-column
-                  prop="desc"
-                  label="说明"
-                  min-width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="type"
-                  label="数据类型"
-                  min-width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="annex"
-                  label="值域/备注"
-                  min-width="180">
-                </el-table-column>
-              </el-table>
-            </div>
-          </div>
-        </div>
-      </div>  
-    </el-dialog>
+    <add-tag-modal v-if="tagDialogVisible" :visible="tagDialogVisible" @addTagChange="onAddTag" @cancel="onCancelAddTag"></add-tag-modal>
+    <search-detail v-if="dialogVisible" :visible="dialogVisible" :detail="currentEntry" @close="onDetailClose"></search-detail>
 
     <div class="search-result-operation">
       <el-button type="primary" size="mini" @click="addTag()">
@@ -114,44 +9,45 @@
       </el-button>
     </div>
 
-    <div class="entry" v-for="entry in searchResult" :key="entry.id">
-      <div class="entry-left">
-        <img class="entry-left-img" :src="getThumbImgPath(entry.thumb)"/>
-      </div>
-      <div class="entry-right">
-        <div class="entry-right-top">
-          <div class="entry-right-top-info">
-            <svg-icon icon="file"></svg-icon>
-            <span :title="entry.name">{{entry.name}}</span>
-          </div>
-          <div class="entry-right-top-operation">
-            <div class="link-btn" @click="viewDetail(entry)">
-              <svg-icon icon="view-detail"></svg-icon>
-              查看详情
+    <div class="result" v-loading="resultLoading" element-loading-background="rgba(0, 0, 0, 0.4)">
+      <div class="entry" v-for="entry in searchResult" :key="entry.id">
+        <div class="entry-left">
+          <img class="entry-left-img" :src="getThumbImgPath(entry.thumb)"/>
+        </div>
+        <div class="entry-right">
+          <div class="entry-right-top">
+            <div class="entry-right-top-info">
+              <svg-icon icon="file"></svg-icon>
+              <span :title="entry.name">{{entry.name}}</span>
             </div>
-            <div class="link-btn">
-              <svg-icon icon="download"></svg-icon>
-              下载
+            <div class="entry-right-top-operation">
+              <div class="link-btn" @click="viewDetail(entry)">
+                <svg-icon icon="view-detail"></svg-icon>
+                查看详情
+              </div>
+              <div class="link-btn">
+                <svg-icon icon="download"></svg-icon>
+                下载
+              </div>
             </div>
           </div>
-        </div>
-        <div class="entry-right-path">
-          <div class="property" :title="entry.path">资源路径: {{entry.path}}</div>
-        </div>
-        <div class="entry-right-tags">
-          <div class="entry-right-tags-property" v-for="tag in entry.tags" :key="tag.id">
-            {{tag.name}}
+          <div class="entry-right-path">
+            <div class="property" :title="entry.path">资源路径: {{entry.path}}</div>
+          </div>
+          <div class="entry-right-tags">
+            <div class="entry-right-tags-property" v-for="tag in entry.tags" :key="tag.id">
+              {{tag.name}}
+            </div>
+          </div>
+          <div class="entry-right-property">
+            <div class="property">数据类型: {{entry.type}}</div>
+            <div class="property">文件大小: {{entry.fileSize}}byte</div>
+            <div class="property">归属节点: {{entry.node}}</div>
+            <div class="property">归属分系统: {{entry.subSystem}}</div>
+            <div class="property">入库时间: {{entry.time}}</div>
           </div>
         </div>
-        <div class="entry-right-property">
-          <div class="property">数据类型: {{entry.type}}</div>
-          <div class="property">文件大小: {{entry.fileSize}}byte</div>
-          <div class="property">归属节点: {{entry.node}}</div>
-          <div class="property">归属分系统: {{entry.subSystem}}</div>
-          <div class="property">入库时间: {{entry.time}}</div>
-        </div>
       </div>
-
     </div>
 
     <div class="search-result-footer">
@@ -172,73 +68,22 @@ import apiService from './search.service';
 
 export default {
   name: 'SearchResult',
+  components: {
+    'add-tag-modal': () => import('./modal/add-tag'),
+    'search-detail': () => import('./modal/search-detail'),
+  },
   data() {
     return {
       tagDialogVisible: false,
       dialogVisible: false,
+      filters: {},
       pagination: {
         page: 1,
         size: 10,
         total: 0,
       },
+      resultLoading: false,
       searchResult: [],
-
-      metaData: [
-        {
-          id: 1,
-          name:'一级节点',
-          desc:'升降轨',
-          type:'String',
-          annex:'TH03-01',
-        }, 
-        {
-          id: 2,
-          name:'一级节点',
-          desc:'升降轨',
-          type:'String',
-          annex:'TH03-02',
-        }, 
-        {
-          id: 3,
-          name:'一级节点',
-          desc: '升降轨',
-          type:'String',
-          annex:'TH03-03',
-          children: [
-            {
-              id: 31,
-              name:'二级节点',
-              desc:'升降轨',
-              type:'String',
-              annex:'TH03--031',
-            }, 
-            {
-              id: 32,
-              name:'二级节点',
-              desc:'升降轨',
-              type:'String',
-              annex:'TH03--032',
-              children:[
-                {
-                  id:321,
-                  name:'三级节点',
-                  desc:'升降轨',
-                  type:'String',
-                  annex:'TH03-033',
-                }
-              ],
-            },
-          ],
-        },
-      ],
-      tagForm: {
-        tags: [],
-      },
-      tags: [
-        'tag1',
-        'tag2',
-        'tag3',
-      ],
       currentEntry: {},
     };
   },
@@ -246,37 +91,59 @@ export default {
     getThumbImgPath(path) {
       return `data:image/jpg;base64,${path}`;
     },
-
     viewDetail(entry) {
       this.currentEntry = entry;
       this.dialogVisible = true;
     },
     addTag() {
-      this.tagForm.tags = [];
       this.tagDialogVisible = true;
     },
-
-    onSizeChange() {
-
+    onCancelAddTag() {
+      this.tagDialogVisible = false;
+    },
+    onAddTag(tags) {
+      if (tags && tags.length > 0) {
+        apiService.batchAddTag(this.filters.filters || [], tags)
+        .then((res) => {
+          this.tagDialogVisible = false;
+          this.$message({
+            message: '批量添加标签成功',
+            type: 'success'
+          });
+        })
+        .catch(() => {
+          this.$message.error('批量添加标签失败，请稍后重试');
+        });
+      }
+    },
+    onSizeChange(size) {
+      this.pagination.size = size;
+      this.fetchResult(this.filters);
     },
     onPageChange(page) {
       this.pagination.page = page;
-      this.fetchResult();
+      this.fetchResult(this.filters);
     },
-    addNewTag(){
-
+    onDetailClose() {
+      this.dialogVisible = false;
+      // this.fetchResult(this.filters);
     },
-    confirmTag() {
-
-    },
-    fetchResult(searchParam) {
+    fetchResult(searchParam = {}) {
       const { page, size } = this.pagination;
-      apiService.getSearchResults(page, size, ...searchParam)
+      this.searchResult = [];
+      // 缓存上一次搜索的filterList
+      this.filters = searchParam;
+      this.resultLoading = true;
+      apiService.getSearchResults(page, size, this.filters)
       .then((results) => {
-        console.log(results.data)
+        this.resultLoading = false;
         if (results) {
           this.searchResult = results.data;
-          this.pagination = results.pagination;
+          this.pagination = results.pagination || {
+            page: 1,
+            size: 10,
+            total: 0,
+          };
         }
       })
       .catch(() => {});
@@ -290,15 +157,6 @@ export default {
 
 .search-result {
 
-  &-dialog {
-
-    &-tag {
-      .el-select {
-        width: 100%;
-      }
-    }
-  }
-
   &-operation {
     @include flex-align(center, flex-end);
     height: 48px;
@@ -310,6 +168,10 @@ export default {
     @include flex-align(center, flex-end);
     padding: 16px;
   }
+}
+
+.result {
+  min-height: 500px;
 }
 
 .entry {
@@ -419,162 +281,4 @@ export default {
   }
 }
 
-.dialog {
-  height: 75vh;
-  background: $bg-light;
-
-  &-top {
-    height: 100px;
-    padding-bottom: 60px;
-    border-bottom: 1px solid $border-default;
-
-    &-topside {
-      @include flex-align( center, space-between);
-      margin-bottom: 25px;
-      
-      &-title {
-        @include flex-align( center, flex-start);
-        padding-right: 16px;
-        margin-left: 10px;
-        font-weight: 500;
-        font-size: 25px;
-        overflow: hidden;
-
-        .svg-icon {
-          fill: $brand-primary;
-          margin-right: 8px;
-        }
-
-        span {
-          @include text-ellipsis();
-        }
-      }
-
-      &-download {
-        @include flex-align( center, flex-end);
-        flex-shrink: 0;
-
-        .link-btn {
-          @include flex-align( center, flex-start);
-          cursor: pointer;
-          color: $brand-primary;
-
-          &:hover {
-            text-decoration: underline;
-          }
-
-          &:not(:last-of-type) {
-            margin-right: 24px;
-          }
-
-          .svg-icon {
-            margin-right: 4px;
-            fill: $brand-primary;
-          }
-        }
-      }
-    }
-
-    &-info {
-      display: flex;
-      margin-bottom: 15px;
-      margin-left: 50px;
-      
-      &-property {
-        @include text-ellipsis();
-        height: 24px;
-        line-height: 24px;
-        min-width: 120px;
-        font-size: $font-sm;
-        color: $text-mute;
-
-        &:not(:last-of-type) {
-          margin-right: 32px;
-        }
-      }
-    }
-
-    &-tags {
-      display: flex;
-      flex-wrap: wrap;
-      margin-left: 50px;
-      margin-bottom: -8px;
-
-      &-property {
-        @include flex-align( center, center);
-        height: 20px;
-        margin-top: 7px;  
-        margin-right: 10px;
-        padding-left: 10px;
-        padding-right: 10px;
-        border-radius: 40px;
-        border: solid 1px;
-        border-color: $text-mute;
-        color: $text-mute;
-      }
-
-      &-add { 
-        height: 20px;
-        margin-top: 7px;
-        border-radius: 40px;
-        border: solid 1px;
-        border-color: $text-mute;
-        .el-button{
-          display: flex;
-          align-items: center;
-          height: 20px;
-          border-radius: 40px;
-          border: transparent;
-        }
-      }
-    }
-  }
-
-  &-bottom {
-    display: flex;
-
-    &-rectangle {
-      width: 3px;
-      height: 14px;
-      margin-right: 6px;
-      margin-left: 5px;
-      background: $brand-primary;
-    }
-
-    &-left {
-      flex:0;
-      margin-left: 10px;
-
-      &-title {
-        @include flex-align( center, flex-start);
-        font-size: $font-sm;
-      }
-
-      &-preview {
-        width: 400px;
-        height: 400px;
-        border: 1px solid $icon-default;
-      }
-    }
-
-    &-right {
-      flex: 1;
-      min-width: 0;
-      margin-left: 20px;
-
-      &-title {
-        @include flex-align( center, flex-start);
-        font-size: $font-sm;
-      }
-      
-      &-metadata {
-        .el-table ::v-deep thead tr th {
-          padding: 6px 0;
-          background: $bg-default;
-        }
-      }
-    }
-  }
-
-}
 </style>

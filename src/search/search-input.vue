@@ -45,6 +45,7 @@ export default {
     position: absolute;
     top: 14px;
     right: 16px;
+    cursor: pointer;
 
     &-icon {
       fill: rgba(74, 99, 124, 1);

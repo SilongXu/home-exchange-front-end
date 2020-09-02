@@ -8,6 +8,7 @@
     node-key="id"
     :render-content="renderContent"
     :default-expanded-keys="[-1]"
+    :current-node-key="-1"
     :expand-on-click-node="false"
     @node-click="onNodeClick"
   >
@@ -27,12 +28,16 @@ export default {
         disabled: 'disabled',
         isLeaf: 'isLeaf'
       },
-      count: 1
     };
+  },
+  mounted() {
+    const currentNode = this.$refs.searchMenuTree.getCurrentNode();
+    if (currentNode) {
+      this.onNodeClick(currentNode);
+    }
   },
   methods: {
     onNodeClick(node) {
-      this.$store.dispatch('menuNodes/addMenuNode', node);
       this.$emit('menuChange', node.id);
     },
     loadNode(node, resolve) {
