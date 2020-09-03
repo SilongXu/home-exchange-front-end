@@ -25,7 +25,7 @@
                 <svg-icon icon="view-detail"></svg-icon>
                 查看详情
               </div>
-              <div class="link-btn">
+              <div class="link-btn" @click="download(entry)">
                 <svg-icon icon="download"></svg-icon>
                 下载
               </div>
@@ -65,6 +65,7 @@
 </template>
 <script>
 import apiService from './search.service';
+import saveAs from 'file-saver';
 
 export default {
   name: 'SearchResult',
@@ -88,6 +89,16 @@ export default {
     };
   },
   methods: {
+    download(entry) {
+      apiService.getDetailDownload(entry.id)
+      .then((href) => {
+        const blob = new Blob([href.data], {type: 'application/octet-stream'});
+        const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
+        const fileNameFinal = fileName.substring(0, fileName.length-1);
+        saveAs(blob, fileNameFinal);
+      }).catch(() => {
+      });
+    },
     getThumbImgPath(path) {
       return `data:image/jpg;base64,${path}`;
     },
