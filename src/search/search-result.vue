@@ -137,8 +137,8 @@ export default {
       .then((results) => {
         this.resultLoading = false;
         if (results) {
-          this.searchResult = results.data;
-          this.pagination = results.pagination || {
+          this.searchResult = results.data.data;
+          this.pagination = results.data.pagination || {
             page: 1,
             size: 10,
             total: 0,
