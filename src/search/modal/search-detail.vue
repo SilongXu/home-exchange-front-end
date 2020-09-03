@@ -8,7 +8,7 @@
             <span :title="detail.name">{{detail.name}}</span>
           </div>
           <div class="dialog-top-topside-download">
-            <div class="link-btn">
+            <div class="link-btn" @click="detailDownload(detail)">
               <svg-icon icon="download"></svg-icon>
               下载
             </div>
@@ -105,6 +105,7 @@
 
 <script>
 import apiService from '../search.service';
+import saveAs from 'file-saver';
 
 export default {
   name: 'SearchDetail',
@@ -166,6 +167,16 @@ export default {
     };
   },
   methods: {
+    detailDownload(detail) {
+      apiService.getDetailDownload(detail.id)
+      .then((href) => {
+        const blob = new Blob([href.data], {type: 'application/octet-stream'});
+        const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
+        const fileNameFinal = fileName.substring(0, fileName.length-1);
+        saveAs(blob, fileNameFinal);
+      }).catch(() => {
+      });
+    },
     getTagList() {
       apiService.getTagList()
       .then((tags) => {

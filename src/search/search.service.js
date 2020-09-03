@@ -41,6 +41,10 @@ const searchService = {
   uploadShapefile(shapefile) {
     return http.post(`retrieval/system/search/file`, shapefile);
   },
+  getDetailDownload(id){
+    return http.get(`/retrieval/system/data/download/${id}`,
+    {responseType: 'blob'});
+  }
 };
 
 export default searchService;
