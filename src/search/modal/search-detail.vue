@@ -172,7 +172,7 @@ export default {
       .then((href) => {
         const blob = new Blob([href.data], {type: 'application/octet-stream'});
         const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
-        const fileNameFinal = fileName.substring(0, fileName.length-1);
+        const fileNameFinal = fileName.substring(0, fileName.length - 1);
         saveAs(blob, fileNameFinal);
       }).catch(() => {
       });
@@ -180,7 +180,7 @@ export default {
     getTagList() {
       apiService.getTagList()
       .then((tags) => {
-        this.tagOptions = tags || [];
+        this.tagOptions = tags.data || [];
       })
       .catch(() => {});
     },
@@ -189,15 +189,14 @@ export default {
     },
     confirmTag() {
       apiService.addTag(this.detail.id, this.getSelectedTags())
-      .then((res) => {
-        console.log(res)
+      .then(() => {
         this.$message({
           message: '添加标签成功',
           type: 'success'
         });
         apiService.getTagByFileId(this.detail.id)
         .then((list) => {
-          this.detail.tags = list;
+          this.detail.tags = list.data;
         });
       })
       .catch(() => {
@@ -209,7 +208,7 @@ export default {
         this.loadingTags = true;
         apiService.getTagList()
         .then((tags) => {
-          this.tagOptions = tags;
+          this.tagOptions = tags.data;
           this.loadingTags = false;
         })
         .catch(() => {

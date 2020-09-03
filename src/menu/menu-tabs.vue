@@ -11,7 +11,7 @@
           @mousedown="activateNode(node)"
         >
           <div class="menu-tabs-node-name">
-            <svg-icon :icon="iconFromType(node)"></svg-icon>
+            <svg-icon icon="folder-close"></svg-icon>
             <span :title="node.name">
               {{node.name}}
             </span>
@@ -24,21 +24,17 @@
     </overflow-container>
 
     <div class="menu-tabs-content" v-if="!!activeNode">
-      <menu-detail v-if="activeNode.type === 'file'"></menu-detail>
-      <menu-table v-if="activeNode.type === 'directory'"></menu-table>
+      <menu-table ref="table"></menu-table>
     </div>
   </div>
 </template>
 
 <script>
-import MenuDetail from './menu-detail';
-import MenuTable from './menu-table';
 
 export default {
   name: 'MenuTabs',
   components: {
-    MenuDetail,
-    MenuTable,
+    'menu-table': () => import('./menu-table'),
   },
   data() {
     return {
@@ -46,6 +42,7 @@ export default {
       activeNode: null,
       nodesWatcher: null,
       activeNodeWatcher: null,
+      tableList: [],
     };
   },
   methods: {
@@ -55,8 +52,13 @@ export default {
     removeNode(node) {
       this.$store.dispatch('menuNodes/removeMenuNode', node);
     },
-    iconFromType(node) {
-      return node.type === 'directory' ? 'folder-close' : 'file';
+    // iconFromType(node) {
+    //   return node.type === 'directory' ? 'folder-close' : 'file';
+    // }
+    fetchTableDetails(node) {
+      if (this.activeNode) {
+        this.$refs.table.fetchTableDetails(node);
+      }
     }
   },
   created() {

@@ -1,12 +1,10 @@
 <template>
-  <div class="menu-abstract">
-    Abstract
-  </div>
+  <div></div>
 </template>
 
 <script>
 export default {
-  name: 'MenuAbstract',
+  name: 'userAuthorityNew',
 }
 </script>
 

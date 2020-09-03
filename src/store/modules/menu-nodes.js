@@ -6,7 +6,9 @@ const state = () => ({
 
 // getters
 const getters = {
-  
+  nodes(state) {
+    return state.nodes || [];
+  }
 }
 
 // actions
@@ -22,7 +24,7 @@ const actions = {
 
   activateMenuNode ({ commit }, node) {
     commit('setActiveNode', { node });
-  }
+  },
 }
 
 // mutations
@@ -43,13 +45,13 @@ const mutations = {
     }
     
     if (state.activeNode.id === node.id) {
-        state.activeNode = state.nodes[0] || null;
+      state.activeNode = state.nodes[0] || null;
     }
   },
 
   setActiveNode (state, { node }) {
     state.activeNode = node;
-  }
+  },
 }
 
 export default {

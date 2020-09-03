@@ -24,8 +24,13 @@ module.exports = {
   },
   devServer: {
     proxy: {
-      "/api": {
+      "/api/v1/retrieval": {
         target: "http://192.168.0.167:8888/", 
+        secure: false,
+        changeOrigin: true,
+      },
+      "/api/v1/catalog": {
+        target: "http://192.168.0.167:8880/", 
         secure: false,
         changeOrigin: true,
       }

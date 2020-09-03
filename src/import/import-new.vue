@@ -5,7 +5,7 @@
         <div class="title-nav icon-btn" @click="navBack()">
           <svg-icon icon="collapser"></svg-icon>
         </div>
-        <svg-icon class="title-icon" icon="import-manage" color="primary" size="lg"></svg-icon>
+        <svg-icon class="title-icon" icon="import-manage" color="primary" size="xlg"></svg-icon>
         <span class="title-text">新建数据导入</span>
       </div>
       <el-form ref="form" :model="form" label-position="left" label-width="120px" size="small">

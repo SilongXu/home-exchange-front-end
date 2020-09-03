@@ -5,6 +5,7 @@ import layout from '@/layout/layout'
 const search = () => import(/* webpackChunkName: "search" */ '@/search/search')
 const _import = () => import(/* webpackChunkName: "import" */ '@/import/import')
 const menu = () => import(/* webpackChunkName: "menu" */ '@/menu/menu')
+const userAuthority = () => import(/* webpackChunkName: "userAuthority" */ '@/userAuthority/userAuthority')
 
 Vue.use(Router)
 
@@ -29,6 +30,11 @@ export default new Router({
           path: 'menu**',
           name: 'menu',
           component: menu,
+        },
+        {
+          path: 'userAuthority**',
+          name: 'userAuthority',
+          component: userAuthority,
         },
       ],
     }
