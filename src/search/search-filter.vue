@@ -182,7 +182,7 @@ export default {
         this.loadingTags = true;
         apiService.getTagList()
         .then((tags) => {
-          this.tagOptions = tags;
+          this.tagOptions = tags.data;
           this.loadingTags = false;
         })
         .catch(() => {
@@ -252,7 +252,7 @@ export default {
       // 获取过滤条件列表
       apiService.getSearchFilters(menuId)
       .then((filters) => {
-        this.filterList = filters;
+        this.filterList = filters.data;
       })
       .catch(() => {});
     },

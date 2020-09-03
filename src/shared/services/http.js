@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = `/api/v1`;
+const BASE_URL = 'api/v1';
 
 const http = axios.create({
   baseURL: BASE_URL,
@@ -15,7 +15,10 @@ http.interceptors.request.use((data) => {
 
 http.interceptors.response.use((response) => {
   if (response && response.data) {
-    return response.data;
+    return {
+      data: response.data,
+      header: response.headers,
+    };
   }
   return response;
 }, (error) => {
