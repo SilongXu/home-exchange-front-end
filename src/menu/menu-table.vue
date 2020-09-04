@@ -96,6 +96,7 @@ import apiService from './menu.service';
 
 export default {
   name: 'MenuTable',
+  props: ['node'],
   data() {
     return {
       searchFilter: null,
@@ -106,7 +107,7 @@ export default {
     };
   },
   mounted() {
-    console.log(111)
+    this.fetchTableDetails(this.node);
   },
   methods: {
     toggleViewMode(mode) {
@@ -181,14 +182,6 @@ export default {
         }
       }
 
-      &-icon {
-        
-        .svg-icon:hover {
-          fill: $brand-primary;
-          cursor: pointer;
-        }
-      }
-
       &-view, &-icon, .el-input {
         margin-right: 16px;
       }
@@ -245,6 +238,11 @@ export default {
       }
     }
   }
+}
+
+.svg-icon:hover {
+  fill: $brand-primary;
+  cursor: pointer;
 }
 
 .el-table ::v-deep thead tr th {

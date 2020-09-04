@@ -60,24 +60,41 @@ export default {
         return;
       }
     },
-    renderContent(h, { node, data }) {
+    renderContent(h, { node }) {
       return (
-        <span class="menu-tree-node">
+        <div class="menu-tree-node">
+          <div class="menu-tree-node-label">
+            {
+              (() => {
+                if (node.level === 1 || node.isLeaf) {
+                  return null;
+                } else {
+                  return node.expanded ? <svg-icon icon="folder-open"></svg-icon> : <svg-icon icon="folder-close"></svg-icon>;
+                }
+              })() 
+            }
+            <div domPropsTitle={node.label}>{node.label}</div>
+          </div>
           {
             (() => {
-              if (node.level === 1 || node.isLeaf) {
-                return null;
-              } else {
-                return node.expanded ? <svg-icon icon="folder-open"></svg-icon> : <svg-icon icon="folder-close"></svg-icon>;
+              if (node.data.id !== -1) {
+                return <div class="menu-tree-node-operation">
+                  <div class="menu-tree-node-operation-icon">
+                    <svg-icon icon="delete" color="default" size="lg"></svg-icon>
+                  </div>
+                  <div class="menu-tree-node-operation-icon">
+                    <svg-icon icon="new-folder" color="default" size="lg"></svg-icon>
+                  </div>
+                </div>
               }
-            })() 
+            })()
           }
-          <span domPropsTitle={node.label}>{node.label}</span>
-        </span>);
+        </div>
+      );
     },
-    onNodeClick(data) {
+    onNodeClick(node) {
       // 通知父节点
-      this.$emit('clickNode', data);
+      this.$emit('clickNode', node);
     },
   },
 }
@@ -91,17 +108,41 @@ export default {
   margin-left: 2px;
 }
 
+.svg-icon:hover {
+  fill: $brand-primary;
+  cursor: pointer;
+}
+
 .el-tree ::v-deep .menu-tree-node {
-  @include flex-align(center, flex-start);
+  flex: 1;
+  @include flex-align(center, space-between);
   padding-right: 4px;
   font-size: $font-md;
   overflow: hidden;
+}
+.el-tree ::v-deep .menu-tree-node:hover {
+
+  .menu-tree-node-operation {
+    visibility: visible;
+  }
+}
+.el-tree ::v-deep .menu-tree-node-label {
+  @include flex-align(center, flex-start);
+}
+.el-tree ::v-deep .menu-tree-node-operation {
+  visibility: hidden;
+  display: flex;
+
+  &-icon:hover {
+    fill: $brand-primary;
+    cursor: pointer;
+  }
 }
 .el-tree ::v-deep .menu-tree-node .svg-icon {
   flex-shrink: 0;
   margin-right: 8px;
 }
-.el-tree ::v-deep .menu-tree-node span {
+.el-tree ::v-deep .menu-tree-node div {
   @include text-ellipsis;
 }
 .el-tree ::v-deep .el-tree-node > .el-tree-node__content {

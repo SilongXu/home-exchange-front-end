@@ -63,7 +63,7 @@ export default {
       this.$emit('cancel', 'addTag');
     },
     getSelectedTags() {
-      selectedTags = [];
+      const selectedTags = [];
       this.tagForm.tags.forEach((tag) => {
         const selectedOption = this.tagOptions.find((option) => option.id === tag);
         if (selectedOption) {

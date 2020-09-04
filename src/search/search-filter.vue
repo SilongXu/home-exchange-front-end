@@ -243,7 +243,7 @@ export default {
       const shapefile = new FormData();
       shapefile.append('shapefile', _file);
       apiService.uploadShapefile(shapefile)
-      .then((res) => {});
+      .then(() => {});
     },
     handleRemove() {
       
