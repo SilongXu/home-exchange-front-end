@@ -1,6 +1,7 @@
 <template>
   <div class="menu-tree">
     <el-tree
+      ref="tree"
       :props="treeProps"
       :load="loadNode"
       lazy
@@ -16,10 +17,12 @@
 </template>
 
 <script>
+import { set } from 'lodash-es';
 import apiService from './menu.service';
 
 export default {
   name: 'MenuTree',
+  props: ['menuEventBus'],
   data() {
     return {
       treeProps: {
@@ -31,7 +34,16 @@ export default {
       },
     }
   },
-   methods: {
+  mounted() {
+    this.menuEventBus.$on('refreshTree', (node) => {
+      if (this.$refs.tree) {
+        const currentNode = this.$refs.tree.getNode(node.id);
+        currentNode.loaded = currentNode.isLeaf = false;
+        currentNode.expand();
+      }
+    });
+  },
+  methods: {
     loadNode(node, resolve) {
       if (node.level === 0) {
         return resolve([{ name: '目录管理', id: -1 }]);
@@ -49,7 +61,7 @@ export default {
       }
       
       if (!node.isLeaf) {
-        apiService.getMenuNodeByParentId(node.id)
+        apiService.getMenuNodeByParentId(node.data.id)
         .then((tree) => {
           return resolve(tree.data);
         })
@@ -66,7 +78,7 @@ export default {
           <div class="menu-tree-node-label">
             {
               (() => {
-                if (node.level === 1 || node.isLeaf) {
+                if (node.level === 1) {
                   return null;
                 } else {
                   return node.expanded ? <svg-icon icon="folder-open"></svg-icon> : <svg-icon icon="folder-close"></svg-icon>;
@@ -77,13 +89,10 @@ export default {
           </div>
           {
             (() => {
-              if (node.data.id !== -1) {
+              if (true) {
                 return <div class="menu-tree-node-operation">
-                  <div class="menu-tree-node-operation-icon">
+                  <div class="menu-tree-node-operation-icon" on-click={(e) => {this.deleteNode(e, node)}}>
                     <svg-icon icon="delete" color="default" size="lg"></svg-icon>
-                  </div>
-                  <div class="menu-tree-node-operation-icon">
-                    <svg-icon icon="new-folder" color="default" size="lg"></svg-icon>
                   </div>
                 </div>
               }
@@ -92,9 +101,43 @@ export default {
         </div>
       );
     },
+    deleteNode(e, node) {
+      e.stopPropagation();
+      e.preventDefault();
+      if (node) {
+        this.$confirm(`确认要删除 “${node.data.name}” 目录吗?`, '删除目录', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'error'
+        }).then(() => {
+          apiService.deleteMenuNode([node.data.id])
+          .then(() => {
+            // 通知刷新表格
+            this.menuEventBus.$emit('treeChange', node.parent);
+            setTimeout(() => {
+              // 删除树
+              this.$refs.tree.remove(node);
+              // 删除tab
+              if (node && node.data) {
+                this.$store.dispatch('menuNodes/removeMenuNode', node.data);
+              }
+            }, 50);
+            this.$message({
+              type: 'success',
+              message: '删除目录成功!'
+            });
+          })
+          .catch((error) => {
+            this.$message.error('删除目录错误');
+          });
+        }).catch(() => {
+           
+        });
+      }
+    },
     onNodeClick(node) {
       // 通知父节点
-      this.$emit('clickNode', node);
+      this.menuEventBus.$emit('clickNode', node);
     },
   },
 }
@@ -107,12 +150,6 @@ export default {
   overflow: auto;
   margin-left: 2px;
 }
-
-.svg-icon:hover {
-  fill: $brand-primary;
-  cursor: pointer;
-}
-
 .el-tree ::v-deep .menu-tree-node {
   flex: 1;
   @include flex-align(center, space-between);
@@ -133,7 +170,7 @@ export default {
   visibility: hidden;
   display: flex;
 
-  &-icon:hover {
+  .svg-icon:hover {
     fill: $brand-primary;
     cursor: pointer;
   }

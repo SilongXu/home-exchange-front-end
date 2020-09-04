@@ -6,6 +6,7 @@ const state = () => ({
 
 // getters
 const getters = {
+  
 }
 
 // actions
@@ -40,10 +41,10 @@ const mutations = {
     if (existNodeIndex > -1) {
       state.nodes.splice(existNodeIndex, 1);
     }
-    
-    if (state.activeNode.id === node.id) {
-      state.activeNode = state.nodes[0] || null;
-    }
+
+    state.activeNode = state.activeNode
+      ? ((state.activeNode.id === node.id) ? (state.nodes[0] || null) : state.activeNode)
+      : (state.nodes[0] || null);
   },
 
   setActiveNode (state, { node }) {

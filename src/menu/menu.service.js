@@ -12,8 +12,8 @@ const MenuService = {
     return http.put(`/${prefix}/system/directory`, { catalogId, metaEnumFieldDTO });
   },
 
-  deleteMenuNode(id) {
-    return http.delete(`/${prefix}/system/directory`, id);
+  deleteMenuNode(ids) {
+    return http.post(`/${prefix}/system/directory/delete`, ids);
   },
 
   getMetaField(id) {

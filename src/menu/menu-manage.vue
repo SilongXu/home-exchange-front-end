@@ -1,11 +1,12 @@
 <template>
   <div class="menu">
-    <menu-tree @clickNode="onNodeClick"></menu-tree>
-    <menu-tabs ref="tabs"></menu-tabs>
+    <menu-tree :menuEventBus="menuEventBus"></menu-tree>
+    <menu-tabs ref="tabs" :menuEventBus="menuEventBus"></menu-tabs>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
 import MenuTabs from './menu-tabs';
 import MenuTree from './menu-tree';
 
@@ -17,12 +18,21 @@ export default {
   },
   data() {
     return {
+      menuEventBus: new Vue(),
     };
   },
-  methods: {
-    onNodeClick(node) {
+  mounted() {
+    this.menuEventBus.$on('tableChange', (node) => {
+      this.menuEventBus.$emit('refreshTree', node);
+    });
+    this.menuEventBus.$on('clickNode', (node) => {
       this.$store.dispatch('menuNodes/addMenuNode', node);
-    },
+    });
+    this.menuEventBus.$on('treeChange', (pNode) => {
+      this.menuEventBus.$emit('refreshTable', pNode);
+    });
+  },
+  methods: {
   },
 }
 </script>
