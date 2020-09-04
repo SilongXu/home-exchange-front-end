@@ -1,5 +1,6 @@
 <template>
   <div class="menu-table">
+    <menu-new v-if="addDialogVisible" :visible="addDialogVisible" :node="node" @close ="dialogClose()"></menu-new>
     <div class="menu-table-header">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>目录管理</el-breadcrumb-item>
@@ -16,7 +17,7 @@
         <div class="menu-table-header-operation-icon">
           <svg-icon icon="delete" color="default" size="lg"></svg-icon>
         </div>
-        <div class="menu-table-header-operation-icon">
+        <div class="menu-table-header-operation-icon" @click="viewDialog()">
           <svg-icon icon="new-folder" color="default" size="lg"></svg-icon>
         </div>
         <div class="menu-table-header-operation-view">
@@ -97,6 +98,9 @@ import apiService from './menu.service';
 export default {
   name: 'MenuTable',
   props: ['node'],
+  components: { 
+    'menu-new': () => import('./modal/menu-new'),
+  },
   data() {
     return {
       searchFilter: null,
@@ -104,6 +108,7 @@ export default {
       selectedData: [],
       tableList: [],
       loading: false,
+      addDialogVisible: false,
     };
   },
   mounted() {
@@ -130,6 +135,12 @@ export default {
     },
     viewMenu(node) {
       console.log(node)
+    },
+    viewDialog(){
+      this.addDialogVisible = true;
+    },
+    dialogClose(){
+      this.addDialogVisible = false;
     },
     onSelectionChange(selection) {
       console.log(selection)
