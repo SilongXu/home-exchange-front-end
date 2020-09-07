@@ -77,7 +77,7 @@ export default {
         {
           icon: 'user-admin',
           name: '用户与权限管理',
-          path:'/userAuthority'
+          // path:'/userAuthority'
         },
         {
           icon: 'life-cycle',

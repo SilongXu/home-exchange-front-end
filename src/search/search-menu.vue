@@ -57,7 +57,7 @@ export default {
       }
 
       if (!node.isLeaf) {
-        apiService.getMenuNodeByParentId(node.id)
+        apiService.getMenuNodeByParentId(node.data.id)
         .then((tree) => {
           return resolve(tree.data);
         })

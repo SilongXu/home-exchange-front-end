@@ -24,7 +24,7 @@
     </overflow-container>
 
     <div class="menu-tabs-content" v-for="node in nodes" :key="node.id" :class="{hidden: activeNode !== node}">
-      <menu-tab-content :node="node"></menu-tab-content>
+      <menu-tab-content :node="node" :menuEventBus="menuEventBus" ref="tabContent"></menu-tab-content>
     </div>
   </div>
 </template>
@@ -33,6 +33,7 @@
 
 export default {
   name: 'MenuTabs',
+  props: ['menuEventBus'],
   components: {
     'menu-tab-content': () => import('./menu-tab-content'),
   },

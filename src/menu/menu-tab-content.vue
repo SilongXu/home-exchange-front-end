@@ -1,13 +1,13 @@
 <template>
   <div class="menu-tab-content">
-    <menu-table :node="node"></menu-table>
+    <menu-table :node="node" :menuEventBus="menuEventBus"></menu-table>
   </div>
 </template>
 
 <script>
 export default {
   name: 'MenuTabContent',
-  props: ['node'],
+  props: ['node', 'menuEventBus'],
   components: {
     'menu-table': () => import('./menu-table'),
   },
