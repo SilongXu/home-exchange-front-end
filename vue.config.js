@@ -30,7 +30,7 @@ module.exports = {
         changeOrigin: true,
       },
       "/api/v1/catalog": {
-        target: "http://192.168.0.167:8880/", 
+        target: "http://192.168.0.167:8888/", 
         secure: false,
         changeOrigin: true,
       }

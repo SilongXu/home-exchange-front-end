@@ -132,7 +132,7 @@
       </div>
       <div class="input-group" v-if="filter.queryType === 61">
         <el-select
-          v-model="filter.tags"
+          v-model="filter.tag"
           filterable
           :loading="loadingTags"
           placeholder="请选择标签"
