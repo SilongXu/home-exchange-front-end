@@ -74,11 +74,11 @@ export default {
     'add-tag-modal': () => import('./modal/add-tag'),
     'search-detail': () => import('./modal/search-detail'),
   },
+  props: ['filters'],
   data() {
     return {
       tagDialogVisible: false,
       dialogVisible: false,
-      filters: {},
       pagination: {
         page: 1,
         size: 10,
@@ -115,7 +115,7 @@ export default {
     },
     onAddTag(tags) {
       if (tags && tags.length > 0) {
-        apiService.batchAddTag(this.filters.filters || [], tags)
+        apiService.batchAddTag((this.filters && this.filters.filters) || [], tags)
         .then(() => {
           this.tagDialogVisible = false;
           this.$message({
@@ -143,9 +143,9 @@ export default {
       const { page, size } = this.pagination;
       this.searchResult = [];
       // 缓存上一次搜索的filterList
-      this.filters = searchParam;
+      // this.filters = searchParam;
       this.resultLoading = true;
-      apiService.getSearchResults(page, size, this.filters)
+      apiService.getSearchResults(page, size, searchParam)
       .then((results) => {
         this.resultLoading = false;
         if (results) {
