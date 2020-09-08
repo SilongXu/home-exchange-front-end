@@ -1,5 +1,5 @@
 <template>
-  <router-view></router-view>
+  <router-view> </router-view>
 </template>
 
 <script>
@@ -8,14 +8,14 @@ import userAuthorityNew from './userAuthority-new';
 import router from './userAuthority-router';
 
 export default {
-  name: 'UserAuthority',
+  name: 'UserAuthority' ,
   components: {
     /* eslint-disable */
-    userAuthorityManage, 
-    userAuthorityNew,
+    userAuthorityManage , 
+    userAuthorityNew ,
     /* eslint-enable */
   },
-  router
+  router ,
 }
 </script>
 
