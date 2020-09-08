@@ -53,8 +53,8 @@
         <el-input v-model="filter.radius" type="number" :min="0" placeholder="请输入半径" size="small"></el-input>
       </div>
       <div class="input-group" v-if="filter.queryType === 54">
-        <el-input v-model="filter.lon" type="number" :min="0" placeholder="请输入经度" size="small"></el-input>
-        <el-input v-model="filter.lat" type="number" :min="0" placeholder="请输入纬度" size="small"></el-input>
+        <el-input v-model="filter.lons" type="number" :min="0" placeholder="请输入经度" size="small"></el-input>
+        <el-input v-model="filter.lats" type="number" :min="0" placeholder="请输入纬度" size="small"></el-input>
       </div>
       <div class="input-group-container" v-if="filter.queryType === 53">
         <div class="input-group bottom">
