@@ -133,9 +133,7 @@
       <div class="input-group" v-if="filter.queryType === 61">
         <el-select
           v-model="filter.tags"
-          multiple
           filterable
-          allow-create
           :loading="loadingTags"
           placeholder="请选择标签"
           size="small"
@@ -237,7 +235,6 @@ export default {
       });
     },
     uploadFile(file) {
-      console.log(file)
       // const isLt2M = _file.size / 1024 / 1024 < 2;
       const _file = file.file;
       const shapefile = new FormData();

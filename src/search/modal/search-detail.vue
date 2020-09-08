@@ -330,10 +330,8 @@ export default {
       &-property {
         @include flex-align( center, center);
         height: 20px;
-        margin-top: 7px;  
-        margin-right: 10px;
-        padding-left: 10px;
-        padding-right: 10px;
+        margin: 7px 10px 0 0;
+        padding: 0 10px 0 10px;
         border-radius: 40px;
         border: solid 1px;
         border-color: $text-mute;

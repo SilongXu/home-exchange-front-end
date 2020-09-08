@@ -7,7 +7,7 @@
       </div>
       <div class="search-content-right">
         <search-filter ref="filter" @filterChange="onFilterChange"></search-filter>
-        <search-result ref="result"></search-result>
+        <search-result ref="result" :filters="getFilterList()"></search-result>
       </div>
     </div>
   </div>
@@ -39,13 +39,14 @@ export default {
   methods: {
     fetchResult() {
       // 这里执行搜索
-      const filters = this.$refs.filter.filterList;
-      const catalogId = this.menuFilter;
-      this.$refs.result.fetchResult({
-        catalogId,
-        filters: JSON.stringify(filters),
+      this.$refs.result.fetchResult(this.getFilterList());
+    },
+    getFilterList() {
+      return {
+        catalogId: this.menuFilter,
         input: this.inputFilter,
-      });
+        filters: this.$refs.filter ? JSON.stringify(this.$refs.filter.filterList) : '[]',
+      };
     },
     onInputChange(filter) {
       this.inputFilter = filter;
