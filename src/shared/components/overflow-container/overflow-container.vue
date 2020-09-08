@@ -53,18 +53,20 @@ export default {
       }, 300);
     },
     updateActiveContent(id) {
-      const nodeElement = this.$refs.containerContent.querySelector(id);
-      if (nodeElement) {
-        if (nodeElement.offsetLeft < this.navOffsetX) {
-          this.navLeft(nodeElement.offsetWidth);
-          this.updateActiveContent(id);
+      setTimeout(() => {
+        const nodeElement = this.$refs.containerContent.querySelector(id);
+        if (nodeElement) {
+          if (nodeElement.offsetLeft < this.navOffsetX) {
+            this.navLeft(nodeElement.offsetWidth);
+            this.updateActiveContent(id);
+          }
+  
+          if (nodeElement.offsetLeft + nodeElement.offsetWidth - this.navOffsetX > this.$refs.container.clientWidth) {
+            this.navRight(nodeElement.offsetWidth);
+            this.updateActiveContent(id);
+          }
         }
-
-        if (nodeElement.offsetLeft + nodeElement.offsetWidth - this.navOffsetX > this.$refs.container.clientWidth) {
-          this.navRight(nodeElement.offsetWidth);
-          this.updateActiveContent(id);
-        }
-      }
+      });
     }
   },
   mounted() {
