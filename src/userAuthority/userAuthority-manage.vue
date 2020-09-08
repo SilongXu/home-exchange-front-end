@@ -1,46 +1,21 @@
-<template>
+  <template>
   <div class="userAuthorityManage">
     <div class="userAuthorityManage-tab">
-      <el-tabs v-model="activeName" @click="changePane()">
-        <el-tab-pane label="用户管理" name="userManage">
-          <div class="userAuthorityManage-tab-userManage">
-            <div class="userAuthorityManage-tab-userManage-top">
-              <div class="userAuthorityManage-tab-userManage-top-search">
-                <el-input
-                  placeholder="请输入关键字搜索"
-                  v-model="inputFilter"
-                  @change="search">
-                </el-input>
-                <svg-icon icon="search" size="21px"></svg-icon>
-              </div>
-              
-              <div class="userAuthorityManage-tab-userManage-top-new">
-                <el-button type="primary" size="mini" @click="addNewUser()">
-                  <svg-icon icon="plus"></svg-icon>
-                  添加用户
-                </el-button>
-              </div>
-
-            </div>
-            <div class="userAuthorityManage-tab-userManage-middle">
-
-            </div>
-
-            <div class="userAuthorityManage-tab-userManage-bottom">
-              <el-pagination></el-pagination>
-              
-            </div>
-          </div>
-
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="用户管理" name="userManage" >
+          <user-manage></user-manage>
         </el-tab-pane>
+        
         <el-tab-pane label="组管理" name="groupManage">
+          <group-manage></group-manage>
+        </el-tab-pane>
 
-        </el-tab-pane>
         <el-tab-pane label="角色管理" name="roleManage">
-            
+          <role-manage></role-manage>
         </el-tab-pane>
+
         <el-tab-pane label="权限管理" name="authorityManage">
-            
+          <authority-manage></authority-manage>
         </el-tab-pane>
       </el-tabs>
     </div>  
@@ -51,15 +26,19 @@
 <script>
 export default {
   name: 'userAuthorityManage',
+  components: {
+    'user-manage': () => import('./el-pane/userAuthority-userManage') ,
+    'group-manage': () => import('./el-pane/userAuthority-groupManage') ,
+    'role-manage': () => import('./el-pane/userAuthority-roleManage') ,
+    'authority-manage': () => import('./el-pane/userAuthority-authorityManage') , 
+  },
   data() {
     return {
+      activeName: 'userManage',
 
     }
   },
   methods: {
-    addNewUsers(){
-
-    },
   },
 
   
@@ -67,5 +46,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/util.scss';
 
+.el-tabs {
+  background: $bg-light;
+}
+
+.el-tabs ::v-deep .el-tabs__header {
+  padding-left: 20px;
+  border-bottom: 1px solid $border-dark;
+}
+.el-tabs ::v-deep .el-tabs__item {
+  height: 48px;
+  line-height: 48px;
+}
+
+.el-tabs ::v-deep .el-tabs__nav-wrap::after {
+  display: none;
+}
 </style>
