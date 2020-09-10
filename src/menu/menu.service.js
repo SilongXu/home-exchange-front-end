@@ -20,8 +20,8 @@ const MenuService = {
     return http.get(`/${prefix}/system/directory/metafield/${id}`);
   },
 
-  enumfield(fieldCode) {
-    return http.get(`/${prefix}/system/directory/enumfield/${fieldCode}`);
+  enumfield(fieldCode, id) {
+    return http.get(`/${prefix}/system/directory/enumfield/${id}/${fieldCode}`);
   },
 };
 

@@ -89,7 +89,7 @@ export default {
     },
     fetchMenuSelectData(classValue) {
       if(this.node) {
-        apiService.enumfield(classValue)
+        apiService.enumfield(classValue, this.node.id)
         .then((selects) => {
           this.menuSelect = selects.data;
         }).catch(() => {})

@@ -67,6 +67,7 @@ export default {
         {
           icon: 'operation',
           name: '监控运维',
+          path: '/monitor',
         },
       ],
       rightNavItems: [

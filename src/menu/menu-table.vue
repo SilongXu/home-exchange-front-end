@@ -232,7 +232,7 @@ export default {
         min-width: 100px;
         min-height: 40px;
         background-color: $bg-body;
-        border-radius: 5px;
+        border-radius: 4px;
         padding: 2px;
 
         &-card, &-list {
@@ -241,7 +241,7 @@ export default {
           width: 48px;
           min-width: 48px;
           min-height: 38px;
-          border-radius: 5px;
+          border-radius: 4px;
           cursor: pointer;
         }
 
