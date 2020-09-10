@@ -43,7 +43,6 @@ export default {
       });
     },
     toggleTab() {
-      
     },
   },
 }
@@ -57,7 +56,6 @@ export default {
   flex: 1;
   margin-top: 20px;
 }
-
 .el-tabs {
   flex: 1;
   height: 100%;

@@ -13,7 +13,6 @@
 
 <script>
 import * as moment from 'moment-mini';
-
 import apiService from './monitor.service';
 
 const TREND_LINE_OPTIONS = {
@@ -243,7 +242,6 @@ export default {
       SEARCH_LINE_OPTIONS.xAxis.data = this.searchLineData.trends[0].trend.map((data) => {
         return data.date;
       });
-
       this.searchLine.setOption(SEARCH_LINE_OPTIONS);
     },
     getLegend(data) {
