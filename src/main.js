@@ -4,6 +4,9 @@ import ElementUI from 'element-ui'
 import './styles/index.scss'
 Vue.use(ElementUI)
 
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
+
 import Shared from './shared'
 Vue.use(Shared)
 

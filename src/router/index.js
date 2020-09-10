@@ -5,6 +5,7 @@ import layout from '@/layout/layout'
 const search = () => import(/* webpackChunkName: "search" */ '@/search/search')
 const _import = () => import(/* webpackChunkName: "import" */ '@/import/import')
 const menu = () => import(/* webpackChunkName: "menu" */ '@/menu/menu')
+const monitor = () => import(/* webpackChunkName: "monitor" */ '@/monitor/monitor')
 const userAuthority = () => import(/* webpackChunkName: "userAuthority" */ '@/userAuthority/userAuthority')
 
 Vue.use(Router)
@@ -30,6 +31,11 @@ export default new Router({
           path: 'menu**',
           name: 'menu',
           component: menu,
+        },
+        {
+          path: 'monitor',
+          name: 'monitor',
+          component: monitor,
         },
         {
           path: 'userAuthority**',
