@@ -19,7 +19,6 @@
 
 <script>
 import * as moment from 'moment-mini';
-
 import apiService from './monitor.service';
 
 const LINE_OPTIONS = {

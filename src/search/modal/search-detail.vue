@@ -10,7 +10,7 @@
           <div class="dialog-top-topside-download">
             <div class="link-btn" @click="detailDownload(detail)">
               <svg-icon icon="download"></svg-icon>
-              下载
+              下载 
             </div>
           </div>
         </div>
@@ -70,29 +70,31 @@
             <div class="dialog-bottom-rectangle"></div>
             <p>元数据</p>
           </div>
-          <div class="dialog-bottom-right-metadata">
+          <div class="dialog-bottom-right-metadata" 
+          v-loading="metadataLoading" 
+          element-loading-background="rgba(0, 0, 0, 0.4)">
             <el-table
               :data="metaData"                
-              row-key="id"
-              :tree-props="{children: 'children'}">
+              row-key="code"
+              :tree-props="{children: 'subs'}">
               <el-table-column
                 prop="name"
                 label="元数据名称"
                 min-width="300">
               </el-table-column>
               <el-table-column
-                prop="desc"
-                label="说明"
+                prop="value"
+                label="元数据值"
                 min-width="180">
               </el-table-column>
               <el-table-column
-                prop="type"
-                label="数据类型"
+                prop="dataType"
+                label="元数据类型"
                 min-width="180">
               </el-table-column>
               <el-table-column
-                prop="annex"
-                label="值域/备注"
+                prop="enumName"
+                label="枚举名称"
                 min-width="180">
               </el-table-column>
             </el-table>
@@ -116,55 +118,18 @@ export default {
       tags: [],
       tagOptions: [],
       popoverVisible: false,
+      metadataLoading: true,
       metaData: [
-        {
-          id: 1,
-          name:'一级节点',
-          desc:'升降轨',
-          type:'String',
-          annex:'TH03-01',
-        }, 
-        {
-          id: 2,
-          name:'一级节点',
-          desc:'升降轨',
-          type:'String',
-          annex:'TH03-02',
-        }, 
-        {
-          id: 3,
-          name:'一级节点',
-          desc: '升降轨',
-          type:'String',
-          annex:'TH03-03',
-          children: [
-            {
-              id: 31,
-              name:'二级节点',
-              desc:'升降轨',
-              type:'String',
-              annex:'TH03--031',
-            }, 
-            {
-              id: 32,
-              name:'二级节点',
-              desc:'升降轨',
-              type:'String',
-              annex:'TH03--032',
-              children:[
-                {
-                  id:321,
-                  name:'三级节点',
-                  desc:'升降轨',
-                  type:'String',
-                  annex:'TH03-033',
-                }
-              ],
-            },
-          ],
-        },
       ],
     };
+  },
+  mounted() {
+    apiService.getMetadata(this.detail.id)
+    .then((meta) => {
+      this.metaData = meta.data.fieldValues;
+      this.metadataLoading=false;
+    }).catch(() => {
+    });
   },
   methods: {
     detailDownload(detail) {
@@ -181,7 +146,7 @@ export default {
       apiService.getTagList()
       .then((tags) => {
         this.tagOptions = tags.data || [];
-      })
+      }) 
       .catch(() => {});
     },
     cancelAdd() {
