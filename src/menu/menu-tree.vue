@@ -89,7 +89,7 @@ export default {
           </div>
           {
             (() => {
-              if (true) {
+              if (node.level !== 1) {
                 return <div class="menu-tree-node-operation">
                   <div class="menu-tree-node-operation-icon" on-click={(e) => {this.deleteNode(e, node)}}>
                     <svg-icon icon="delete" color="default" size="lg"></svg-icon>

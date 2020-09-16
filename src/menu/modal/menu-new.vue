@@ -98,12 +98,13 @@ export default {
     commitData() {
       const catalogId = this.node.id;
       const fieldCode = this.menuSelect.fieldCode;
+      const nodeCode = this.node.nodeCode ? this.node.nodeCode : 'ALL';
       const metaEnumFieldDTO = {
         fieldCode,
         items: this.menuSelect.items.filter((item) => this.checkList.includes(item.itemCode)),
       };
 
-      apiService.createMenuNode(catalogId, metaEnumFieldDTO)
+      apiService.createMenuNode(catalogId, metaEnumFieldDTO, nodeCode)
       .then((commitData) => {
         this.onClose(true);
         this.$message({
