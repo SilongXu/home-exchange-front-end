@@ -5,9 +5,9 @@
       <el-select v-if="filter.queryType === 11" v-model="filter.value" placeholder="请选择" size="small">
         <el-option
           v-for="item in filter.options"
-          :key="item"
-          :label="item"
-          :value="item"
+          :key="item.enumName"
+          :label="item.enumName"
+          :value="item.enumCode"
         >
         </el-option>
       </el-select>
