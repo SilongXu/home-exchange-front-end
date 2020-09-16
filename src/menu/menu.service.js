@@ -8,8 +8,8 @@ const MenuService = {
     return http.get(`/${prefix}/system/directory/${parentId}`);
   },
 
-  createMenuNode(catalogId, metaEnumFieldDTO) {
-    return http.put(`/${prefix}/system/directory`, { catalogId, metaEnumFieldDTO });
+  createMenuNode(catalogId, metaEnumFieldDTO, nodeCode) {
+    return http.put(`/${prefix}/system/directory`, { catalogId, metaEnumFieldDTO, nodeCode });
   },
 
   deleteMenuNode(ids) {
