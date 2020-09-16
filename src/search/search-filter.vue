@@ -248,11 +248,15 @@ export default {
     fetchDivisionById(divisionId) {
       return apiService.getDivisionById(divisionId);
     },
-    fetchFilterList(menuId) {
+    fetchFilterList(nodeCode) {
       // 获取过滤条件列表
-      apiService.getSearchFilters(menuId)
+      if (!nodeCode) {
+        nodeCode = 'ALL';
+      }
+      apiService.getSearchFilters(nodeCode)
       .then((filters) => {
         this.filterList = filters.data;
+      
       })
       .catch(() => {});
     },
