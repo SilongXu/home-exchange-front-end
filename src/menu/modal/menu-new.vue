@@ -84,7 +84,7 @@ export default {
         apiService.getMetaField(this.node.id)
         .then((type) => {
           this.menuTypes = type.data;
-        })
+        });
       }
     },
     fetchMenuSelectData(classValue) {
@@ -92,7 +92,10 @@ export default {
         apiService.enumfield(classValue, this.node.id)
         .then((selects) => {
           this.menuSelect = selects.data;
-        }).catch(() => {})
+          this.menuSelect.items.forEach(item => {
+            this.checkList.push(item.itemCode);
+          });
+        }).catch(() => {});
       }
     },
     commitData() {
