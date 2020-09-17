@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     onNodeClick(node) {
-      this.$emit('menuChange', node.nodeCode);
+      this.$emit('menuChange', node);
     },
     loadNode(node, resolve) {
       if (node.level === 0) {
