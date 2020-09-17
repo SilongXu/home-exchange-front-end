@@ -74,7 +74,7 @@ export default {
         {
           icon: 'connection',
           name: '连接中心',
-          path: '/connect',
+          //path: '/connect',
         },
         {
           icon: 'user-admin',
