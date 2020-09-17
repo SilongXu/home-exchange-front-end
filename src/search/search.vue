@@ -39,7 +39,7 @@ export default {
   methods: {
     fetchResult() {
       // 这里执行搜索
-      this.$refs.result.fetchResult(this.getFilterList());
+      this.$refs.result.fetchResult(this.getFilterForResult());
     },
     getFilterList() {
       return {
@@ -47,6 +47,14 @@ export default {
         input: this.inputFilter,
         filters: this.$refs.filter ? JSON.stringify(this.$refs.filter.filterList) : '[]',
       };
+    },
+    getFilterForResult() {
+        return {
+          catalogId: this.menuFilter,
+          filters: this.$refs.filter ? JSON.stringify(this.$refs.filter.filterList.concat(
+            {fieldCode: null, fieldName: null, queryType: 0, dataType: null, value: this.inputFilter}
+          )) : '[]',
+        }      
     },
     onInputChange(filter) {
       this.inputFilter = filter;
