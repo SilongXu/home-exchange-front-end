@@ -50,7 +50,7 @@ export default {
     },
     getFilterForResult() {
         return {
-          catalogId: this.menuFilter,
+          nodeCode: this.menuFilter? this.menuFilter : 'ALL',
           filters: this.$refs.filter ? JSON.stringify(this.$refs.filter.filterList.concat(
             {fieldCode: null, fieldName: null, queryType: 0, dataType: null, value: this.inputFilter}
           )) : '[]',
