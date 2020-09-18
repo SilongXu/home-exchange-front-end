@@ -9,12 +9,6 @@
         <span class="title-text">新建数据导入</span>
       </div>
       <el-form ref="form" :model="form" label-position="left" label-width="120px" size="small">
-        <el-form-item label="文件名称">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="描述信息">
-          <el-input v-model="form.desc" type="textarea"></el-input>
-        </el-form-item>
         <el-form-item label="元数据XML文件">
           <el-upload
             action=""
@@ -54,25 +48,11 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="生命周期策略">
-          <el-select v-model="form.cycle" placeholder="请选择">
-            <el-option
-              v-for="item in cycleOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+        <el-form-item label="文件名称">
+          <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="同步策略">
-          <el-select v-model="form.sync" placeholder="请选择">
-            <el-option
-              v-for="item in syncOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+        <el-form-item label="描述信息">
+          <el-input v-model="form.desc" type="textarea"></el-input>
         </el-form-item>
       </el-form>
     </div>
