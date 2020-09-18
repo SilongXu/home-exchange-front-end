@@ -185,7 +185,6 @@ export default {
           },
         },
       ];
-      console.log(LINE_OPTIONS)
       this.lineChart.setOption(LINE_OPTIONS);
     },
   },

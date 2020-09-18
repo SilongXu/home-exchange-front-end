@@ -3,21 +3,57 @@
   <div class="new">
     <div class="new-top">
       <div class="new-top-title">
-        <svg-icon icon="user-add"></svg-icon>
+        <div @click="navBack()">
+          <svg-icon icon="angle-left" size="sm" class="new-top-title-back"></svg-icon>
+        </div>
+        <svg-icon icon="user-add" class="new-top-title-add"></svg-icon>
         添加用户
       </div>
       <div class="new-top-inform">
-        通知方式
+        通知方式:
         <el-radio v-model="inform" label="1">邮箱</el-radio>
         <el-radio v-model="inform" label="2">手机</el-radio>
         <el-radio v-model="inform" label="3">创建账号</el-radio>
       </div>
-      <div class="new-top-email">
-        <div class="new-top-email-title">
-          邮箱
-        </div>
-        <el-input v-model="email" placeholder="可以同时添加多个账户，请以分号隔开"></el-input>
-      </div>
+
+      <el-form ref="userCreateInfo" :model="userCreateInfo" label-width="90px">
+        <el-form-item label="邮箱"
+          prop= "email"
+          :rules="[
+            { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+            { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+          ]"
+          v-if="this.inform==1">
+            <el-input 
+              v-model="userCreateInfo.email"
+              placeholder="可以同时添加多个账户，请以分号隔开"
+              @change="update()">
+            </el-input>
+        </el-form-item>
+
+        <el-form-item label="手机"
+          prop= "phoneNumber"
+          :rules="[
+            { required: true, message: '请输入手机号', trigger: 'blur'},
+            { type: 'number', message: '请输入正确手机号' },
+          ]"
+          v-else-if="this.inform==2">
+          <el-input v-model="userCreateInfo.phoneNumber"
+            placeholder="请输入手机号">
+          </el-input>
+        </el-form-item>
+
+        <el-form-item label="账号"
+          prop= "createCount"
+          :rules="[
+            { required : true, message: '请输入想创建的账号名', trigger: 'blur'},
+          ]"
+          v-else-if="this.inform==3">
+          <el-input v-model="userCreateInfo.createCount" 
+            placeholder="请输入您想创建的账号">
+          </el-input>
+        </el-form-item>
+      </el-form>
     </div>
 
     <div class="new-middle">
@@ -66,7 +102,7 @@
 
     <div class="new-bottom">
       <div class="new-bottom-title">
-        {{"权限" + "()"}}
+        {{"权限" + "(" + Number(this.checkListMission.length + this.checkListData.length + this.checkListProgramme.length) +")"}}
       </div>
       <div class="new-bottom-mission">
         <div class="new-bottom-mission-title">
@@ -118,9 +154,10 @@
     </div>
   </div>
   <div class="commit">
-    <el-button type="">取消</el-button>
-    <el-button type="primary">确认</el-button>
-
+    <div class="commit-button">
+      <el-button type="" @click="navBack()">取消</el-button>
+      <el-button type="primary">确认</el-button>
+    </div>
   </div>
 
 </div>
@@ -132,7 +169,6 @@ export default {
   data() {
     return {
       inform: '1',
-      email: '',
       roleSelected: '',
       groupSelected: '',
       checkListOptions: [],
@@ -140,6 +176,13 @@ export default {
       checkListMission: [],
       checkListData: [],
       checkListProgramme: [],
+
+      userCreateInfo: {
+        email: '',
+        phoneNumber: '',
+        createCount: '',
+      },
+
       options: [
         {
           name: 'option1',
@@ -276,6 +319,14 @@ export default {
       ],
     }
   },
+  methods: {
+    navBack() {
+      this.$router.push('/userAuthority');
+    },
+    update() {
+      
+    },
+  },
 }
 </script>
 
@@ -284,66 +335,86 @@ export default {
 .new{
   overflow-y: auto;
   background: $bg-light;
-  width: 60%;
   margin-left: 20%;
-  padding: 20px;
   margin-bottom: 90px;
+  padding: 20px;
+  width: 60%;
 
   &-top{
     border-bottom: 1px solid $border-dark;
     padding-bottom: 20px;
 
     &-title{
+      @include flex-align(center, flex-start);
+      margin-bottom: 20px;
+      &-back{
+        margin-right: 15px;
+        cursor: pointer;
+        &:hover{
+          fill: $brand-primary;
+        }
+      }
+      &-add{
+        fill: $brand-primary;
+        margin-bottom: -2px;
+        margin-right: 5px;
+      }
     }
 
     &-inform{
-    }
-
-    &-email{
-      @include flex-align(center, flex-start);
-
-      &-title{
-        width: 60px;
-      }
-
-      .el-input{
-        margin-left: 10px;
+      margin-bottom: 20px;
+      .el-radio{
+        margin-left: 20px;
       }
     }
+
+    /deep/ .el-form-item{
+      margin-bottom: 5px;
+    }
+
+    /deep/ .el-form-item__label{
+      margin-left: -35px;
+      font-size: 16px;
+    }
+
   }
 
   &-middle{
     &-title{
       width: 100%;
       @include flex-align(center, flex-start);
+      margin: 15px 0px 15px;
     }
 
     &-content{
       display: flex;
-      border-top: 1px solid $border-dark;
       border-bottom: 1px solid $border-dark;
+      border-top: 1px solid $border-dark;
       
       &-left{ 
+        border-right: 1px solid $border-dark;
         width: 50%;
         height: 100%;
-        border-right: 1px solid $border-dark;
 
         &-title{
           background: $bg-default;
+          padding: 10px 10px 10px;
         }
 
         &-content{
+          padding: 15px 10px 15px;
+
           /deep/ .el-checkbox__input{
             top:-17px; 
           }  
 
           .checkBox{
+            display: grid;
+            white-space: pre-line;
+            height: auto;
+            width: 100%;
             font-size: 12px;
             color: $text-mute;
-            display: grid;
-            height: auto;
-            width: 350px;
-            white-space: pre-line;
           }
 
           .el-checkbox-group{
@@ -359,8 +430,11 @@ export default {
 
         &-title{
           background: $bg-default;
+          padding: 10px 10px 10px;
         }
         &-content{
+          padding: 15px 10px 15px;
+
           /deep/ .el-checkbox__input{
             top:-17px; 
           }
@@ -368,10 +442,10 @@ export default {
           .checkBox{
             display: grid;
             white-space: pre-line;
-            font-size: 12px;
             color: $text-mute;
+            font-size: 12px;
             height: auto;
-            width: 350px;
+            width: 100%
           }
 
           .el-checkbox-group{
@@ -385,11 +459,13 @@ export default {
   &-bottom{
     &-title{
       background: $bg-default;
+      padding: 10px 10px 10px;
     }
 
     &-mission{
       @include flex-align(center, flex-start);
       border-bottom: 1px solid $border-dark;
+      padding: 10px 10px 10px;
       height: auto;
 
       &-title{
@@ -406,8 +482,7 @@ export default {
           flex-wrap: wrap;
 
           .el-checkbox{
-            margin-top: 5px;
-            margin-right: 40px;
+            margin: 5px 40px 0px 0px;
           }
         }
       }
@@ -416,6 +491,7 @@ export default {
     &-data{
       @include flex-align(center, flex-start);
       border-bottom: 1px solid $border-dark;
+      padding: 10px 10px 10px;
       height: auto;
 
       &-title{
@@ -431,8 +507,7 @@ export default {
           flex-wrap: wrap;
           
           .el-checkbox{
-            margin-top: 5px;
-            margin-right: 40px;
+            margin: 5px 40px 0px 0px;
           }
         }
       }
@@ -441,6 +516,7 @@ export default {
     &-programme{
       @include flex-align(center, flex-start);
       border-bottom: 1px solid $border-dark;
+      padding: 10px 10px 10px;
       height: auto;
 
       &-title{
@@ -457,19 +533,19 @@ export default {
           flex-wrap: wrap;
           
           .el-checkbox{
-            margin-top: 5px;
-            margin-right: 40px;
+            margin: 5px 40px 0px 0px;
           }
         }
       }
     }
+    .svg-icon{
+      fill: $brand-primary;
+    }
   }
-
 }
 
-.svg-icon{
-  fill: $brand-primary;
-}
+
+
 .outside{
   overflow: auto;
   .commit{
@@ -478,9 +554,17 @@ export default {
     background: $bg-light;
     position: absolute;
     bottom: 40px;
-    .el-button{
-      padding: -5px;
+    z-index: 1;
+    &-button{
+      position:absolute;
+      right: 18%;
+      margin-top: 11px;
+      /deep/ .el-button{
+        padding: 6px 20px;
+        font-size: 10px;
+     }
     }
+
   }
 }
 </style>

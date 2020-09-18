@@ -42,12 +42,16 @@ const SearchService = {
   },
 
   getDetailDownload(id){
-    return http.get(`/retrieval/system/data/download/${id}`,
+    return http.post(`/retrieval/system/data/download`, id,
     {responseType: 'blob'});
   },
   
-  getMetadata(dataId){
-    return http.get(`/retrieval/system/data/metadata/${dataId}`);
+  getMetadata(id){
+    return http.post(`/retrieval/system/data/metadata`, id);
+  },
+
+  getDetailImage(path) {
+    return http.post('/retrieval/system/data/getImage', path);
   }
 };
 

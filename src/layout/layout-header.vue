@@ -60,10 +60,10 @@ export default {
           name: '导入管理',
           path: '/import'
         },
-        {
-          icon: 'export-manage',
-          name: '导出管理',
-        },
+        // {
+        //   icon: 'export-manage',
+        //   name: '导出管理',
+        // },
         {
           icon: 'operation',
           name: '监控运维',
@@ -71,11 +71,11 @@ export default {
         },
       ],
       rightNavItems: [
-        {
-          icon: 'connection',
-          name: '连接中心',
-          //path: '/connect',
-        },
+        // {
+        //   icon: 'connection',
+        //   name: '连接中心',
+        //   //path: '/connect',
+        // },
         {
           icon: 'user-admin',
           name: '用户与权限管理',

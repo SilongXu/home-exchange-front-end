@@ -39,10 +39,10 @@
                 :loading="loadingTags"
                 @visible-change="onTagsVisibleChange">
                 <el-option
-                  v-for="tag in tagOptions"
-                  :key="tag.id"
-                  :label="tag.name"
-                  :value="tag.id">
+                  v-for="tagOption in tagOptions"
+                  :key="tagOption.id"
+                  :label="tagOption.name"
+                  :value="tagOption.id">
                 </el-option>
               </el-select>
               <div class="dialog-top-tags-add-operation">
@@ -62,7 +62,7 @@
             <p>拇指图</p>
           </div>
           <div class="dialog-bottom-left-preview">
-            <img class="dialog-bottom-left-preview-img" :src="getThumbImgPath(detail.thumb)" alt="图像预览图">
+            <img class="dialog-bottom-left-preview-img" :src="imagePath" alt="图像预览图">
           </div>
         </div>
         <div class="dialog-bottom-right">
@@ -121,13 +121,18 @@ export default {
       metadataLoading: true,
       metaData: [
       ],
+      imagePath: '',
     };
   },
   mounted() {
+    this.imagePath = 'data:image/jpg;base64,' + this.detail.thumb;
+    this.imagePath = apiService.getDetailImage(this.detail.browseFilePath).then((res) => {
+      this.imagePath =  `data:image/jpg;base64,` + res.data;
+    });
     apiService.getMetadata(this.detail.id)
     .then((meta) => {
       this.metaData = meta.data.fieldValues;
-      this.metadataLoading=false;
+      this.metadataLoading=false; 
     }).catch(() => {
     });
   },
@@ -183,9 +188,6 @@ export default {
     },
     onClose() {
       this.$emit('close', 'searchDetail');
-    },
-    getThumbImgPath(path) {
-      return `data:image/jpg;base64,${path}`;
     },
     getSelectedTags() {
       const selectedTags = [];
