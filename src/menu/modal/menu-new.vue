@@ -24,6 +24,15 @@
         </el-form-item>
       </div>
 
+      <div class="menu-new-dialog-all" v-if="this.menuSelect.length != 0">
+        <el-checkbox 
+        :indeterminate="isIndeterminate"
+        v-model="checkAll"
+        @change="checkAllChange()">
+          全选
+        </el-checkbox>
+      </div>
+
       <div class="menu-new-dialog-select">
         <el-form-item 
           label="目录选择" 
@@ -31,7 +40,7 @@
             { required : true ,message: '请选择目录', trigger: 'blur'},
           ]">
           <div class="menu-new-dialog-select-content" v-if="!menuSelect['items'] || (menuSelect['items'].length === 0)">请先选择目录类型</div>
-          <el-checkbox-group v-model="checkList" class="menu-new-dialog-select-content">
+          <el-checkbox-group v-model="checkList" class="menu-new-dialog-select-content" @change="checkMenuChange()">
             <div class="menu-new-dialog-select-choose" v-for="select in menuSelect['items']" :key="select.itemCode">
               <el-checkbox :name="select.itemName" :label="select.itemCode" v-model="select.itemCode">
                 <svg-icon icon="file" size="md"></svg-icon>
@@ -60,8 +69,9 @@ export default {
   props: ['visible','node'],
   data() {
     return {  
-      checkList: [
-      ],
+      isIndeterminate: false,
+      checkAll: true,
+      checkList: [],
       validateForm: {
         typeItem: '',
       } ,   
@@ -73,6 +83,27 @@ export default {
     }
   },
   methods:{
+    checkMenuChange() {
+      let checkedCount = this.checkList.length;
+      this.checkAll = checkedCount ===this.menuSelect.items.length;
+      this.isIndeterminate = checkedCount>0 && checkedCount <this.menuSelect.items.length;
+    },
+
+    checkAllChange() {
+      if(this.checkList.length == this.menuSelect.items.length){
+        this.checkList=[];
+        this.isIndeterminate=false;
+        this.checkAll=false;
+      }else if(this.checkList.length < this.menuSelect.items.length){
+        this.checkList=[];
+        this.menuSelect.items.forEach(item => {
+          this.checkList.push(item.itemCode);
+          this.checkAll=true;
+          this.isIndeterminate=false;
+        });
+      }
+    },
+
     itemChange(item) {
       this.currentItem = item;
     },
@@ -131,6 +162,12 @@ export default {
 @import '@/styles/util.scss';
 
 .menu-new-dialog {
+  &-all{
+    @include flex-align(center, flex-start);
+    position: relative;
+    top: -20px;
+    left: 80px;
+  }
   &-type {
     display: flex;
     margin-bottom: 20px;
