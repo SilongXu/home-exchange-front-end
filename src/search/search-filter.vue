@@ -134,6 +134,7 @@
         <el-select
           v-model="filter.tag"
           filterable
+          clearable
           :loading="loadingTags"
           placeholder="请选择标签"
           size="small"
@@ -143,7 +144,7 @@
             v-for="tag in tagOptions"
             :key="tag.id"
             :label="tag.name"
-            :value="tag.id">
+            :value="tag">
           </el-option>
         </el-select>
       </div>
