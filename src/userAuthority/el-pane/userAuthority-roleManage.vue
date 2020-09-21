@@ -61,7 +61,7 @@ export default {
       },
       tableData: [
         {
-          rolepName: 'role-1',
+          roleName: 'role-1',
           description: 'description-1',
           roleType: 'type-1',
         },

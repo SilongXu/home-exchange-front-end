@@ -18,7 +18,9 @@
     <div class="userAuthorityManage-tab-userManage-top-new">
       <el-button type="primary" size="mini" @click="addNewUser()">
         <svg-icon icon="plus"></svg-icon>
-        添加用户
+        <div class="userAuthorityManage-tab-userManage-top-new-para">
+          添加用户
+        </div>
       </el-button>
     </div>
 
@@ -165,8 +167,23 @@ export default {
         }
         &-new {
           @include flex-align(center, flex-end);
+          display: flex;
           position: absolute;
           right: 25px;
+          /deep/ .el-button{
+            padding: 5px 10px 10px 10px;
+          }
+          .svg-icon{
+            margin-top: 5px;
+            vertical-align: middle;
+            fill: $icon-default;
+          }
+          &-para{
+            display: inline-flex;
+            vertical-align: middle;
+            margin-top: 5px;
+
+          }
         }
       }
       &-middle {

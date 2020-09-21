@@ -27,7 +27,7 @@
             <el-input 
               v-model="userCreateInfo.email"
               placeholder="可以同时添加多个账户，请以分号隔开"
-              @change="update()">
+              @change="navBack()">
             </el-input>
         </el-form-item>
 
@@ -323,27 +323,24 @@ export default {
     navBack() {
       this.$router.push('/userAuthority');
     },
-    update() {
-      
-    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/styles/util.scss';
+
 .new{
   overflow-y: auto;
-  background: $bg-light;
+  width: 60%;
+  padding: 20px;
   margin-left: 20%;
   margin-bottom: 90px;
-  padding: 20px;
-  width: 60%;
+  background: $bg-light;
 
   &-top{
     border-bottom: 1px solid $border-dark;
     padding-bottom: 20px;
-
     &-title{
       @include flex-align(center, flex-start);
       margin-bottom: 20px;
@@ -356,27 +353,22 @@ export default {
       }
       &-add{
         fill: $brand-primary;
-        margin-bottom: -2px;
-        margin-right: 5px;
+        margin: 0px 5px -2px 0px;
       }
     }
-
     &-inform{
       margin-bottom: 20px;
       .el-radio{
         margin-left: 20px;
       }
     }
-
     /deep/ .el-form-item{
       margin-bottom: 5px;
     }
-
     /deep/ .el-form-item__label{
       margin-left: -35px;
       font-size: 16px;
     }
-
   }
 
   &-middle{
@@ -385,29 +377,23 @@ export default {
       @include flex-align(center, flex-start);
       margin: 15px 0px 15px;
     }
-
     &-content{
       display: flex;
       border-bottom: 1px solid $border-dark;
       border-top: 1px solid $border-dark;
-      
       &-left{ 
         border-right: 1px solid $border-dark;
         width: 50%;
         height: 100%;
-
         &-title{
           background: $bg-default;
           padding: 10px 10px 10px;
         }
-
         &-content{
           padding: 15px 10px 15px;
-
           /deep/ .el-checkbox__input{
             top:-17px; 
           }  
-
           .checkBox{
             display: grid;
             white-space: pre-line;
@@ -415,11 +401,6 @@ export default {
             width: 100%;
             font-size: 12px;
             color: $text-mute;
-          }
-
-          .el-checkbox-group{
-            .el-checkbox{
-            }
           }
         }
       }
@@ -432,6 +413,7 @@ export default {
           background: $bg-default;
           padding: 10px 10px 10px;
         }
+
         &-content{
           padding: 15px 10px 15px;
 
@@ -447,91 +429,73 @@ export default {
             height: auto;
             width: 100%
           }
-
-          .el-checkbox-group{
-            .el-checkbox{
-            }
-          }
         }
       }
     }
   }
+
   &-bottom{
     &-title{
       background: $bg-default;
       padding: 10px 10px 10px;
     }
-
     &-mission{
       @include flex-align(center, flex-start);
       border-bottom: 1px solid $border-dark;
       padding: 10px 10px 10px;
       height: auto;
-
       &-title{
         width: 120px;
         margin-right: 80px;
       }
-
       &-options{
         @include flex-align(center, center);
         width: 100%;
-
         .el-checkbox-group{
           display: flex;
           flex-wrap: wrap;
-
           .el-checkbox{
             margin: 5px 40px 0px 0px;
           }
         }
       }
     }
-
     &-data{
       @include flex-align(center, flex-start);
       border-bottom: 1px solid $border-dark;
       padding: 10px 10px 10px;
       height: auto;
-
       &-title{
         width: 120px;
         margin-right: 80px;
       }
-
       &-options{
         @include flex-align(center, center);
         width: 100%;
         .el-checkbox-group{
           display: flex;
           flex-wrap: wrap;
-          
           .el-checkbox{
             margin: 5px 40px 0px 0px;
           }
         }
       }
     }
-
     &-programme{
       @include flex-align(center, flex-start);
       border-bottom: 1px solid $border-dark;
       padding: 10px 10px 10px;
       height: auto;
-
       &-title{
         width: 120px;
         margin-right: 80px;
       }
-
       &-options{
         @include flex-align(center, center);
         width: 100%;
-
         .el-checkbox-group{
           display: flex;
           flex-wrap: wrap;
-          
           .el-checkbox{
             margin: 5px 40px 0px 0px;
           }
@@ -543,8 +507,6 @@ export default {
     }
   }
 }
-
-
 
 .outside{
   overflow: auto;
@@ -564,7 +526,6 @@ export default {
         font-size: 10px;
      }
     }
-
   }
 }
 </style>

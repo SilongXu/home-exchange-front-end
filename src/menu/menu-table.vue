@@ -1,6 +1,7 @@
 <template>
   <div class="menu-table">
     <menu-new v-if="addDialogVisible" :visible="addDialogVisible" :node="node" @close="dialogClose"></menu-new>
+    
     <div class="menu-table-header">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item v-if="node.paths"><a @click="gotoMenuNode({catalogId: -1, name: '目录管理'})">目录管理</a></el-breadcrumb-item>

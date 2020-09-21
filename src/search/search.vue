@@ -34,7 +34,7 @@ export default {
     };
   },
   mounted() {
-    this.fetchResult();
+    this.fetchResult(); 
   },
   methods: {
     fetchResult() {
@@ -49,13 +49,15 @@ export default {
       };
     },
     getFilterForResult() {
+      
         return {
           catalogId: this.menuFilter?.id? this.menuFilter.id : -1 ,
           nodeCode: this.menuFilter?.nodeCode? this.menuFilter.nodeCode : 'ALL',
           filters: this.$refs.filter ? JSON.stringify(this.$refs.filter.filterList.concat(
             {fieldCode: null, fieldName: null, queryType: 0, dataType: null, value: this.inputFilter}
           )) : '[]',
-        }      
+        }
+  
     },
     onInputChange(filter) {
       this.inputFilter = filter;
