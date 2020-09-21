@@ -14,15 +14,15 @@
       <el-input v-if="filter.queryType === 12" v-model="filter.value" placeholder="请输入" size="small"></el-input>
       <el-input-number v-if="filter.queryType === 21" v-model="filter.value" :min="0" placeholder="请输入数字" size="small"></el-input-number>
       <div class="input-group" v-if="filter.queryType === 22">
-        <el-input-number v-model="filter.fromValue" :min="0" placeholder="请输入数字" size="small"></el-input-number>
+        <el-input-number v-model="filter.fromValue" @change="onFilterFromToChange(filter)" :min="0" placeholder="请输入数字" size="small"></el-input-number>
         至
-        <el-input-number v-model="filter.toValue" :min="0" placeholder="请输入数字" size="small"></el-input-number>
+        <el-input-number v-model="filter.toValue" @change="onFilterFromToChange(filter)" :min="0" placeholder="请输入数字" size="small"></el-input-number>
       </div>
       <el-input v-if="filter.queryType === 31" v-model="filter.value" type="number" :min="0" placeholder="请输入数字" size="small"></el-input>
       <div class="input-group" v-if="filter.queryType === 32">
-        <el-input v-model="filter.fromValue" type="number" :min="0" placeholder="请输入数字" size="small"></el-input>
+        <el-input v-model="filter.fromValue" @change="onFilterFromToChange(filter)" type="number" :min="0" placeholder="请输入数字" size="small"></el-input>
         至
-        <el-input v-model="filter.toValue" type="number" :min="0" placeholder="请输入数字" size="small"></el-input>
+        <el-input v-model="filter.toValue" @change="onFilterFromToChange(filter)" type="number" :min="0" placeholder="请输入数字" size="small"></el-input>
       </div>
       <el-date-picker
         v-if="filter.queryType === 41"
@@ -32,17 +32,23 @@
         placeholder="选择日期"
       >
       </el-date-picker>
-      <el-date-picker
-        v-if="filter.queryType === 42"
-        v-model="filter.value"
-        type="daterange"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        size="small"
-        @change="changeDataRange(filter)"
-      >
-      </el-date-picker>
+      <div v-if="filter.queryType === 42">
+        <el-date-picker
+          v-model="filter.fromValue"
+          placeholder="开始日期"
+          size="small"
+          @change="onFilterFromToChange(filter)"
+        >
+        </el-date-picker>
+        <span class="data-separator">至</span> 
+        <el-date-picker
+          v-model="filter.toValue"
+          placeholder="结束日期"
+          size="small"
+          @change="onFilterFromToChange(filter)"
+        >
+        </el-date-picker>
+      </div>
       <div class="input-group" v-if="filter.queryType === 51">
         <el-input v-model="filter.lonValue" type="number" :min="0" placeholder="请输入经度" size="small"></el-input>
         <el-input v-model="filter.latValue" type="number" :min="0" placeholder="请输入纬度" size="small"></el-input>
@@ -142,7 +148,7 @@
           @visible-change="onTagsVisibleChange"
         >
           <el-option
-            v-for="tag in tagOptions"
+            v-for="(tag) in tagOptions"
             :key="tag.id"
             :label="tag.name"
             :value="tag">
@@ -178,7 +184,7 @@ export default {
       this.$emit('filterChange', this.filterList);
     },
     onTagsVisibleChange(visible) {
-      if (visible) {
+      if (visible && !this.tagOptions.length) {
         this.loadingTags = true;
         apiService.getTagList()
         .then((tags) => {
@@ -263,10 +269,13 @@ export default {
       })
       .catch(() => {});
     },
-    changeDataRange(filter) {
-      if (filter && filter.value) {
-        filter.fromValue = filter.value[0];
-        filter.toValue = filter.value[1];
+    onFilterFromToChange(filter) {
+      if (filter.fromValue && filter.toValue) {
+        if (filter.fromValue > filter.toValue) {
+          const tmp = filter.toValue;
+          filter.toValue = filter.fromValue;
+          filter.fromValue = tmp;
+        }
       }
     }
   },
@@ -296,6 +305,10 @@ export default {
       margin-right: 12px;
       white-space: nowrap;
     }
+  }
+
+  .data-separator {
+    margin: 0 15px;
   }
 
   .input-group {
