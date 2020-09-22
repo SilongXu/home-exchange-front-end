@@ -74,28 +74,34 @@
           v-loading="metadataLoading" 
           element-loading-background="rgba(0, 0, 0, 0.4)">
             <el-table
-              :data="metaData"                
+              :data="metaData"
               row-key="code"
-              :tree-props="{children: 'subs'}">
+              :tree-props="{children: 'subs'}"
+              >
+              <el-table-column
+                prop="code"
+                label=元数据编号
+                min-width="120">
+              </el-table-column>
               <el-table-column
                 prop="name"
                 label="元数据名称"
-                min-width="300">
+                min-width="120">
               </el-table-column>
               <el-table-column
                 prop="value"
                 label="元数据值"
-                min-width="180">
+                min-width="250">
               </el-table-column>
               <el-table-column
                 prop="dataType"
                 label="元数据类型"
-                min-width="180">
+                min-width="80">
               </el-table-column>
               <el-table-column
                 prop="enumName"
                 label="枚举名称"
-                min-width="180">
+                min-width="80">
               </el-table-column>
             </el-table>
           </div>
@@ -119,8 +125,7 @@ export default {
       tagOptions: [],
       popoverVisible: false,
       metadataLoading: true,
-      metaData: [
-      ],
+      metaData: [],
       imagePath: '',
     };
   },
@@ -133,10 +138,24 @@ export default {
     .then((meta) => {
       this.metaData = meta.data.fieldValues;
       this.metadataLoading=false; 
+
+      //console.log(this.metaData);
+      this.filterObject(this.metaData);
     }).catch(() => {
     });
+
   },
   methods: {
+    filterObject(obj){
+      obj.forEach((item) => {
+        if(item.dataType=="object"){
+          item.value = '';
+        }
+        if(item.subs != null){
+          filterObject(item.subs);
+        }
+      })
+    },
     detailDownload(detail) {
       apiService.getDetailDownload(detail.id)
       .then((href) => {
@@ -214,7 +233,7 @@ export default {
 @import '@/styles/util.scss';
 
 .dialog {
-  height: 75vh;
+  height: auto;
   background: $bg-light;
 
   &-top {
@@ -382,5 +401,8 @@ export default {
 
 .el-select {
   width: 360px;
+}
+/deep/ .el-dialog{
+  height: auto;
 }
 </style>
