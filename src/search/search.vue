@@ -49,11 +49,12 @@ export default {
       };
     },
     getFilterForResult() {
-      
+        const fList = this.checkFilterValue();
+        console.log(fList)
         return {
           catalogId: this.menuFilter?.id? this.menuFilter.id : -1 ,
           nodeCode: this.menuFilter?.nodeCode? this.menuFilter.nodeCode : 'ALL',
-          filters: this.$refs.filter ? JSON.stringify(this.$refs.filter.filterList.concat(
+          filters: fList? JSON.stringify(fList.concat(
             {fieldCode: null, fieldName: null, queryType: 0, dataType: null, value: this.inputFilter}
           )) : '[]',
         }
@@ -69,6 +70,78 @@ export default {
     },
     onFilterChange() {
       this.fetchResult();
+    },
+    checkFilterValue() {
+      let fList;
+      if (!this.$refs.filter) {
+        return null;
+      }
+      fList = this.$refs.filter.filterList.filter(filter => {
+        switch (filter.queryType) {
+          case 11:
+          case 12:
+          case 21:
+          case 31:
+          case 41: {
+            if (filter.value) {
+              return filter;
+            }
+            break;
+          }
+          case 22:
+          case 32: {
+            if (filter.fromValue || filter.toValue) {
+              return filter;
+            }
+            break;
+          }
+          case 42: {
+            if (filter.fromValue || filter.toValue) {
+              return filter;
+            }
+            break;
+          }
+          case 51: {
+            if (filter.lonValue && filter.latValue) {
+              return filter;
+            }
+            break;
+          }
+          case 52: {
+            if (filter.centralLon && filter.centralLat) {
+              return filter;
+            }
+            break;
+          }
+          case 54: {
+            if (filter.lons && filter.lats) {
+              return filter;
+            }
+            break;
+          }
+          case 53: {
+            if (filter.northEastLon && filter.northEastLat && filter.northWestLon && filter.northWestLat && filter.southEastLon && filter.southEastLat && filter.southWestLat && filter.southWestLon) {
+              return filter;
+            }
+            break;
+          }
+          case 56: { 
+            if (filter.country && filter.province && filter.city && filter.district) {
+              return filter;
+            }
+            break;
+          }
+          case 61: {
+            if (filter.tag) {
+              return filter;
+            }
+            break;
+          }
+          default:
+            return filter;
+        }
+      });
+      return fList;
     },
   },
 }
