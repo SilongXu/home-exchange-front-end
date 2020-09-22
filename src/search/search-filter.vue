@@ -27,7 +27,8 @@
       <el-date-picker
         v-if="filter.queryType === 41"
         v-model="filter.value"
-        type="date"
+        format="yyyy-MM-dd HH:mm:ss"
+        type="datetime"
         size="small"
         placeholder="选择日期"
       >
@@ -35,6 +36,9 @@
       <div v-if="filter.queryType === 42">
         <el-date-picker
           v-model="filter.fromValue"
+          format="yyyy-MM-dd HH:mm:ss"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          type="datetime"
           placeholder="开始日期"
           size="small"
           @change="onFilterFromToChange(filter)"
@@ -43,6 +47,9 @@
         <span class="data-separator">至</span> 
         <el-date-picker
           v-model="filter.toValue"
+          format="yyyy-MM-dd HH:mm:ss"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          type="datetime"
           placeholder="结束日期"
           size="small"
           @change="onFilterFromToChange(filter)"
@@ -190,7 +197,6 @@ export default {
         .then((tags) => {
           this.tagOptions = tags.data;
           this.loadingTags = false;
-
         })
         .catch(() => {
           this.loadingTags = false;
