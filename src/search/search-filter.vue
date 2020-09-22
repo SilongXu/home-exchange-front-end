@@ -30,8 +30,7 @@
         format="yyyy-MM-dd HH:mm:ss"
         type="datetime"
         size="small"
-        placeholder="选择日期"
-      >
+        placeholder="选择日期">
       </el-date-picker>
       <div v-if="filter.queryType === 42">
         <el-date-picker
