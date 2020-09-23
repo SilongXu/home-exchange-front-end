@@ -1,5 +1,12 @@
 <template>
   <div class="monitor-chart">
+    <monitor-error-detail
+      :visible='errorDetailVisible'
+      :detail='errorDetailData'
+      @close="onDetailClose"
+    >
+    
+    </monitor-error-detail>
     <div class="monitor-chart-left">
       <div class="monitor-chart-left-title">导入趋势</div>
       <div class="monitor-chart-left-content"></div>
@@ -7,6 +14,34 @@
     <div class="monitor-chart-right">
       <div class="monitor-chart-right-title">搜索次数</div>
       <div class="monitor-chart-right-content"></div>
+    </div>
+    <div class="monitor-chart-error">
+      <div class="monitor-chart-error-title">错误提示</div>
+      <div class="monitor-error-table">
+        <el-table
+          :data="errorTableData"
+          style="width: 100%"
+        >
+          <el-table-column
+            prop="id"
+            label="编号"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="date"
+            label="时间"
+            min-width="200"
+          >
+          </el-table-column>
+          <el-table-column
+            label="错误原因"
+          >
+            <template slot-scope="scope">
+              <span class="reason" @click="checkErrorDetail(scope.row.failReason)">详情</span>  
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
     </div>
   </div>
 </template>
@@ -163,9 +198,13 @@ const SEARCH_LINE_OPTIONS = {
 
 export default {
   name: 'MonitorChart',
+  components: {
+    'monitor-error-detail': () => import('./modal/monitor-error-detail'),
+  },
   mounted() {
     this.getTrendData();
     this.getSearchData();
+    this.getErrorLog();
   },
   data() {
     return {
@@ -173,6 +212,9 @@ export default {
       trendLineData: [],
       searchLine: null,
       searchLineData: [],
+      errorTableData: [],
+      errorDetailData: null,
+      errorDetailVisible: false,
     };
   },
   methods: {
@@ -191,6 +233,14 @@ export default {
           this.drawSearchLine();
         }
       });
+    },
+    getErrorLog() {
+      apiService.getErrorLog().then((log) => {
+        if (log) {
+          this.errorTableData = log.data.data || [];
+          console.log(this.errorTableData)
+        }
+      })
     },
     drawTrendLine() {
       this.trendLine = this.$echarts.init(document.querySelector('.monitor-chart-left-content'));
@@ -258,7 +308,14 @@ export default {
         itemWidth: 12,
         itemHeight: 12,
       };
-    }
+    },
+    checkErrorDetail(detail) {
+      this.errorDetailData = detail;
+      this.errorDetailVisible = true;
+    },
+     onDetailClose() {
+      this.errorDetailVisible = false;
+    },
   },
 }
 </script>
@@ -268,10 +325,11 @@ export default {
 
 .monitor-chart {
   display: flex;
+  justify-content: space-between;
   height: 332px;
   margin-top: 20px;
 
-  &-left, &-right {
+  &-left, &-right, &-error {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -295,6 +353,30 @@ export default {
 
   &-left {
     margin-right: 20px;
+  }
+  &-error {
+    margin-left: 20px;
+
+    .monitor-error-table {
+      overflow: auto;
+      text-align: center;
+
+      .reason {
+          @include flex-align(center, flex-start);
+          color: $brand-primary;
+          cursor: pointer;
+
+          &:hover {
+            text-decoration: underline;
+          }
+
+          &:not(:last-of-type) {
+            margin-right: 24px;
+          }
+
+      }
+    }
+
   }
 }
 </style>

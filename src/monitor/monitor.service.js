@@ -23,6 +23,10 @@ const MonitorService = {
   getHistoryTrend(nodeCode, period) {
     return http.get(`/${prefix}/system/stat/resource/trend/${nodeCode}?period=${period}`);
   },
+
+  getErrorLog() {
+    return http.get(`/${prefix}/system/log/importLog`);
+  }
 };
 
 export default MonitorService;
