@@ -50,7 +50,6 @@ export default {
     },
     getFilterForResult() {
         const fList = this.checkFilterValue();
-        console.log(fList)
         return {
           catalogId: this.menuFilter?.id? this.menuFilter.id : -1 ,
           nodeCode: this.menuFilter?.nodeCode? this.menuFilter.nodeCode : 'ALL',
