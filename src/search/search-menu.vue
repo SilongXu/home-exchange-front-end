@@ -83,7 +83,7 @@ export default {
           <span domPropsTitle={node.label}>{node.label}</span>
         </span>);
     }
-  }
+  },
 }
 </script>
 <style lang="scss" scoped>
