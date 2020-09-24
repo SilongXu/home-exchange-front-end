@@ -7,6 +7,7 @@ const _import = () => import(/* webpackChunkName: "import" */ '@/import/import')
 const menu = () => import(/* webpackChunkName: "menu" */ '@/menu/menu')
 const monitor = () => import(/* webpackChunkName: "monitor" */ '@/monitor/monitor')
 const userAuthority = () => import(/* webpackChunkName: "userAuthority" */ '@/userAuthority/userAuthority')
+const transfer = () => import(/* webpackChunkName: "transfer" */ '@/transfer/transfer')
 
 Vue.use(Router)
 
@@ -26,6 +27,11 @@ export default new Router({
           path: 'import**',
           name: 'import',
           component: _import,
+        },
+        {
+          path: 'transfer**',
+          name: 'transfer',
+          component: transfer,
         },
         {
           path: 'menu**',
