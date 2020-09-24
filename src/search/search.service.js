@@ -41,13 +41,13 @@ const SearchService = {
     return http.post(`retrieval/system/search/file`, shapefile);
   },
 
-  getDetailDownload(id){
-    return http.post(`/retrieval/system/data/download`, id,
+  getDetailDownload(dataId, productType){
+    return http.post(`/retrieval/system/data/download/?dataId=${dataId}&productType=${productType}`,
     {responseType: 'blob'});
   },
   
-  getMetadata(id){
-    return http.post(`/retrieval/system/data/metadata`, id);
+  getMetadata(dataId, productType){
+    return http.post(`/retrieval/system/data/metadata/?dataId=${dataId}&productType=${productType}`);
   },
 
   getDetailImage(path) {

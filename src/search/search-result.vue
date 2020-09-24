@@ -54,9 +54,9 @@
       <el-pagination
         @size-change="onSizeChange"
         @current-change="onPageChange"
-        :current-page="pagination.page"
+        :current-page.="pagination.page + 1" 
         :page-sizes="[5, 10, 20]"
-        :page-size="pagination.size"
+        :page-size.sync="pagination.size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pagination.total">
       </el-pagination>
@@ -79,6 +79,7 @@ export default {
     return {
       tagDialogVisible: false,
       dialogVisible: false,
+      filterPagination: 0,
       pagination: {
         page: 1,
         size: 10,
@@ -91,7 +92,7 @@ export default {
   },
   methods: {
     download(entry) {
-      apiService.getDetailDownload(entry.id)
+      apiService.getDetailDownload(entry.id, entry.productType)
       .then((href) => {
         const blob = new Blob([href], {type: 'application/octet-stream'});
         //const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
@@ -134,6 +135,7 @@ export default {
       this.fetchResult(this.filters);
     },
     onPageChange(page) {
+      
       this.pagination.page = page;
       this.fetchResult(this.filters);
     },
@@ -146,7 +148,7 @@ export default {
       // 缓存上一次搜索的filterList
       // this.filters = searchParam;
       this.resultLoading = true;
-      apiService.getSearchResults(page, size, searchParam)
+      apiService.getSearchResults(this.filterPagination  == -1 ? 0 : page-1, size, searchParam)
       .then((results) => {
         this.resultLoading = false;
         if (results) {
@@ -159,6 +161,7 @@ export default {
         }
       })
       .catch(() => {});
+      this.filterPagination = 0;
     },
   },
 }

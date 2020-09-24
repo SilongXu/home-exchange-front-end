@@ -118,12 +118,10 @@ export default {
       let selectedMenu = this.getSelectedMenu();
       // TO DO do setting transfer
       this.dialogVisible = true;
-      console.log(selectedMenu);
     },
 
     setTransfer(item) {
       this.dialogVisible = true;
-      console.log(item);
     },
 
     getSelectedMenu() {
@@ -139,7 +137,6 @@ export default {
       this.dialogVisible = false;
       if (setting) {
       console.log(setting)
-
       }
     }
   },

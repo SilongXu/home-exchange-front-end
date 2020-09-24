@@ -60,6 +60,7 @@ export default {
   
     },
     onInputChange(filter) {
+      this.$refs.result.filterPagination = -1;
       this.inputFilter = filter;
       this.fetchResult();
     },
