@@ -194,7 +194,7 @@ export default {
         this.loadingTags = true;
         apiService.getTagList()
         .then((tags) => {
-          this.tagOptions = tags.data;
+          this.tagOptions = tags;
           this.loadingTags = false;
         })
         .catch(() => {
@@ -206,7 +206,7 @@ export default {
       if (visible) {
         this.loadingCountry = true;
         this.fetchDivisionById(-1).then((options) => {
-          this.countries = options.data;
+          this.countries = options;
           this.loadingCountry = false;
         })
         .catch(() => {
@@ -218,7 +218,7 @@ export default {
     onSelectCountry(country) {
       this.loadingProvince = true;
       this.fetchDivisionById(country).then((options) => {
-        this.provinces = options.data;
+        this.provinces = options;
         this.loadingProvince = false;
       })
       .catch(() => {
@@ -229,7 +229,7 @@ export default {
     onSelectProvince(province) {
       this.loadingCity = true;
       this.fetchDivisionById(province).then((options) => {
-        this.cities = options.data;
+        this.cities = options;
         this.loadingCity = false;
       })
       .catch(() => {
@@ -240,7 +240,7 @@ export default {
     onSelectCity(city) {
       this.loadingDistrict = true;
       this.fetchDivisionById(city).then((options) => {
-        this.districts = options.data;
+        this.districts = options;
         this.loadingDistrict = false;
       })
       .catch(() => {
@@ -269,7 +269,7 @@ export default {
       }
       apiService.getSearchFilters(node.nodeCode)
       .then((filters) => {
-        this.filterList = filters.data;
+        this.filterList = filters;
       
       })
       .catch(() => {});

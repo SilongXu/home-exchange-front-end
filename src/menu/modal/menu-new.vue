@@ -114,7 +114,7 @@ export default {
       if (this.node) {
         apiService.getMetaField(this.node.id)
         .then((type) => {
-          this.menuTypes = type.data;
+          this.menuTypes = type;
         });
       }
     },
@@ -122,7 +122,7 @@ export default {
       if(this.node) {
         apiService.enumfield(classValue, this.node.id)
         .then((selects) => {
-          this.menuSelect = selects.data;
+          this.menuSelect = selects;
           this.menuSelect.items.forEach(item => {
             this.checkList.push(item.itemCode);
           });

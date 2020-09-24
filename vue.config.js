@@ -25,14 +25,16 @@ module.exports = {
   devServer: {
     proxy: {
       "/api/v1/retrieval": {
-        target: "http://192.168.0.167:28500/", 
+        //target: "http://192.168.0.167:28500/", 
         //target: "http://172.26.4.51:30001/",
+        target: "http://192.168.43.181:28500/",
         secure: false,
         changeOrigin: true,
       },
       "/api/v1/catalog": {
-        target: "http://192.168.0.167:28500/", 
+        //target: "http://192.168.0.167:28500/", 
         //target: "http://172.26.4.51:30001/",
+        target: "http://192.168.43.181:28500/",
         secure: false,
         changeOrigin: true,
       }

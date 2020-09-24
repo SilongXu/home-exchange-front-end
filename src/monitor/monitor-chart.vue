@@ -221,7 +221,7 @@ export default {
     getTrendData() {
       apiService.getImportTrend().then((trend) => {
         if (trend) {
-          this.trendLineData = trend.data || [];
+          this.trendLineData = trend || [];
           this.drawTrendLine();
         }
       })
@@ -229,7 +229,7 @@ export default {
     getSearchData() {
       apiService.getSearchTrend().then((search) => {
         if (search) {
-          this.searchLineData = search.data || [];
+          this.searchLineData = search || [];
           this.drawSearchLine();
         }
       });
@@ -237,7 +237,7 @@ export default {
     getErrorLog() {
       apiService.getErrorLog().then((log) => {
         if (log) {
-          this.errorTableData = log.data.data || [];
+          this.errorTableData = log.data || [];
           console.log(this.errorTableData)
         }
       })
