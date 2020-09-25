@@ -54,6 +54,7 @@ export default {
         {
           icon: 'transfer',
           name: '同步管理',
+          path: '/transfer',
         },
         {
           icon: 'import-manage',
