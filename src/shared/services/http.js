@@ -14,13 +14,7 @@ http.interceptors.request.use((data) => {
 });
 
 http.interceptors.response.use((response) => {
-  if (response && response.data) {
-    return {
-      data: response.data,
-      header: response.headers,
-    };
-  }
-  return response;
+  return response.data;
 }, (error) => {
   return Promise.reject(error);
 });

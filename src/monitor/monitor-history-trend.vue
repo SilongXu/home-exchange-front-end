@@ -82,7 +82,6 @@ const LINE_OPTIONS = {
     itemWidth: 12,
     itemHeight: 12,
   },
-  series: [],
 };
 
 export default {
@@ -111,7 +110,7 @@ export default {
       .then((info) => {
         this.loading = false;
         if (info) {
-          this.info = info.data || {};
+          this.info = info || {};
           this.draw();
         }
       })

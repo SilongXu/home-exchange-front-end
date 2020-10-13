@@ -51,7 +51,7 @@ export default {
       if (node.level === 1) {
         apiService.getMenuNodeByParentId(-1)
         .then((tree) => {
-          return resolve(tree.data);
+          return resolve(tree);
         })
         .catch(() => {
           resolve([]);
@@ -63,7 +63,7 @@ export default {
       if (!node.isLeaf) {
         apiService.getMenuNodeByParentId(node.data.id)
         .then((tree) => {
-          return resolve(tree.data);
+          return resolve(tree);
         })
         .catch(() => {
           resolve([]);

@@ -50,7 +50,7 @@ export default {
     getCount() {
       apiService.getResourceCount().then((count) => {
         if (count) {
-          this.topData = count.data;
+          this.topData = count;
         }
       });
     }

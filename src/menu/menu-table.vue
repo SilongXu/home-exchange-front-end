@@ -138,8 +138,8 @@ export default {
         this.loading = true;
         apiService.getMenuNodeByParentId(node.id)
         .then((list) => {
-          if (list && list.data) {
-            this.tableList = list.data || [];
+          if (list) {
+            this.tableList = list || [];
             this.loading = false;
           }
         })

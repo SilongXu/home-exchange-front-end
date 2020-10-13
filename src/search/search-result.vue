@@ -93,10 +93,11 @@ export default {
     download(entry) {
       apiService.getDetailDownload(entry.id)
       .then((href) => {
-        const blob = new Blob([href.data], {type: 'application/octet-stream'});
-        const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
-        const fileNameFinal = fileName.substring(0, fileName.length - 1);
-        saveAs(blob, fileNameFinal);
+        const blob = new Blob([href], {type: 'application/octet-stream'});
+        //const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
+        //const fileNameFinal = fileName.substring(0, fileName.length - 1);
+        const fileName = 'downloadFile';
+        saveAs(blob, fileName);
       }).catch(() => {
       });
     },
@@ -149,8 +150,8 @@ export default {
       .then((results) => {
         this.resultLoading = false;
         if (results) {
-          this.searchResult = results.data.data;
-          this.pagination = results.data.pagination || {
+          this.searchResult = results.data;
+          this.pagination = results.pagination || {
             page: 1,
             size: 10,
             total: 0,
