@@ -238,7 +238,6 @@ export default {
       apiService.getErrorLog().then((log) => {
         if (log) {
           this.errorTableData = log.data || [];
-          console.log(this.errorTableData)
         }
       })
     },

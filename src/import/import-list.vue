@@ -9,7 +9,13 @@
           <done></done>
         </el-tab-pane>
       </el-tabs>
-      <el-button type="primary" size="mini" @click="goToNew()">
+
+      <el-button type="primary" size="mini" @click="goToNewSpecial()" class="import-tab-dataInt">
+        <svg-icon icon="import-manage"></svg-icon>
+        网络数据导入
+      </el-button>
+
+      <el-button type="primary" size="mini" @click="goToNew()" class="import-tab-data">
         <svg-icon icon="import-manage"></svg-icon>
         数据导入
       </el-button>
@@ -31,6 +37,9 @@ export default {
     }
   },
   methods: {
+    goToNewSpecial(){
+      this.$router.push('./import/newSpecial');
+    },
     goToNew() {
       this.$router.push('/import/new');
     },
@@ -45,11 +54,17 @@ export default {
   &-tab{
     position: relative;
 
-    .el-button {
+    &-dataInt{
+      position: absolute;
+      top: 8px;
+      right: 130px;
+    }
+    &-data {
       position: absolute;
       top: 8px;
       right: 20px;
-
+    }
+    .el-button{
       ::v-deep span{
         display: flex;
         align-items: center;

@@ -143,9 +143,17 @@ export default {
     }
   },
   methods: {
+    onSortChange(){},
+    onFilterChange(){},
     onSelectionChange(selection) {
       this.selectedData = selection;
     },
+    startImport(){},
+    stopImport(){},
+    cancelImport(){},
+    refreshImport(){},
+    onSizeChange(){},
+    onPageChange(){},
     deleteAllImports() {
       this.$confirm('确定删除全部选中的导入进程？', '提示', {
         confirmButtonText: '确定',

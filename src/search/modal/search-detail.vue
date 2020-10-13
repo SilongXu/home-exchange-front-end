@@ -130,16 +130,15 @@ export default {
     };
   },
   mounted() {
+    
     this.imagePath = 'data:image/jpg;base64,' + this.detail.thumb;
     this.imagePath = apiService.getDetailImage(this.detail.browseFilePath).then((res) => {
       this.imagePath =  `data:image/jpg;base64,` + res;
     });
-    apiService.getMetadata(this.detail.id)
+    apiService.getMetadata(this.detail.id, this.detail.productType)
     .then((meta) => {
       this.metaData = meta.fieldValues;
       this.metadataLoading=false; 
-
-      //console.log(this.metaData);
       this.filterObject(this.metaData);
     }).catch(() => {
     });
@@ -157,7 +156,7 @@ export default {
       })
     },
     detailDownload(detail) {
-      apiService.getDetailDownload(detail.id)
+      apiService.getDetailDownload(detail.id, detail.productType)
       .then((href) => {
         const blob = new Blob([href], {type: 'application/octet-stream'});
         //const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];

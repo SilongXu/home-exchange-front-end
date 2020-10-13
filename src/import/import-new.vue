@@ -19,6 +19,9 @@
             <el-button plain size="small" type="primary">选择文件</el-button>
           </el-upload>
         </el-form-item>
+
+
+
         <el-form-item label="业务数据" :required="true">
           <el-upload
             action=""
@@ -141,7 +144,6 @@ export default {
       this.form.directory = nameStack.join('/');
     },
     onFileChange(file, fileList) {
-      console.log(fileList);
     }
   },
 }
