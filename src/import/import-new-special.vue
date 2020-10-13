@@ -1,5 +1,5 @@
 <template>
-  <div class="import-new">
+  <div class="import-new" >
     <div class="import-new-form">
       <div class="import-new-form-title">
         <div class="title-nav icon-btn" @click="navBack()">
@@ -15,7 +15,7 @@
               <el-option
               v-for="item in options"
               :key="item.name"
-              :label="item.updateDataType" 
+              :label="item.name" 
               :value="item.updateDataType">
               </el-option>
             </el-select>
@@ -52,7 +52,7 @@
           </div>
         </el-form-item>
         <el-form-item label="描述信息">
-          <el-input v-model="dir.dirBasePath" type="textarea"></el-input>
+          <el-input v-model="importPath" type="textarea"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -96,7 +96,7 @@ export default {
         children: 'children',
         isLeaf: 'leaf'
       },
-      count: 1
+      count: 1,
     }
   },
   methods: {
@@ -110,18 +110,19 @@ export default {
       apiService.importIntData(formData)
       .then((data) => {
         this.importStatus=data.result;
+        if(this.importStatus == "false"){
+          this.$message('文件和数据类型不符');
+        }else if(this.importStatus == "true"){
+          this.$router.push('/import');
+          this.$message({
+            message: '导入成功',
+            type: 'success'
+          });
+        }       
       }).catch(() =>{
       });
-      if(this.importStatus == false){
-        this.$message('文件和数据类型不符');
-      }else{
-        this.$router.push('/import');
-        this.$message({
-          message: '导入成功',
-          type: 'success'
-        });
-      }
     },
+
     setformDataType(){
       this.dir.updateDataType = this.value;
     },
