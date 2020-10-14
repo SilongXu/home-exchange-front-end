@@ -35,7 +35,7 @@
         <el-form-item label="目标目录">
           <div class="directory">
             <div class="directory-selected">
-              {{importPath}}
+              {{dir.dirBasePath}}
             </div>
             <div class="directory-selector">
               <el-tree
@@ -52,7 +52,7 @@
           </div>
         </el-form-item>
         <el-form-item label="描述信息">
-          <el-input v-model="importPath" type="textarea"></el-input>
+          <el-input v-model="descInfo" type="textarea"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -71,6 +71,7 @@
 
 <script>
 import apiService from './import.service';
+import debounce from "lodash-es/debounce";
 
 export default {
   name: 'ImportNewSpecial',
@@ -78,13 +79,12 @@ export default {
     return {
       options: [],
       value: '',
-      importPath: '',
+      descInfo: '',
       dir: {
         dir: [],
         dirBasePath: '',
         updateDataType: '',
       },
-      importStatus: '',
       cycleOptions: [
         {label: '永久保留', value: 'PERMANENT'},
       ],
@@ -109,15 +109,14 @@ export default {
       formData.append('updateDataType', this.dir.updateDataType);
       apiService.importIntData(formData)
       .then((data) => {
-        this.importStatus=data.result;
-        if(this.importStatus == "false"){
-          this.$message('文件和数据类型不符');
-        }else if(this.importStatus == "true"){
-          this.$router.push('/import');
+        if(data.result == "false"){
+          this.$message(data.rejectReason);
+        }else if(data.result == "true"){
           this.$message({
             message: '导入成功',
             type: 'success'
           });
+          this.navBack();
         }       
       }).catch(() =>{
       });
@@ -170,7 +169,6 @@ export default {
     onFileChange(file, fileList) {
       apiService.getImportPath()
       .then((path) => {
-        this.importPath = path;
         this.dir.dirBasePath = path;
         this.dir.dir = fileList;
       }).catch(() => {

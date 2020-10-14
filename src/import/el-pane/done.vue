@@ -4,16 +4,16 @@
       <el-button plain size="mini" :disabled="!hasSelection" >
         重新开始
       </el-button>
-      <el-button plain size="mini" :disabled="!hasSelection" @click="deleteAllImports">
+      <el-button plain size="mini" :disabled="!hasSelection" @click="deleteAllImports()">
         全部删除
       </el-button>
     </div>
     <div class="import-processing-table">
       <el-table
         :data="tableData"
-        @sort-change="onSortChange"
-        @filter-change="onFilterChange"
-        @selection-change="onSelectionChange"
+        @sort-change="onSortChange()"
+        @filter-change="onFilterChange()"
+        @selection-change="onSelectionChange()"
         style="width: 100%">
         <el-table-column
           type="selection"
