@@ -1,7 +1,7 @@
 <template>
   <div class="import-processing">
     <div class="import-processing-operation">
-      <el-button plain size="mini" :disabled="!hasSelection" @click="stopAllImports">
+      <el-button plain size="mini" :disabled="!hasSelection" @click="stopAllImports()">
         全部暂停
       </el-button>
       <el-button plain size="mini" :disabled="!hasSelection">
@@ -11,9 +11,9 @@
     <div class="import-processing-table">
       <el-table
         :data="tableData"
-        @sort-change="onSortChange"
-        @filter-change="onFilterChange"
-        @selection-change="onSelectionChange"
+        @sort-change="onSortChange()"
+        @filter-change="onFilterChange()"
+        @selection-change="onSelectionChange()"
         style="width: 100%">
         <el-table-column
           type="selection"
@@ -88,8 +88,8 @@
 
     <div class="import-processing-footer">
       <el-pagination
-        @size-change="onSizeChange"
-        @current-change="onPageChange"
+        @size-change="onSizeChange()"
+        @current-change="onPageChange()"
         :current-page="pagination.page"
         :page-sizes="[1, 2]"
         :page-size="pagination.size"
@@ -142,6 +142,18 @@ export default {
     }
   },
   methods: {
+    onSortChange(){},
+    onFilterChange(){},
+    onSizeChange(){},
+    onPageChange(){},
+    startImport(){},
+    stopImport(){},
+    cancelImport(){},
+    refreshImport(){},
+
+
+
+
     onSelectionChange(selection) {
       this.selectedData = selection;
     },
