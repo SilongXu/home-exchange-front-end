@@ -119,6 +119,8 @@ export default {
       }
     },
     fetchMenuSelectData(classValue) {
+      this.menuSelect = [];
+      this.checkList = [];
       if(this.node) {
         apiService.enumfield(classValue, this.node.id)
         .then((selects) => {
