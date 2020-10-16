@@ -2,7 +2,7 @@
   <div class="search-filter" >
     <div class="search-filter-entry" :class="filter.queryType === 54 ? 'large' : ''" v-for="(filter, index) in filterList" :key="index">
       <div class="label" :class="{bottom: filter.queryType === 53}">{{filter.fieldName}}</div>
-      <el-select v-if="filter.queryType === 11" v-model="filter.value" placeholder="请选择" size="small" clearable>
+      <el-select v-if="filter.queryType === 11" v-model="filter.value" placeholder="请选择" size="small" clearable multiple>
         <el-option
           v-for="item in filter.options"
           :key="item.enumName"
