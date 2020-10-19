@@ -94,10 +94,8 @@ export default {
     download(entry) {
       apiService.getDetailDownload(entry.id, entry.productType)
       .then((href) => {
-        const blob = new Blob([href], {type: 'application/octet-stream'});
-        //const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
-        //const fileNameFinal = fileName.substring(0, fileName.length - 1);
-        const fileName = 'downloadFile';
+        const blob = new Blob([href.data], {type: href.header['content-type']});
+        const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
         saveAs(blob, fileName);
       }).catch(() => {
       });
@@ -151,9 +149,9 @@ export default {
       apiService.getSearchResults(this.filterPagination  == -1 ? 0 : page-1, size, searchParam)
       .then((results) => {
         this.resultLoading = false;
-        if (results) {
-          this.searchResult = results.data;
-          this.pagination = results.pagination || {
+        if (results.data) {
+          this.searchResult = results.data.data;
+          this.pagination = results.data.pagination || {
             page: 1,
             size: 10,
             total: 0,

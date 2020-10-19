@@ -32,7 +32,7 @@ export default {
       this.loadingTabs = true;
       apiService.getMenuTabs()
       .then((tabs) => {
-        this.tabs = tabs || [];
+        this.tabs = tabs.data || [];
         if (this.tabs.length > 0) {
           this.activeTab = this.tabs[0].nodeCode + '';
         }
