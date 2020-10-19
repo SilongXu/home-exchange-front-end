@@ -114,17 +114,19 @@ export default {
       if (this.node) {
         apiService.getMetaField(this.node.id)
         .then((type) => {
-          this.menuTypes = type;
+          this.menuTypes = type.data;
         });
       }
     },
     fetchMenuSelectData(classValue) {
       this.menuSelect = [];
       this.checkList = [];
+      this.isIndeterminate=false;
+      this.checkAll=true;
       if(this.node) {
         apiService.enumfield(classValue, this.node.id)
         .then((selects) => {
-          this.menuSelect = selects;
+          this.menuSelect = selects.data;
           this.menuSelect.items.forEach(item => {
             this.checkList.push(item.itemCode);
           });

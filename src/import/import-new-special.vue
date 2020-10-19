@@ -109,9 +109,9 @@ export default {
       formData.append('updateDataType', this.dir.updateDataType);
       apiService.importIntData(formData)
       .then((data) => {
-        if(data.result == "false"){
-          this.$message(data.rejectReason);
-        }else if(data.result == "true"){
+        if(data.data.result == "false"){
+          this.$message(data.data.rejectReason);
+        }else if(data.data.result == "true"){
           this.$message({
             message: '导入成功',
             type: 'success'
@@ -169,7 +169,7 @@ export default {
     onFileChange(file, fileList) {
       apiService.getImportPath()
       .then((path) => {
-        this.dir.dirBasePath = path;
+        this.dir.dirBasePath = path.data;
         this.dir.dir = fileList;
       }).catch(() => {
       });
@@ -179,7 +179,7 @@ export default {
   mounted() {
     apiService.getUpdateDataType()
     .then((options) => {
-      this.options = options;
+      this.options = options.data;
     }).catch(() => {
     });
   },

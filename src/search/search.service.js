@@ -42,7 +42,7 @@ const SearchService = {
   },
 
   getDetailDownload(dataId, productType){
-    return http.post(`/retrieval/system/data/download/?dataId=${dataId}&productType=${productType}`,
+    return http.post(`/retrieval/system/data/download/?dataId=${dataId}&productType=${productType}`, {},
     {responseType: 'blob'});
   },
   

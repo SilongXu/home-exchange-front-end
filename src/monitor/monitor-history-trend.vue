@@ -109,8 +109,8 @@ export default {
       apiService.getHistoryTrend(this.nodeCode, this.period)
       .then((info) => {
         this.loading = false;
-        if (info) {
-          this.info = info || {};
+        if (info.data) {
+          this.info = info.data || {};
           this.draw();
         }
       })

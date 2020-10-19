@@ -52,7 +52,7 @@ export default {
     getTagList() {
       apiService.getTagList()
       .then((tags) => {
-        this.tagOptions = tags || [];
+        this.tagOptions = tags.data || [];
       })
       .catch(() => {});
     },

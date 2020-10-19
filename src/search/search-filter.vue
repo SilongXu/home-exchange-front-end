@@ -194,7 +194,7 @@ export default {
         this.loadingTags = true;
         apiService.getTagList()
         .then((tags) => {
-          this.tagOptions = tags;
+          this.tagOptions = tags.data;
           this.loadingTags = false;
         })
         .catch(() => {
@@ -269,7 +269,7 @@ export default {
       }
       apiService.getSearchFilters(node.nodeCode)
       .then((filters) => {
-        this.filterList = filters;
+        this.filterList = filters.data;
       
       })
       .catch(() => {});

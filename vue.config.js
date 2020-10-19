@@ -26,17 +26,19 @@ module.exports = {
     proxy: {
       "/api/v1/retrieval": {
         //target: "http://192.168.0.167:28500/", 
-        target: "http://172.26.4.51:28500/",
+        //target: "http://172.26.4.51:28500/",
+        target: "http://172.16.1.81:28500/",  //以后常用服务器
         //target: "http://192.168.43.181:28500/",
-        //target: "http://10.0.0.31:28500/",
+        //target: "http://10.0.0.31:28500/",//测绘
         secure: false,
         changeOrigin: true,
       },
       "/api/v1/catalog": {
         //target: "http://192.168.0.167:28500/", 
-        target: "http://172.26.4.51:28500/",
+        //target: "http://172.26.4.51:28500/",
+        target: "http://172.16.1.81:28500/",  //以后常用服务器
         //target: "http://192.168.43.181:28500/",
-        //target: "http://10.0.0.31:28500/",
+        //target: "http://10.0.0.31:28500/",//测绘
         secure: false,
         changeOrigin: true,
       }

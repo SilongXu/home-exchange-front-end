@@ -220,24 +220,24 @@ export default {
   methods: {
     getTrendData() {
       apiService.getImportTrend().then((trend) => {
-        if (trend) {
-          this.trendLineData = trend || [];
+        if (trend.data) {
+          this.trendLineData = trend.data || [];
           this.drawTrendLine();
         }
       })
     },
     getSearchData() {
       apiService.getSearchTrend().then((search) => {
-        if (search) {
-          this.searchLineData = search || [];
+        if (search.data) {
+          this.searchLineData = search.data || [];
           this.drawSearchLine();
         }
       });
     },
     getErrorLog() {
       apiService.getErrorLog().then((log) => {
-        if (log) {
-          this.errorTableData = log.data || [];
+        if (log.data) {
+          this.errorTableData = log.data.data || [];
         }
       })
     },

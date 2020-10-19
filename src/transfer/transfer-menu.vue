@@ -48,7 +48,7 @@ export default {
         apiService
           .getMenuNodeByParentId(-1)
           .then((tree) => {
-            return resolve(tree.data);
+            return resolve(tree.data.data);
           })
           .catch(() => {
             resolve([]);
@@ -61,7 +61,7 @@ export default {
         apiService
           .getMenuNodeByParentId(node.data.id)
           .then((tree) => {
-            return resolve(tree.data);
+            return resolve(tree.data.data);
           })
           .catch(() => {
             resolve([]);

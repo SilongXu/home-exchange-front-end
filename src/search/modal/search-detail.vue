@@ -133,11 +133,11 @@ export default {
     
     this.imagePath = 'data:image/jpg;base64,' + this.detail.thumb;
     this.imagePath = apiService.getDetailImage(this.detail.browseFilePath).then((res) => {
-      this.imagePath =  `data:image/jpg;base64,` + res;
+      this.imagePath =  `data:image/jpg;base64,` + res.data;
     });
     apiService.getMetadata(this.detail.id, this.detail.productType)
     .then((meta) => {
-      this.metaData = meta.fieldValues;
+      this.metaData = meta.data.fieldValues;
       this.metadataLoading=false; 
       this.filterObject(this.metaData);
     }).catch(() => {
@@ -158,10 +158,8 @@ export default {
     detailDownload(detail) {
       apiService.getDetailDownload(detail.id, detail.productType)
       .then((href) => {
-        const blob = new Blob([href], {type: 'application/octet-stream'});
-        //const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
-        //const fileNameFinal = fileName.substring(0, fileName.length - 1);
-        const fileName = 'downloadFile';
+        const blob = new Blob([href.data], {type: href.header['content-type']});
+        const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
         saveAs(blob, fileName);
       }).catch(() => {
       });
@@ -169,12 +167,13 @@ export default {
     getTagList() {
       apiService.getTagList()
       .then((tags) => {
-        this.tagOptions = tags || [];
+        this.tagOptions = tags.data || [];
       }) 
       .catch(() => {});
     },
     cancelAdd() {
       this.popoverVisible = false;
+      this.tags = [];
     },
     confirmTag() {
       apiService.addTag(this.detail.id, this.getSelectedTags())
@@ -185,7 +184,7 @@ export default {
         });
         apiService.getTagByFileId(this.detail.id)
         .then((list) => {
-          this.detail.tags = list;
+          this.detail.tags = list.data;
         });
       })
       .catch(() => {
@@ -197,7 +196,7 @@ export default {
         this.loadingTags = true;
         apiService.getTagList()
         .then((tags) => {
-          this.tagOptions = tags;
+          this.tagOptions = tags.data;
           this.loadingTags = false;
         })
         .catch(() => {
