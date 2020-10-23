@@ -1,6 +1,7 @@
 <template>
   <div class="search">
     <search-input @inputChange="onInputChange"></search-input>
+    <div class="search-empty-box"></div>
     <div class="search-content">
       <div class="search-content-left">
         <search-menu @menuChange="onMenuChange"></search-menu>
@@ -247,6 +248,11 @@ export default {
 .search {
   flex: 1;
   overflow: auto;
+
+  &-empty-box{
+    width: 100%;
+    height: 88px;
+  }
 
   &-content {
     display: flex;
