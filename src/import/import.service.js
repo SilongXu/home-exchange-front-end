@@ -13,6 +13,20 @@ const importService = {
   },
   importIntData(formData){
     return http.post(`${prefix}/system/data/upload/dir`, formData);
+  },
+
+  //数据导入三个接口
+  getUploadDataTypeNormal(){
+    return http.get(`${prefix}/system/options/getAllProductType`);
+  },
+  getImportPathNormal(){
+    return http.get(`${prefix}/system/options/getManualPath`);
+  },
+  importData(formData){
+    return http.post(`${prefix}/system/data/manual/upload`, formData,
+    {onUploadProgress (progress) {
+      return Math.round(progress.loaded / progress.total * 100);
+    }});
   }
 };
 

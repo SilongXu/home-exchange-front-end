@@ -10,12 +10,15 @@
         {{ filter.fieldName }}
       </div>
       <el-select
+        filterable
         v-if="filter.queryType === 11"
         v-model="filter.value"
         placeholder="请选择"
         size="small"
         clearable
         multiple
+        collapse-tags="true"
+        style="width: 450px"
       >
         <el-option
           v-for="item in filter.options"
@@ -648,5 +651,17 @@ export default {
 
 .el-cascader {
   width: 360px;
+}
+
+.el-input /deep/{
+  
+input[type=number] {  
+    -moz-appearance:textfield;  
+}  
+input[type=number]::-webkit-inner-spin-button,  
+input[type=number]::-webkit-outer-spin-button {  
+    -webkit-appearance: none;  
+    margin: 0;  
+}  
 }
 </style>
