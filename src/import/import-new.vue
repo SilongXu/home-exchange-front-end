@@ -99,6 +99,36 @@ export default {
     }
   },
   methods: {
+    importData(){
+      this.$message("正在上传文件请耐心等待");
+
+      this.dir.dir.forEach((file) => {
+        const formData = new FormData();
+        formData.append('f', file.raw);
+        formData.append('productType', this.dir.updateDataType);
+
+        apiService.importData(formData)
+        .then((data) => {
+          file.status ="success";
+          this.fileSuccessPush.push(file);
+          this.whetherImportSuccess();
+        }).catch(() => {
+        })
+      })
+    },
+    whetherImportSuccess(){
+      if(this.fileSuccessPush.length === this.dir.dir.length){
+        this.$message({
+            message: '导入成功',
+            type: 'success'
+        });
+        this.navBack();
+      }
+    },
+
+    setformDataType(){
+      this.dir.updateDataType = this.value;
+    },
     navBack() {
       this.$router.push('/import');
     },

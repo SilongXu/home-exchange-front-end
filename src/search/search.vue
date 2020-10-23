@@ -115,7 +115,12 @@ export default {
       }
       fList = this.$refs.filter.filterList.filter((filter) => {
         switch (filter.queryType) {
-          case 11:
+          case 11:{
+            if(filter.value != null && filter.value.length != 0){
+              return filter;
+            }
+            break;
+          }
           case 12:
           case 21:
           case 31:
@@ -152,6 +157,8 @@ export default {
           }
           case 54: {
             if (filter.lons && filter.lats) {
+              filter.lons = filter.lons.split(",");
+              filter.lats = filter.lats.split(",");
               return filter;
             }
             break;
