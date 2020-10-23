@@ -6,20 +6,28 @@
         <search-menu @menuChange="onMenuChange"></search-menu>
       </div>
       <div class="search-content-right">
-        <search-filter ref="filter" @filterChange="onFilterChange"></search-filter>
+        <search-filter
+          ref="filter"
+          @filterChange="onFilterChange"
+          @sendCountriesCache="acceptCountriesCache"
+          @sendProvincesCache="acceptProvincesCache"
+          @sendCitesCache="accpetCitiesCache"
+          @sendCountiesCache="accepCountiesCache"
+        >
+        </search-filter>
         <search-result ref="result" :filters="getFilterList()"></search-result>
       </div>
     </div>
   </div>
 </template>
 <script>
-import SearchFilter from './search-filter'
-import SearchInput from './search-input'
-import SearchMenu from './search-menu'
-import SearchResult from './search-result'
+import SearchFilter from "./search-filter";
+import SearchInput from "./search-input";
+import SearchMenu from "./search-menu";
+import SearchResult from "./search-result";
 
 export default {
-  name: 'Search',
+  name: "Search",
   components: {
     SearchFilter,
     SearchInput,
@@ -28,15 +36,32 @@ export default {
   },
   data: () => {
     return {
-      inputFilter: '',
+      inputFilter: "",
       menuFilter: null,
       needFilter: false,
+      countriesCache: [], //接收国家列表的数据
+      provincesCache: [], //接收省列表的数据
+      citiesCache: [], //接收城市列表的数据
+      countiesCache: [], //接收县区列表的数据
     };
   },
   mounted() {
-    this.fetchResult(); 
+    this.fetchResult();
   },
   methods: {
+    //通过监听接收子节点传送来的数据
+    acceptCountriesCache(countriesCache) {
+      this.countriesCache = countriesCache ? countriesCache : [];
+    },
+    acceptProvincesCache(provincesCache) {
+      this.provincesCache = provincesCache ? provincesCache : [];
+    },
+    accpetCitiesCache(citiesCache) {
+      this.citiesCache = citiesCache ? citiesCache : [];
+    },
+    accepCountiesCache(countiesCache) {
+      this.countiesCache = countiesCache ? countiesCache : [];
+    },
     fetchResult() {
       // 这里执行搜索
       this.$refs.result.fetchResult(this.getFilterForResult());
@@ -45,19 +70,31 @@ export default {
       return {
         catalogId: this.menuFilter?.id,
         input: this.inputFilter,
-        filters: this.$refs.filter ? JSON.stringify(this.$refs.filter.filterList) : '[]',
+        filters: this.$refs.filter
+          ? JSON.stringify(this.$refs.filter.filterList)
+          : "[]",
       };
     },
     getFilterForResult() {
-        const fList = this.checkFilterValue();
-        return {
-          catalogId: this.menuFilter?.id? this.menuFilter.id : -1 ,
-          nodeCode: this.menuFilter?.nodeCode? this.menuFilter.nodeCode : 'ALL',
-          filters: fList? JSON.stringify(fList.concat(
-            {fieldCode: null, fieldName: null, queryType: 0, dataType: null, value: this.inputFilter}
-          )) : '[]',
-        }
-  
+      const fList = this.checkFilterValue();
+      const fListFinal = fList.filter((target) => {
+        return target.queryType != 11;
+      });
+      return {
+        catalogId: this.menuFilter?.id ? this.menuFilter.id : -1,
+        nodeCode: this.menuFilter?.nodeCode ? this.menuFilter.nodeCode : "ALL",
+        filters: fList
+          ? JSON.stringify(
+              fList.concat({
+                fieldCode: null,
+                fieldName: null,
+                queryType: 0,
+                dataType: null,
+                value: this.inputFilter,
+              })
+            )
+          : "[]",
+      };
     },
     onInputChange(filter) {
       this.$refs.result.filterPagination = -1;
@@ -76,7 +113,7 @@ export default {
       if (!this.$refs.filter) {
         return null;
       }
-      fList = this.$refs.filter.filterList.filter(filter => {
+      fList = this.$refs.filter.filterList.filter((filter) => {
         switch (filter.queryType) {
           case 11:
           case 12:
@@ -120,13 +157,61 @@ export default {
             break;
           }
           case 53: {
-            if (filter.northEastLon && filter.northEastLat && filter.northWestLon && filter.northWestLat && filter.southEastLon && filter.southEastLat && filter.southWestLat && filter.southWestLon) {
+            if (
+              filter.northEastLon &&
+              filter.northEastLat &&
+              filter.northWestLon &&
+              filter.northWestLat &&
+              filter.southEastLon &&
+              filter.southEastLat &&
+              filter.southWestLat &&
+              filter.southWestLon
+            ) {
               return filter;
             }
             break;
           }
-          case 56: { 
-            if (filter.country && filter.province && filter.city && filter.district) {
+          case 56: {
+            if (
+              filter.country &&
+              filter.province &&
+              filter.city &&
+              filter.county
+            ) {
+              if (filter.country.id) {
+                const newCountry = this.countriesCache.filter(function (target) {
+                  return target.id == filter.country.id;
+                })[0];
+                filter.country.id = newCountry.id;
+                filter.country.name = newCountry.name;
+              }
+
+              if (filter.province.id) {
+                const newProvince = this.provincesCache.filter(function (target) {
+                  return target.id == filter.province.id;
+                })[0];
+                filter.province.id = newProvince.id;
+                filter.province.name = newProvince.name;
+              }
+
+              if (filter.city.id) {
+                const newCity = this.citiesCache.filter(function (target) {
+                  return target.id == filter.city.id;
+                })[0];
+                filter.city.id = newCity.id;
+                filter.city.name = newCity.name;
+              }
+
+              if (filter.county.id) {
+                const newCounty = this.countiesCache.filter(function (target) {
+                  return target.id == filter.county.id;
+                })[0];
+                filter.county.id = newCounty.id;
+                filter.county.name = newCounty.name;
+              }
+            }
+
+            if (filter.country.id) {
               return filter;
             }
             break;
@@ -144,10 +229,10 @@ export default {
       return fList;
     },
   },
-}
+};
 </script>
 <style lang="scss" scoped>
-@import '@/styles/util.scss';
+@import "@/styles/util.scss";
 
 .search {
   flex: 1;

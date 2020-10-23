@@ -33,8 +33,8 @@ const SearchService = {
     return http.get(`/${catalogPrefix}/system/tag/${id}`);
   },
 
-  getDivisionById(divisionId = -1) {
-    return http.get(`/retrieval/system/options/division/${divisionId}`);
+  getDivisionById(divisionLevel,divisionId = -1) {
+    return http.get(`/retrieval/system/options/division/${divisionLevel}/${divisionId}`);
   },
 
   uploadShapefile(shapefile) {
