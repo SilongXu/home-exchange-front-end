@@ -19,14 +19,11 @@ const importService = {
   getUploadDataTypeNormal(){
     return http.get(`${prefix}/system/options/getAllProductType`);
   },
-  getImportPathNormal(){
+  /*getImportPathNormal(){
     return http.get(`${prefix}/system/options/getManualPath`);
-  },
+  },*/
   importData(formData){
-    return http.post(`${prefix}/system/data/manual/upload`, formData,
-    {onUploadProgress (progress) {
-      return Math.round(progress.loaded / progress.total * 100);
-    }});
+    return http.post(`${prefix}/system/data/manual/upload`, formData);
   }
 };
 

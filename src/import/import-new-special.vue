@@ -85,12 +85,6 @@ export default {
         dirBasePath: '',
         updateDataType: '',
       },
-      cycleOptions: [
-        {label: '永久保留', value: 'PERMANENT'},
-      ],
-      syncOptions: [
-        {label: '不同步', value: 'ASYNC'},
-      ],
       treeProps: {
         label: 'name',
         children: 'children',
@@ -124,6 +118,7 @@ export default {
 
     setformDataType(){
       this.dir.updateDataType = this.value;
+      console.log(this.dir.updateDataType);
     },
     navBack() {
       this.$router.push('/import');

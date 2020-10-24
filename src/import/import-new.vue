@@ -8,34 +8,34 @@
         <svg-icon class="title-icon" icon="import-manage" color="primary" size="xlg"></svg-icon>
         <span class="title-text">新建数据导入</span>
       </div>
-      <el-form ref="form" :model="form" label-position="left" label-width="120px" size="small">
-        <el-form-item label="元数据XML文件">
+      <el-form ref="dir" :model="dir" label-position="left" label-width="120px" size="small">
+
+        <el-form-item label="业务数据类型" :required="true">
+            <el-select v-model="selected" placeholder="请选择" @change="setformDataType()" filterable>
+              <el-option
+              v-for="item in options"
+              :key="item.code"
+              :label="item.value" 
+              :value="item.code">
+              </el-option>
+            </el-select>
+        </el-form-item>
+
+        <el-form-item label="业务数据(zip文件)" :required="true">
           <el-upload
             action=""
             :auto-upload="false"
             :on-change="onFileChange"
             :on-remove="onFileChange"
-            multiple>
+            multiple
+            accept=".zip">
             <el-button plain size="small" type="primary">选择文件</el-button>
           </el-upload>
         </el-form-item>
 
-
-
-        <el-form-item label="业务数据" :required="true">
-          <el-upload
-            action=""
-            :auto-upload="false"
-            :on-change="onFileChange"
-            :on-remove="onFileChange"
-            multiple>
-            <el-button plain size="small" type="primary">选择文件</el-button>
-          </el-upload>
-        </el-form-item>
         <el-form-item label="目标目录">
           <div class="directory">
             <div class="directory-selected">
-              {{form.directory}}
             </div>
             <div class="directory-selector">
               <el-tree
@@ -51,12 +51,6 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="文件名称">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="描述信息">
-          <el-input v-model="form.desc" type="textarea"></el-input>
-        </el-form-item>
       </el-form>
     </div>
     <div class="import-new-footer">
@@ -64,7 +58,7 @@
         <el-button plain @click="navBack()">
           取消
         </el-button>
-        <el-button type="primary">
+        <el-button type="primary" @click="importData()">
           确定
         </el-button>
       </div>
@@ -73,23 +67,18 @@
 </template>
 
 <script>
+import apiService from './import.service';
+
 export default {
   name: 'ImportNew',
   data() {
     return {
-      form: {
-        name: '',
-        desc: '',
-        directory: '目录管理/气象水文/气候统计产品',
-        cycle: '',
-        sync: ''
+      options: [],
+      selected: '',
+      dir: {
+        dir: [],
+        updateDataType: '',
       },
-      cycleOptions: [
-        {label: '永久保留', value: 'PERMANENT'},
-      ],
-      syncOptions: [
-        {label: '不同步', value: 'ASYNC'},
-      ],
       treeProps: {
         label: 'name',
         children: 'children',
@@ -98,10 +87,20 @@ export default {
       count: 1
     }
   },
+  mounted() {
+    apiService.getUploadDataTypeNormal()
+    .then((data) => {
+      this.options = data.data;
+    }).catch(() => {
+    })
+  },
   methods: {
     importData(){
-      this.$message("正在上传文件请耐心等待");
-
+      if(this.dir.dir.length !=0 ){
+        this.$message("正在上传文件请耐心等待");
+      }else{
+        this.$message("没有选择上传文件");
+      }
       this.dir.dir.forEach((file) => {
         const formData = new FormData();
         formData.append('f', file.raw);
@@ -127,7 +126,8 @@ export default {
     },
 
     setformDataType(){
-      this.dir.updateDataType = this.value;
+      this.dir.updateDataType = this.selected;
+      console.log(this.dir.updateDataType);
     },
     navBack() {
       this.$router.push('/import');
@@ -137,9 +137,7 @@ export default {
         return resolve([{ name: 'region1' }, { name: 'region2' }]);
       }
       if (node.level > 2) return resolve([]);
-
       const hasChild = true;
-
       setTimeout(() => {
         const data = [];
         if (hasChild) {
@@ -149,7 +147,6 @@ export default {
             });
           }
         }
-
         resolve(data);
       }, 500);
     },
@@ -171,9 +168,10 @@ export default {
         nameStack.unshift(currentNode.data.name);
         currentNode = currentNode.parent;
       }
-      this.form.directory = nameStack.join('/');
+      //this.form.directory = nameStack.join('/');
     },
     onFileChange(file, fileList) {
+      this.dir.dir = fileList;
     }
   },
 }
