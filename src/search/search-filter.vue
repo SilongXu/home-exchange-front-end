@@ -654,14 +654,13 @@ export default {
 }
 
 .el-input /deep/{
-  
-input[type=number] {  
+  input[type=number] {  
     -moz-appearance:textfield;  
-}  
-input[type=number]::-webkit-inner-spin-button,  
-input[type=number]::-webkit-outer-spin-button {  
+  }  
+  input[type=number]::-webkit-inner-spin-button,  
+  input[type=number]::-webkit-outer-spin-button {  
     -webkit-appearance: none;  
     margin: 0;  
-}  
+  }   
 }
 </style>
