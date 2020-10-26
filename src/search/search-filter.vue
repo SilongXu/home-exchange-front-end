@@ -17,7 +17,7 @@
         size="small"
         clearable
         multiple
-        collapse-tags="true"
+        :collapse-tags="true"
         style="width: 450px"
       >
         <el-option

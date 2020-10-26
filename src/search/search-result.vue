@@ -45,6 +45,7 @@
             <div class="property">归属节点: {{entry.node}}</div>
             <div class="property">归属分系统: {{entry.subSystem}}</div>
             <div class="property">入库时间: {{entry.time}}</div>
+            <div class="property">是否同步：{{entry.syncFlag == 0 ? '否' : '是'}}</div>
           </div>
         </div>
       </div>
@@ -133,7 +134,6 @@ export default {
       this.fetchResult(this.filters);
     },
     onPageChange(page) {
-      
       this.pagination.page = page;
       this.fetchResult(this.filters);
     },
@@ -146,7 +146,7 @@ export default {
       // 缓存上一次搜索的filterList
       // this.filters = searchParam;
       this.resultLoading = true;
-      apiService.getSearchResults(this.filterPagination  == -1 ? 0 : page-1, size, searchParam)
+      apiService.getSearchResults(page-1, size, searchParam)
       .then((results) => {
         this.resultLoading = false;
         if (results.data) {
@@ -159,7 +159,6 @@ export default {
         }
       })
       .catch(() => {});
-      this.filterPagination = 0;
     },
   },
 }
