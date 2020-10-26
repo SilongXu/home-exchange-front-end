@@ -21,14 +21,14 @@
             </el-select>
         </el-form-item>
 
-        <el-form-item label="业务数据(zip文件)" :required="true">
+        <el-form-item label="业务数据(zip,tar文件)" :required="true">
           <el-upload
             action=""
             :auto-upload="false"
             :on-change="onFileChange"
             :on-remove="onFileChange"
             multiple
-            accept=".zip">
+            accept=".zip,.tar">
             <el-button plain size="small" type="primary">选择文件</el-button>
           </el-upload>
         </el-form-item>
