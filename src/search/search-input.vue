@@ -34,13 +34,17 @@ export default {
 @import '@/styles/util.scss';
 
 .search-input {
-  @include flex-xy-center();
-  padding: 48px 0;
+  position: fixed;  
+  padding: 20px 0;
+  z-index: 20;
+  background-color: black;
+  width: 100%;
 }
 .search-input-group {
   position: relative;
   width: 600px;
-
+  left: 50%;
+  transform: translateX(-50%);
   .svg {
     position: absolute;
     top: 14px;
