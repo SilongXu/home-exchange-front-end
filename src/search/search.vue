@@ -63,6 +63,10 @@ export default {
       this.countiesCache = countiesCache ? countiesCache : [];
     },
     fetchResult() {
+      //搜索的时候默认回到第一页
+      if(this.$refs.result.pagination.page !=0){
+        this.$refs.result.pagination.page=0;
+      }
       // 这里执行搜索
       this.$refs.result.fetchResult(this.getFilterForResult());
     },

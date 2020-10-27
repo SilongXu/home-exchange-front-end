@@ -41,7 +41,7 @@
           </div>
           <div class="entry-right-property">
             <div class="property">数据类型: {{entry.type}}</div>
-            <div class="property">文件大小: {{entry.fileSize}}byte</div>
+            <div class="property">文件大小: {{entry.fileSize}}</div>
             <div class="property">归属节点: {{entry.node}}</div>
             <div class="property">归属分系统: {{entry.subSystem}}</div>
             <div class="property">入库时间: {{entry.time}}</div>
@@ -55,7 +55,7 @@
       <el-pagination
         @size-change="onSizeChange"
         @current-change="onPageChange"
-        :current-page.="pagination.page + 1" 
+        :current-page="pagination.page + 1" 
         :page-sizes="[5, 10, 20]"
         :page-size.sync="pagination.size"
         layout="total, sizes, prev, pager, next, jumper"
@@ -141,16 +141,32 @@ export default {
       this.dialogVisible = false;
     },
     fetchResult(searchParam = {}) {
-      const { page, size } = this.pagination;
+      const page =this.pagination.page;
+      const size =this.pagination.size;
       this.searchResult = [];
       // 缓存上一次搜索的filterList
       // this.filters = searchParam;
       this.resultLoading = true;
-      apiService.getSearchResults(page-1, size, searchParam)
+      apiService.getSearchResults(page-1===-1?0:page-1, size, searchParam)
       .then((results) => {
         this.resultLoading = false;
         if (results.data) {
           this.searchResult = results.data.data;
+          //
+          this.searchResult.forEach((target) => {
+            if(target.fileSize > 1024){
+              if(target.fileSize > 1024*1024){
+                if(target.fileSize > 1024*1024*1024){
+                  target.fileSize = target.fileSize / (1024*1024*1024);
+                  target.fileSize = parseInt(target.fileSize) + 'GB';
+                }
+                target.fileSize = target.fileSize / (1024*1024);
+                target.fileSize = parseInt(target.fileSize) + 'MB';
+              }
+              target.fileSize = target.fileSize / 1024;
+              target.fileSize = parseInt(target.fileSize) + 'KB';
+            }
+          })
           this.pagination = results.data.pagination || {
             page: 1,
             size: 10,
