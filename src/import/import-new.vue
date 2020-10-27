@@ -96,11 +96,7 @@ export default {
   },
   methods: {
     importData(){
-      if(this.dir.dir.length !=0 ){
-        this.$message("正在上传文件请耐心等待");
-      }else{
-        this.$message("没有选择上传文件");
-      }
+      this.$message("正在上传文件请耐心等待");
       this.dir.dir.forEach((file) => {
         const formData = new FormData();
         formData.append('f', file.raw);
