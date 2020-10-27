@@ -141,6 +141,8 @@ export default {
       this.dialogVisible = false;
     },
     fetchResult(searchParam = {}) {
+      //回到页面顶部
+      //document.body.scrollTop = document.documentElement.scrollTop = 0;
       const page =this.pagination.page;
       const size =this.pagination.size;
       this.searchResult = [];
@@ -159,12 +161,16 @@ export default {
                 if(target.fileSize > 1024*1024*1024){
                   target.fileSize = target.fileSize / (1024*1024*1024);
                   target.fileSize = parseInt(target.fileSize) + 'GB';
+                }else{
+                  target.fileSize = target.fileSize / (1024*1024);
+                  target.fileSize = parseInt(target.fileSize) + 'MB';
                 }
-                target.fileSize = target.fileSize / (1024*1024);
-                target.fileSize = parseInt(target.fileSize) + 'MB';
+              }else{
+                target.fileSize = target.fileSize / 1024;
+                target.fileSize = parseInt(target.fileSize) + 'KB';
               }
-              target.fileSize = target.fileSize / 1024;
-              target.fileSize = parseInt(target.fileSize) + 'KB';
+            }else{
+              target.fileSize = parseInt(target.fileSize) + 'bytes';
             }
           })
           this.pagination = results.data.pagination || {

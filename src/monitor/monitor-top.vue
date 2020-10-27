@@ -4,30 +4,30 @@
       <div class="title">本部门目录数</div>
       <div class="content">
         <div>
-          <div><span class="total">{{topData.catalogCountStat ? topData.catalogCountStat.value : 0}}</span>个</div>
+          <div v-loading="loading" element-loading-background="rgba(113, 186, 215, 0.2)"><span class="total">{{topData.catalogCountStat ? topData.catalogCountStat.value : ''}}</span>个</div>
           <div class="subText">总目录数</div>
         </div>
-        <div class="subText">环比上月{{topData.catalogCountStat ? topData.catalogCountStat.monthRate : 0}}%</div>
+        <div class="subText" v-loading="loading" element-loading-background="rgba(113, 186, 215, 0.2)">环比上月{{topData.catalogCountStat ? topData.catalogCountStat.monthRate : ''}}%</div>
       </div>
     </div>
     <div class="monitor-top-resource">
-      <div class="title">本部门目资源数</div>
+      <div class="title">本部门资源数</div>
       <div class="content">
         <div>
-          <div><span class="total">{{topData.resourceCountStat ? topData.resourceCountStat.value : 0}}</span>个</div>
+          <div v-loading="loading" element-loading-background="rgba(113, 186, 215, 0.2)"><span class="total">{{topData.resourceCountStat ? topData.resourceCountStat.value : ''}}</span>个</div>
           <div class="subText">总目录数</div>
         </div>
-        <div class="subText">环比上月{{topData.resourceCountStat ? topData.resourceCountStat.monthRate : 0}}%</div>
+        <div class="subText" v-loading="loading" element-loading-background="rgba(113, 186, 215, 0.2)">环比上月{{topData.resourceCountStat ? topData.resourceCountStat.monthRate : ''}}%</div>
       </div>
     </div>
     <div class="monitor-top-size">
       <div class="title">数据大小统计</div>
       <div class="content">
         <div>
-          <div><span class="total">{{topData.resourceSizeStat ? topData.resourceSizeStat.value : 0}}</span>GB</div>
+          <div v-loading="loading" element-loading-background="rgba(113, 186, 215, 0.2)"><span class="total">{{topData.resourceSizeStat ? topData.resourceSizeStat.value : ''}}</span>GB</div>
           <div class="subText">总目录数</div>
         </div>
-        <div class="subText">环比上月{{topData.resourceSizeStat ? topData.resourceSizeStat.monthRate : 0}}%</div>
+        <div class="subText" v-loading="loading" element-loading-background="rgba(113, 186, 215, 0.2)">环比上月{{topData.resourceSizeStat ? topData.resourceSizeStat.monthRate : ''}}%</div>
       </div>
     </div>
   </div>
@@ -39,11 +39,13 @@ import apiService from './monitor.service';
 export default {
   name: 'MonitorTop',
   mounted() {
+    this.loading = true;
     this.getCount();
   },
   data() {
     return {
       topData: {},
+      loading: true,
     };
   },
   methods: {
@@ -51,6 +53,7 @@ export default {
       apiService.getResourceCount().then((count) => {
         if (count.data) {
           this.topData = count.data;
+          this.loading = false;
         }
       });
     }

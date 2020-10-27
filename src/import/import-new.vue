@@ -123,7 +123,6 @@ export default {
 
     setformDataType(){
       this.dir.updateDataType = this.selected;
-      console.log(this.dir.updateDataType);
     },
     navBack() {
       this.$router.push('/import');

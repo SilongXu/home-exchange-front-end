@@ -1,7 +1,7 @@
 <template>
   <div class="monitor-panel" v-loading="loadingTabs" element-loading-background="rgba(0, 0, 0, 0.4)">
     <el-tabs v-model="activeTab" :before-leave="toggleTab">
-      <el-tab-pane :lazy="true" v-for="tab in tabs" :key="tab.id" :label="tab.name" :name="tab.nodeCode + ''">
+      <el-tab-pane :lazy="true" v-for="tab in tabs" :key="tab.nodeCode" :label="tab.nodeName" :name="tab.nodeCode + ''">
         <monitor-history-trend v-if="activeTab === tab.nodeCode" :nodeCode="tab.nodeCode"></monitor-history-trend>
       </el-tab-pane>
     </el-tabs>
