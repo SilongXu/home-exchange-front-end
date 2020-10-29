@@ -5,9 +5,13 @@ const catalogPrefix = 'catalog';
 
 const MonitorService = {
   getMenuTabs() {
-    return http.get(`/${catalogPrefix}/system/directory/-1`);
+    return http.get(`/${prefix}/system/stat/nodeCodes`);
   },
 
+  getHistoryTrend(nodeCode, period) {
+    return http.get(`/${prefix}/system/stat/resource/trend/${nodeCode}?period=${period}`);
+  },
+  
   getResourceCount() {
     return http.get(`/${prefix}/system/stat/resource`);
   },
@@ -18,10 +22,6 @@ const MonitorService = {
 
   getSearchTrend() {
     return http.get(`/${prefix}/system/stat/search/trend`);
-  },
-
-  getHistoryTrend(nodeCode, period) {
-    return http.get(`/${prefix}/system/stat/resource/trend/${nodeCode}?period=${period}`);
   },
 
   getErrorLog() {

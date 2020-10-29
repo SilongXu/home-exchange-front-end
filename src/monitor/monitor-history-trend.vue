@@ -110,7 +110,7 @@ export default {
       .then((info) => {
         this.loading = false;
         if (info.data) {
-          this.info = info.data || {};
+          this.info = info.data;
           this.draw();
         }
       })
