@@ -9,6 +9,7 @@ const monitor = () => import(/* webpackChunkName: "monitor" */ '@/monitor/monito
 const userAuthority = () => import(/* webpackChunkName: "userAuthority" */ '@/userAuthority/userAuthority')
 const transfer = () => import(/* webpackChunkName: "transfer" */ '@/transfer/transfer')
 
+
 Vue.use(Router)
 
 export default new Router({
@@ -29,9 +30,10 @@ export default new Router({
           component: _import,
         },
         {
-          path: 'transfer**',
+          path: 'transfer',
           name: 'transfer',
           component: transfer,
+          
         },
         {
           path: 'menu**',

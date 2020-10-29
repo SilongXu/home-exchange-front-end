@@ -1,54 +1,21 @@
 <template>
-  <div class="transfer">
-    <div class="transfer-left">
-      <transfer-menu @menuChange="onMenuChange"> </transfer-menu>
-    </div>
-    <div class="transfer-right">
-      <transfer-config></transfer-config>
-    </div>
-  </div>
+  <router-view></router-view>
 </template>
 
 <script>
-import TransferMenu from "./transfer-menu";
-import TransferConfig from "./transfer-config";
-
+import router from './transfer-router'
+import TransferManage from "./transfer-manage";
+import TransferLogs from './transfer-logs'
 export default {
   name: "Transfer",
-  components: {
-    TransferMenu,
-    TransferConfig,
+  components:{
+    TransferManage,
+    TransferLogs
   },
-  data: () => {
-    return {
-      node: null,
-    };
-  },
-  methods: {
-    onMenuChange(node) {
-    },
-  },
+  router,
 };
 </script>
 <style lang="scss" scoped>
 @import "@/styles/util.scss";
-.transfer {
-  flex: 1;
-  overflow: auto;
-  display: flex;
-  align-items: stretch;
-  background: $bg-light;
 
-  &-left {
-    flex-shrink: 0;
-    width: 400px;
-    min-height: 100vh;
-    border-right: 1px solid $border-dark;
-  }
-
-  &-right {
-    flex: 1;
-    min-width: 0;
-  }
-}
 </style>

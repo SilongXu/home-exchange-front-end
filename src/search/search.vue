@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <search-input @inputChange="onInputChange"></search-input>
+    <search-input @inputChange="onInputChange" ref="input"></search-input>
     <div class="search-empty-box"></div>
     <div class="search-content">
       <div class="search-content-left">
@@ -16,7 +16,7 @@
           @sendCountiesCache="accepCountiesCache"
         >
         </search-filter>
-        <search-result ref="result" :filters="getFilterList()"></search-result>
+        <search-result ref="result" :filters="getFilterList()" @clearItems = "onClearItems"></search-result>
       </div>
     </div>
   </div>
@@ -106,11 +106,23 @@ export default {
       this.fetchResult();
     },
     onMenuChange(node) {
-      this.menuFilter = node;
-      this.$refs.filter.fetchFilterList(this.menuFilter);
+      if(!this.menuFilter){
+        this.menuFilter = node;
+        this.$refs.filter.fetchFilterList(this.menuFilter);
+      }else{
+        if(this.menuFilter.nodeCode != node.nodeCode){
+          this.menuFilter = node;
+          this.$refs.filter.fetchFilterList(this.menuFilter);
+        }
+      }
+      this.$refs.input.search();
+       
     },
     onFilterChange() {
       this.fetchResult();
+    },
+    onClearItems(){
+      this.$refs.filter.clearFilterItems();
     },
     checkFilterValue() {
       let fList;
@@ -247,7 +259,7 @@ export default {
 
 .search {
   flex: 1;
-  overflow: auto;
+  // overflow: auto;
   .search{
     &-input{
       right: 8px;
@@ -261,7 +273,6 @@ export default {
 
   &-content {
     display: flex;
-    overflow: auto;
     align-items: stretch;
     border-top: 1px solid $border-dark;
     background: $bg-light;
@@ -269,16 +280,21 @@ export default {
     &-left {
       flex-shrink: 0;
       width: 400px;
-      min-height: 100vh;
+      // min-height: 100vh;
       border-right: 1px solid $border-dark;
+      overflow: auto;
+      height: 74.5vh;
+      
     }
 
     &-right {
       flex: 1;
       min-width: 0;
+      overflow: auto;
+      height: 74.5vh;
     }
   }
-
+  
   &-filter {
     border-bottom: 1px solid $border-dark;
   }

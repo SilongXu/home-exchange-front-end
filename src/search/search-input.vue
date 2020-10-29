@@ -36,9 +36,9 @@ export default {
 .search-input {
   position: fixed;  
   padding: 20px 0;
-  z-index: 20;
+  z-index: 200;
   background-color: black;
-  width: 100%;
+  width: 100% ;
 }
 .search-input-group {
   position: relative;

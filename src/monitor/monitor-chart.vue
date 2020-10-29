@@ -210,12 +210,8 @@ export default {
     return {
       trendLine: null,
       trendLineData: [],
-      legendTrendLine: [],
-
       searchLine: null,
       searchLineData: [],
-      legendSearchLine: [],
-
       errorTableData: [],
       errorDetailData: null,
       errorDetailVisible: false,
@@ -225,7 +221,7 @@ export default {
     getTrendData() {
       apiService.getImportTrend().then((trend) => {
         if (trend.data) {
-          this.trendLineData = trend.data;
+          this.trendLineData = trend.data || [];
           this.drawTrendLine();
         }
       })
@@ -233,10 +229,7 @@ export default {
     getSearchData() {
       apiService.getSearchTrend().then((search) => {
         if (search.data) {
-          this.searchLineData = search.data;
-          this.searchLineData.forEach((legend) => {
-            this.legendSearchLine.push(legend.systemName)
-          })
+          this.searchLineData = search.data || [];
           this.drawSearchLine();
         }
       });
@@ -279,9 +272,9 @@ export default {
       this.searchLine = this.$echarts.init(document.querySelector('.monitor-chart-right-content'));
       SEARCH_LINE_OPTIONS.legend = this.getLegend(this.legendSearchLine);
       SEARCH_LINE_OPTIONS.series = [];
-      this.searchLineData.map((data, index) => {
+      this.searchLineData.trends.map((data, index) => {
         SEARCH_LINE_OPTIONS.series.push({
-          name: data.systemName,
+          name: data.nodeName,
           type: 'line',
           smooth: false,
           showSymbol: false,
@@ -295,7 +288,7 @@ export default {
         });
       });
 
-      SEARCH_LINE_OPTIONS.xAxis.data = this.searchLineData[0].trend.map((data) => {
+      SEARCH_LINE_OPTIONS.xAxis.data = this.searchLineData.trends[0].trend.map((data) => {
         return data.date;
       });
       this.searchLine.setOption(SEARCH_LINE_OPTIONS);
