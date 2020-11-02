@@ -270,7 +270,7 @@ export default {
 
     &-left {
       flex-shrink: 0;
-      //overflow: auto;
+      overflow: auto;
       width: 400px;
       min-height: 100vh;
       border-right: 1px solid $border-dark;
