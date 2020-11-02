@@ -130,11 +130,7 @@ export default {
     };
   },
   mounted() {
-    
     this.imagePath = 'data:image/jpg;base64,' + this.detail.thumb;
-    this.imagePath = apiService.getDetailImage(this.detail.browseFilePath).then((res) => {
-      this.imagePath =  `data:image/jpg;base64,` + res.data;
-    });
     apiService.getMetadata(this.detail.id, this.detail.productType)
     .then((meta) => {
       this.metaData = meta.data.fieldValues;

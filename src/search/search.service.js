@@ -50,8 +50,8 @@ const SearchService = {
     return http.post(`/retrieval/system/data/metadata/?dataId=${dataId}&productType=${productType}`);
   },
 
-  getDetailImage(path) {
-    return http.post('/retrieval/system/data/getImage', path);
+  getXmlDetail(path) {
+    return http.post(`/retrieval/system/data/getBase64?filePath=${path}`);
   }
 };
 
