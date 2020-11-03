@@ -52,11 +52,6 @@ export default {
           path: '/menu',
         },
         {
-          icon: 'transfer',
-          name: '同步管理',
-          path: '/transfer',
-        },
-        {
           icon: 'import-manage',
           name: '导入管理',
           path: '/import'
@@ -65,11 +60,6 @@ export default {
         //   icon: 'export-manage',
         //   name: '导出管理',
         // },
-        {
-          icon: 'operation',
-          name: '监控运维',
-          path: '/monitor',
-        },
       ],
       rightNavItems: [
         // {
@@ -77,14 +67,24 @@ export default {
         //   name: '连接中心',
         //   //path: '/connect',
         // },
+        // {
+        //   icon: 'user-admin',
+        //   name: '用户与权限管理',
+        //   path:'/userAuthority'
+        // },
+        // {
+        //   icon: 'life-cycle',
+        //   name: '生命周期管理',
+        // },
         {
-          icon: 'user-admin',
-          name: '用户与权限管理',
-          path:'/userAuthority'
+          icon: 'operation',
+          name: '监控运维',
+          path: '/monitor',
         },
         {
-          icon: 'life-cycle',
-          name: '生命周期管理',
+          icon: 'transfer',
+          name: '同步管理',
+          path: '/transfer',
         },
       ],
       extraNavItems: [
@@ -180,17 +180,23 @@ export default {
     height: 65px;
 
     &-left {
-      @include flex-align(center, flex-start);
+      @include flex-align(center, center);
       flex: 1;
       max-width: calc(50% - 260px);
+      margin-left: -80px;
       padding-left: 20px;
     }
 
     &-right {
-      @include flex-align(center, flex-start);
+      @include flex-align(center, center);
       flex: 1;
       max-width: calc(50% - 300px);
+      margin-right: 20px;
       padding-right: 20px;
+    }
+
+    .nav-item{
+      padding-left: 80px;
     }
   }
 

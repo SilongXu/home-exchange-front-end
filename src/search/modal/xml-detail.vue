@@ -47,7 +47,9 @@ export default {
 @import '@/styles/util.scss';
 
 .dialog{
+  font-size: 20px;
   &-bottom{
+    font-size: 20px;
     border-radius: 10px;
     padding: 10px 60px;
     margin-top: 10px;
