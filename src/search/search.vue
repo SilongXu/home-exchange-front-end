@@ -68,8 +68,6 @@ export default {
       if(this.$refs.result.pagination.page !=0){
         this.$refs.result.pagination.page=0;
       }
-      //点击回到页面顶部
-      //document.body.scrollTop = document.documentElement.scrollTop = 0;
       // 这里执行搜索
       this.$refs.result.fetchResult(this.getFilterForResult());
     },
@@ -270,7 +268,6 @@ export default {
 
     &-left {
       flex-shrink: 0;
-      overflow: auto;
       width: 400px;
       min-height: 100vh;
       border-right: 1px solid $border-dark;
