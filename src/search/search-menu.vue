@@ -15,18 +15,18 @@
   </el-tree>
 </template>
 <script>
-import apiService from './search.service';
+import apiService from "./search.service";
 
 export default {
-  name: 'SearchMenu',
+  name: "SearchMenu",
   data: () => {
     return {
       treeProps: {
-        id: 'id',
-        label: 'name',
-        children: 'children',
-        disabled: 'disabled',
-        isLeaf: 'isLeaf'
+        id: "id",
+        label: "name",
+        children: "children",
+        disabled: "disabled",
+        isLeaf: "isLeaf",
       },
     };
   },
@@ -38,32 +38,34 @@ export default {
   },
   methods: {
     onNodeClick(node) {
-      this.$emit('menuChange', node);
+      this.$emit("menuChange", node);
     },
     loadNode(node, resolve) {
       if (node.level === 0) {
-        return resolve([{ name: '全部', id: -1 }]);
+        return resolve([{ name: "全部", id: -1 }]);
       }
       if (node.level === 1) {
-        apiService.getMenuNodeByParentId(-1)
-        .then((tree) => {
-          return resolve(tree.data);
-        })
-        .catch(() => {
-          resolve([]);
-        });
+        apiService
+          .getMenuNodeByParentId(-1)
+          .then((tree) => {
+            return resolve(tree.data);
+          })
+          .catch(() => {
+            resolve([]);
+          });
 
         return;
       }
 
       if (!node.isLeaf) {
-        apiService.getMenuNodeByParentId(node.data.id)
-        .then((tree) => {
-          return resolve(tree.data);
-        })
-        .catch(() => {
-          resolve([]);
-        });
+        apiService
+          .getMenuNodeByParentId(node.data.id)
+          .then((tree) => {
+            return resolve(tree.data);
+          })
+          .catch(() => {
+            resolve([]);
+          });
 
         return;
       }
@@ -71,23 +73,26 @@ export default {
     renderContent(h, { node }) {
       return (
         <span class="search-menu-node">
-          {
-            (() => {
-              if (node.level === 1 || node.isLeaf) {
-                return null;
-              } else {
-                return node.expanded ? <svg-icon icon="folder-open"></svg-icon> : <svg-icon icon="folder-close"></svg-icon>;
-              }
-            })() 
-          }
+          {(() => {
+            if (node.level === 1 || node.isLeaf) {
+              return null;
+            } else {
+              return node.expanded ? (
+                <svg-icon icon="folder-open"></svg-icon>
+              ) : (
+                <svg-icon icon="folder-close"></svg-icon>
+              );
+            }
+          })()}
           <span domPropsTitle={node.label}>{node.label}</span>
-        </span>);
-    }
+        </span>
+      );
+    },
   },
-}
+};
 </script>
 <style lang="scss" scoped>
-@import '@/styles/util.scss';
+@import "@/styles/util.scss";
 
 .el-tree {
   padding-left: 8px;

@@ -1,71 +1,89 @@
 <template>
-  <el-dialog :title="'同步策略设置'" :visible="visible" @close="onClose" width="600PX" top="4%">
+  <el-dialog
+    :title="'同步策略设置'"
+    :visible="visible"
+    @close="onClose"
+    width="600PX"
+    top="4%"
+  >
     <div>
       <div class="setting-selector">
-        <div class="label">
-          同步类型
-        </div>
+        <div class="label">同步类型</div>
         <div class="selector">
           <el-select v-model="transferSetting.transferType">
-
+            <el-option
+              v-for="(item, index) in transferTypes"
+              :key="index"
+              :value="item"
+            >
+              {{ item }}
+            </el-option>
           </el-select>
         </div>
       </div>
       <div class="setting-selector">
-        <div class="label">
-          同步策略
-        </div>
+        <div class="label">同步策略</div>
         <div class="selector">
           <el-select v-model="transferSetting.transferStrategy">
-            
+            <el-option
+              v-for="(item, index) in transferStrategies"
+              :key="index"
+              :value="item"
+            >
+              {{ item }}
+            </el-option>
           </el-select>
         </div>
       </div>
       <div class="setting-selector">
-        <div class="label">
-          同步时间
-        </div>
+        <div class="label">同步时间</div>
         <div class="selector">
-          <el-time-picker v-model="transferSetting.transferTime">
-
+          <el-time-picker
+            v-model="transferSetting.transferTime"
+            :picker-options="{
+              selectableRange: '00:00:00 - 23:59:59',
+            }"
+            placeholder="任意时间点"
+          >
           </el-time-picker>
         </div>
       </div>
       <div class="operator">
         <el-button size="medium" plain @click="onClose">取消</el-button>
-        <el-button size="medium" type="primary" @click="verifySetting">确认</el-button>
+        <el-button size="medium" type="primary" @click="verifySetting"
+          >确认</el-button
+        >
       </div>
     </div>
   </el-dialog>
 </template>
 <script>
 export default {
-  name: 'TransferSetting',
-  props: ['visible'],
+  name: "TransferSetting",
+  props: ["visible"],
   data: () => {
     return {
       transferSetting: {
         transferType: null,
         transferStrategy: null,
         transferTime: null,
-      }
-  
-    }
+      },
+      transferTypes: ["实时", "定时", "不定时"],
+      transferStrategies: ["每天一次", "每小时一次"],
+    };
   },
   methods: {
     onClose() {
-      this.$emit('close', null);
+      this.$emit("close", null);
     },
     verifySetting() {
-      this.$emit('close', this.transferSetting);
-    }
-
-
-  }
-}
+      this.$emit("close", this.transferSetting);
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
-@import '@/styles/util.scss';
+@import "@/styles/util.scss";
 
 .setting-selector {
   @include flex-xy-center;
@@ -75,12 +93,10 @@ export default {
   .label {
     margin-right: 80px;
   }
-  
-  /deep/
-  .el-input--suffix .el-input__inner {
+
+  /deep/ .el-input--suffix .el-input__inner {
     width: 400px;
   }
-
 }
 
 .operator {
@@ -92,7 +108,5 @@ export default {
   button {
     margin-left: 20px;
   }
-
 }
-
 </style>

@@ -1,13 +1,17 @@
 <template>
-  <div class="search-result">
+  <div class="search-result" ref="result">
     <add-tag-modal v-if="tagDialogVisible" :visible="tagDialogVisible" @addTagChange="onAddTag" @cancel="onCancelAddTag"></add-tag-modal>
     <search-detail v-if="dialogVisible" :visible="dialogVisible" :detail="currentEntry" @close="onDetailClose"></search-detail>
-    <xml-detail v-if="xmlDialogVisible" :visible="xmlDialogVisible" :detailXml="currentEntryXML" @closeXml="onXmlDetailClose"></xml-detail>
+
     <div class="search-result-operation">
-      <el-button type="primary" size="mini" @click="addTag()">
+      <el-button type="primary" size="mini" @click="clearItems()" class="search-result-operation-left">
+        清空所选项
+      </el-button>
+      <el-button type="primary" size="mini" @click="addTag()" class="search-result-operation-right">
         批量添加标签
       </el-button>
     </div>
+
     <div class="result" v-loading="resultLoading" element-loading-background="rgba(0, 0, 0, 0.4)">
       <div class="entry" v-for="entry in searchResult" :key="entry.id">
         <div class="entry-left">
@@ -20,10 +24,6 @@
               <span :title="entry.name">{{entry.name}}</span>
             </div>
             <div class="entry-right-top-operation">
-              <div class="link-btn" @click="viewXmlDetail(entry)">
-                <svg-icon icon="view-detail"></svg-icon>
-                元数据文件
-              </div>
               <div class="link-btn" @click="viewDetail(entry)">
                 <svg-icon icon="view-detail"></svg-icon>
                 查看详情
@@ -53,6 +53,7 @@
         </div>
       </div>
     </div>
+
     <div class="search-result-footer">
       <el-pagination
         @size-change="onSizeChange"
@@ -76,14 +77,12 @@ export default {
   components: {
     'add-tag-modal': () => import('./modal/add-tag'),
     'search-detail': () => import('./modal/search-detail'),
-    'xml-detail': () => import('./modal/xml-detail'),
   },
   props: ['filters'],
   data() {
     return {
       tagDialogVisible: false,
       dialogVisible: false,
-      xmlDialogVisible: false,
       filterPagination: 0,
       pagination: {
         page: 1,
@@ -93,8 +92,10 @@ export default {
       resultLoading: false,
       searchResult: [],
       currentEntry: {},
-      currentEntryXML: {},
     };
+  },
+  mounted(){
+    document.documentElement.scrollTop = 0;
   },
   methods: {
     download(entry) {
@@ -113,9 +114,8 @@ export default {
       this.currentEntry = entry;
       this.dialogVisible = true;
     },
-    viewXmlDetail(entry){
-      this.currentEntryXML = entry;
-      this.xmlDialogVisible = true;
+    clearItems(){
+        this.$emit('clearItems')
     },
     addTag() {
       this.tagDialogVisible = true;
@@ -149,10 +149,8 @@ export default {
     onDetailClose() {
       this.dialogVisible = false;
     },
-    onXmlDetailClose(){
-      this.xmlDialogVisible = false;
-    },
     fetchResult(searchParam = {}) {
+      //回到页面顶部
       const page =this.pagination.page;
       const size =this.pagination.size;
       this.searchResult = [];
@@ -188,8 +186,9 @@ export default {
             total: 0,
           };
         }
+        this.$refs.result.scrollTop = 0;
       })
-      .catch(() => {});
+      .catch(() => {});      
     },
   },
 }
@@ -201,7 +200,7 @@ export default {
 .search-result {
 
   &-operation {
-    @include flex-align(center, flex-end);
+    @include flex-align(center, space-between);
     height: 48px;
     padding: 0 20px;
     border-bottom: 1px solid $border-dark;
@@ -215,6 +214,8 @@ export default {
 
 .result {
   min-height: 500px;
+  overflow: auto;
+  height: 50%;
 }
 
 .entry {
@@ -257,8 +258,9 @@ export default {
       }
 
       &-operation {
-        @include flex-align(center, flex-end);
+        @include flex-align(center, space-between);
         flex-shrink: 0;
+       
       }
     }
 

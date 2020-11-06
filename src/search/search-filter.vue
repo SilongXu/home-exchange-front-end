@@ -166,7 +166,7 @@
         <el-input
           v-model="filter.lats"
           :min="0"
-          placeholder="请输入经度, 以逗号分割"
+          placeholder="请输入纬度, 以逗号分割"
           size="small"
         ></el-input>
       </div>
@@ -353,6 +353,7 @@
   </div>
 </template>
 <script>
+import { filter } from "lodash-es";
 import apiService from "./search.service";
 
 export default {
@@ -361,6 +362,7 @@ export default {
     return {
       divisionLevel: ["COUNTRY", "PROVINCE", "CITY", "COUNTY"],
       filterList: [],
+      resetFilterList: [],
       tagOptions: [],
       loadingTags: false,
       loadingCountry: false, //是否开启自动加载远程数据
@@ -379,7 +381,7 @@ export default {
       countriesDisable: true, //下拉列表是否可用
       provincesDisable: true,
       citiesDisable: true,
-      countiesDisable:true,
+      countiesDisable: true,
     };
   },
   methods: {
@@ -425,10 +427,10 @@ export default {
     onSelectCountry(countryId) {
       this.citiesDisable = true; //城市列表禁用
       this.countiesDisable = true; //县区列表禁用
-      this.loadingProvince = true;  //开启远程加载省列表
+      this.loadingProvince = true; //开启远程加载省列表
       //当国家选定时,根据ID向后端请求省列表的数据
       this.fetchDivisionById(this.divisionLevel[1], countryId)
-        .then((options) => { 
+        .then((options) => {
           //将省列表数据存进中间变量
           this.provincesCache = options.data;
           //当省列表数据存在不为空的时候,省列表可用可选
@@ -452,7 +454,7 @@ export default {
           this.cities = [];
           this.loadingProvince = false;
         });
-        //将缓存发送给父组件
+      //将缓存发送给父组件
       this.$emit("sendCountriesCache", this.countriesCache);
     },
     onClearCountry() {
@@ -466,7 +468,7 @@ export default {
     onSelectProvince(provinceId) {
       //设置县区列表禁用
       this.countiesDisable = true;
-      this.loadingCity = true;  //开启远程加载城市
+      this.loadingCity = true; //开启远程加载城市
       this.fetchDivisionById(this.divisionLevel[2], provinceId)
         .then((options) => {
           //将城市列表数据放入缓存
@@ -490,7 +492,7 @@ export default {
           this.cities = [];
           this.loadingCity = false;
         });
-        //将城市列表数据发送给父组件
+      //将城市列表数据发送给父组件
       this.$emit("sendProvincesCache", this.provincesCache);
     },
     onClearProvince() {
@@ -567,6 +569,7 @@ export default {
         .getSearchFilters(node.nodeCode)
         .then((filters) => {
           this.filterList = filters.data;
+          this.resetFilterList = JSON.parse(JSON.stringify(this.filterList));
         })
         .catch(() => {});
     },
@@ -578,6 +581,9 @@ export default {
           filter.fromValue = tmp;
         }
       }
+    },
+    clearFilterItems() {
+      this.filterList = JSON.parse(JSON.stringify(this.resetFilterList));
     },
   },
 };
@@ -653,14 +659,14 @@ export default {
   width: 360px;
 }
 
-.el-input /deep/{
-  input[type=number] {  
-    -moz-appearance:textfield;  
-  }  
-  input[type=number]::-webkit-inner-spin-button,  
-  input[type=number]::-webkit-outer-spin-button {  
-    -webkit-appearance: none;  
-    margin: 0;  
-  }   
+.el-input /deep/ {
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }
 </style>
