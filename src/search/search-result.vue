@@ -32,6 +32,7 @@
                 <svg-icon icon="download"></svg-icon>
                 下载
               </div>
+
             </div>
           </div>
           <div class="entry-right-path">
@@ -150,10 +151,10 @@ export default {
       this.dialogVisible = false;
     },
     fetchResult(searchParam = {}) {
-      //回到页面顶部
       const page =this.pagination.page;
       const size =this.pagination.size;
       this.searchResult = [];
+      //返回到顶端
       // 缓存上一次搜索的filterList
       // this.filters = searchParam;
       this.resultLoading = true;
@@ -186,7 +187,7 @@ export default {
             total: 0,
           };
         }
-        this.$refs.result.scrollTop = 0;
+        document.getElementsByClassName('search-content-right')[0].scrollTop=0;
       })
       .catch(() => {});      
     },

@@ -21,7 +21,7 @@
           </el-select>
         </div>
       </div>
-      <div class="setting-selector">
+      <!-- <div class="setting-selector">
         <div class="label">同步策略</div>
         <div class="selector">
           <el-select v-model="transferSetting.transferStrategy">
@@ -47,7 +47,7 @@
           >
           </el-time-picker>
         </div>
-      </div>
+      </div> -->
       <div class="operator">
         <el-button size="medium" plain @click="onClose">取消</el-button>
         <el-button size="medium" type="primary" @click="verifySetting"
