@@ -82,9 +82,6 @@ export default {
     },
     getFilterForResult() {
       const fList = this.checkFilterValue();
-      const fListFinal = fList.filter((target) => {
-        return target.queryType != 11;
-      });
       return {
         catalogId: this.menuFilter?.id ? this.menuFilter.id : -1,
         nodeCode: this.menuFilter?.nodeCode ? this.menuFilter.nodeCode : "ALL",
@@ -110,8 +107,8 @@ export default {
         this.menuFilter = node;
         this.$refs.filter.fetchFilterList(this.menuFilter);
       }else{
+        this.menuFilter = node;
         if(this.menuFilter.nodeCode != node.nodeCode){
-          this.menuFilter = node;
           this.$refs.filter.fetchFilterList(this.menuFilter);
         }
       }

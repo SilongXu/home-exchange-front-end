@@ -7,7 +7,7 @@
     class="dialog"
   >
     <div slot="title" class="dialog-title">
-      <svg-icon icon="transfer" class="dialog-title-icon"></svg-icon>
+      <svg-icon icon="transfer-success" class="dialog-title-icon" size="60px"></svg-icon>
       <span class="dialog-title-content">同步成功</span>
       <div class="dialog-content">
           <span>同步时间:</span>
@@ -63,6 +63,9 @@ export default {
 .dialog {
   &-title {
     padding: 10px 40px;
+    &-icon{
+      margin-bottom: -20px;
+    }
     &-content {
       margin-left: 20px;
       font-size: 30px;

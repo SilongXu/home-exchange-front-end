@@ -37,6 +37,9 @@ export default {
     }
   },
   methods: {
+    getCurrentNodeData(){
+      this.$refs.searchMenuTree.getCurrentNode();
+    },
     onNodeClick(node) {
       this.$emit("menuChange", node);
     },

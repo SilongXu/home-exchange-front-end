@@ -1,7 +1,7 @@
 <template>
   <div class="transfer-config">
     <div class="transfer-config-header">
-      <div class="transfer-config-header-title">
+      <!-- <div class="transfer-config-header-title">
         <el-breadcrumb separator="/">
           <el-breadcrumb-item
             v-for="item in transferBreadcrumbList"
@@ -10,16 +10,8 @@
             {{ item.data.label }}
           </el-breadcrumb-item>
         </el-breadcrumb>
-      </div>
+      </div> -->
       <div class="transfer-config-header-operation">
-        <div class="transfer-config-header-operation-search">
-          <el-input
-            v-model="searchKey"
-            placeholder="输入关键字搜索"
-            suffix-icon="el-icon-search"
-            size="small"
-          ></el-input>
-        </div>
         <div class="transfer-config-header-operation-set">
           <el-button type="primary" size="mini" @click="setTransfers()">
             <svg-icon icon="setting"></svg-icon>
@@ -34,55 +26,73 @@
         </div>
       </div>
     </div>
+
     <div class="transfer-config-content">
-      <el-table :data="transferTableList">
-        <el-table-column label="目录名称" class="menu-name" prop="name">
-        </el-table-column>
-        <el-table-column label="同步类型" prop="type"> </el-table-column>
-        <el-table-column label="同步策略" sortable="sta" prop="sta">
-        </el-table-column>
-        <el-table-column label="上次同步时间" sortable="time" prop="time">
-        </el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
-            <div class="transfer-config-content-operation">
-              <span
-                class="logs"
-                @click="logsTransfer(scope.row.name)"
-                title="查看日志"
-              >
-                <svg-icon icon="view-detail" color="default"></svg-icon>
-              </span>
-              <span
-                class="set"
-                @click="setTransfer(scope.row.name)"
-                title="设置"
-              >
-                <svg-icon icon="setting" color="default"></svg-icon>
-              </span>
-              <span
-                class="refresh"
-                @click="refreshTransfer(scope.row.name)"
-                title="刷新"
-              >
-                <svg-icon icon="refresh" color="default"></svg-icon>
-              </span>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!-- <div class="transfer-config-footer">
-        
-      </div> -->
-      <div class="transfer-config-footer-pagination">
-          <el-pagination
-            :page-sizes="[100, 200, 300, 400]"
-            :page-size="100"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="400"
-          >
-          </el-pagination>
+      <div class="transfer-config-content-header">
+        <div class="transfer-config-content-header-name">目录名称</div>
+        <div class="transfer-config-content-header-type">同步类型</div>
+        <div class="transfer-config-content-header-strategy">同步策略</div>
+        <div class="transfer-config-content-header-date">上次同步时间</div>
+        <div class="transfer-config-content-header-status">同步状态</div> 
+        <div class="transfer-config-content-header-operation">操作</div>
+      </div>
+      <div class="transfer-config-content-result" v-loading="transferResultLoading" element-loading-background="rgba(0, 0, 0, 0.4)">
+        <div class="entry" v-for="entry in transferResult" :key="entry.id">
+          <div class="entry-name">
+            <svg-icon icon="folder-close" size="md"></svg-icon>
+            {{entry.name}}
+          </div>
+          <div class="entry-type">
+            <!-- {{entry.type}} -->
+            定时
+          </div>
+          <div class="entry-strategy">
+            <!-- {{entry.strategy}} -->
+            每天12：00
+          </div>
+          <div class="entry-date">
+            <!-- {{entry.date}} -->
+            2020-11-09 12:00:00
+          </div>
+          <div class="entry-date">
+            <!-- {{entry.status}} -->
+            同步成功
+          </div>
+          <div class="entry-operation">
+            <span
+              class="logs"
+              title="查看日志"
+              @click="gotoTransferLogs()">
+              <svg-icon icon="view-detail" color="default"></svg-icon>
+            </span>
+
+            <span
+              class="set"
+              title="设置"
+              @click="setTransfers()">
+              <svg-icon icon="setting" color="default"></svg-icon>
+            </span>
+
+            <span
+              class="refresh"
+              title="刷新"
+              @click="refreshTransfer()">
+              <svg-icon icon="refresh" color="default"></svg-icon>
+            </span>
+          </div>
         </div>
+      </div>
+      <div class="transfer-config-footer-pagination">
+        <el-pagination
+          @size-change="onSizeChange"
+          @current-change="onPageChange"
+          :current-page="pagination.page"
+          :page-sizes="[10, 20, 40]"
+          :page-size.sync="pagination.size"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pagination.total">
+        </el-pagination>
+      </div>
     </div>
     <transfer-setting
       :visible="setDialogVisible"
@@ -95,6 +105,7 @@
 <script>
 import TransferSetting from "./transfer-setting";
 import TransferRefresh from "./transfer-refresh";
+import apiService from "./transfer.service";
 
 export default {
   name: "TransferConfig",
@@ -108,10 +119,34 @@ export default {
       searchKey: "",
       setDialogVisible: false,
       refreshDialogVisible: false,
+      transferResult: [],
+      pagination: {},
+      nodeId: null,
+      transferResultLoading: false,
     };
   },
-
   methods: {
+    onSizeChange(size){
+      this.transferResultLoading = true;
+      this.pagination.size = size;
+      apiService.getLeafNodeList(this.nodeId, this.pagination.page, this.pagination.size)
+      .then((data) => {
+        this.transferResult = data.data.data;
+        this.pagination = data.data.pagination;
+        this.transferResultLoading=false;
+      })
+    },
+    onPageChange(page){
+      this.transferResultLoading = true;
+      this.pagination.page = page;
+      apiService.getLeafNodeList(this.nodeId, this.pagination.page, this.pagination.size)
+      .then((data) => {
+        this.transferResult = data.data.data;
+        this.pagination = data.data.pagination;
+        console.log(this.pagination)
+        this.transferResultLoading=false;
+      })
+    },
     setTransfers() {
       let selectedMenu = this.getSelectedMenu();
       // TO DO do setting transfer
@@ -154,24 +189,15 @@ export default {
 
 .transfer-config {
   &-header {
-    @include flex-xy-center;
     justify-content: space-between;
     padding: 5px 15px;
     border-bottom: 1px solid $border-dark;
 
     &-operation {
-      display: flex;
-
-      &-search {
-        margin-right: 15px;
-        /deep/ .el-input .el-input__inner {
-          width: 300px;
-          background: $bg-body;
-        }
+      &-set{
+        @include flex-align(center, flex-end);
       }
 
-      // @include flex-align(center,flex-start);
-      // @include flex-align(center, flex-start);
       &-set {
         .svg-icon {
           margin-right: 4px;
@@ -188,55 +214,87 @@ export default {
   &-content {
     overflow: auto;
     height: 73vh;
+    &-header{
+      display: flex;
+      border-bottom: 1px solid $bg-default;
+      background: $bg-default;
+      padding: 15px;
+      color: $text-mute;
+      &-name{
+        min-width: 28%;
+      }
+      &-type{
+        min-width: 15%;
+      }
+      &-strategy{
+        min-width: 15%;
+      }
+      &-date{
+        min-width: 15%;
+      }
+      &-status{
+        min-width: 15%;
+      }
+      &-operation{
+        min-width: 12%;
+      }
+    }
+
+    .entry{
+      display: flex;
+      padding: 20px 15px;
+      border-bottom: 1px solid $border-dark ;
+      &-name{
+        min-width: 28%;
+      }
+      &-type{
+        min-width: 15%;
+      }
+      &-strategy{
+        min-width: 15%;
+      }
+      &-date{
+        min-width: 15%;
+      }
+      &-status{
+        min-width: 15%;
+      }
+      &-operation{
+        min-width: 12%;
+        .logs{
+          margin-right: 15px;
+          &:hover .svg-icon{
+            fill: $brand-primary;
+            cursor: pointer;
+          }
+        }
+        .set{
+          margin-right: 15px;
+          &:hover .svg-icon{
+            fill: $brand-primary;
+            cursor: pointer;
+          }
+        }
+        .refresh{
+          margin-right: 15px;
+          &:hover .svg-icon{
+            fill: $brand-primary;
+            cursor: pointer;
+          }
+        }
+      }
+    }
 
     .el-table ::v-deep thead tr th {
       padding: 12px 0;
       background: $bg-default;
     }
 
-    // .el-table ::v-deep,
-    // th.el-table_1_column_1,
-    // th.el-table_1_column_2,
-    // th.el-table_1_column_3,
-    // th.el-table_1_column_4,
-    // th.el-table_1_column_5 {
-    //   // padding-left: 50px;
-    //   // text-align: center;
-    // }
-
-    // .el-table ::v-deep,
-    // tr.el-table_1_column_1,
-    // tr.el-table_1_column_2,
-    // tr.el-table_1_column_3,
-    // tr.el-table_1_column_4,
-    // tr.el-table_1_column_5 {
-    //   // padding-left: 50px;
-    //   text-align: center;
-    // }
-
-    .el-table ::v-deep .el-checkbox__input {
-      padding: 0 13px;
-    }
-
-    .el-table ::v-deep .set,
-    .logs,
-    .refresh {
-      cursor: pointer;
-    }
-    .el-table ::v-deep .set {
-      margin: 0 10px;
+  }
+  &-footer {
+    &-pagination {
+      @include flex-align(center, flex-end);
     }
   }
-  // &-footer {
-  //   position: fixed;
-  //   bottom: 4vh;
-  //   height: 50px;
-  //   width: 100%;
-  //   &-pagination {
-  //     position: relative;
-  //     padding-top: 10px;
-  //     left: 25vw;
-  //   }
-  // }
 }
 </style>

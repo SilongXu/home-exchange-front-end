@@ -1,7 +1,9 @@
 <template>
   <el-tree
     ref="tranferMenuTree"
-    :data="treeData"
+    :props="treeProps"
+    :load="loadNode"
+    lazy
     icon-class="el-icon-arrow-right"
     node-key="id"
     :render-content="renderContent"
@@ -28,524 +30,8 @@ export default {
       },
       nodeChildrenList: [],
       nodeParentList: [],
-      treeData: [
-        {
-          label: "影响数据",
-          icon: "el-icon-folder",
-          name: "sadsada",
-          type: "test",
-          sta: "s",
-          time: "dsa",
-          children: [
-            {
-              label: "二级 1-1",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 1-1-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          label: "地理信息",
-          icon: "el-icon-folder",
-          name: "sadsada",
-          type: "test",
-          sta: "s",
-          time: "dsa",
-          children: [
-            {
-              label: "二级 2-1",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 2-1-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "二级 2-2",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 2-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          label: "气象水文",
-          icon: "el-icon-folder",
-          name: "sadsada",
-          type: "test",
-          sta: "s",
-          time: "dsa",
-          children: [
-            {
-              label: "气候统计产品",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-1-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "TK环境报文",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "气象水文实况",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "ZC气象水文情况",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "框架地形图",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "实景数据",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "海图",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "地名注记",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "气候统计产品",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-1-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "TK环境报文",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "气象水文实况",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "ZC气象水文情况",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "框架地形图",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "实景数据",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "海图",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "地名注记",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "气候统计产品",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-1-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "TK环境报文",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "气象水文实况",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "ZC气象水文情况",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "框架地形图",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "实景数据",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "海图",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-            {
-              label: "地名注记",
-              icon: "el-icon-folder",
-              name: "sadsada",
-              type: "test",
-              sta: "s",
-              time: "dsa",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                  icon: "el-icon-folder",
-                  name: "sadsada",
-                  type: "test",
-                  sta: "s",
-                  time: "dsa",
-                },
-              ],
-            },
-          ],
-        },
-      ],
+      transferResult: [],
+      transferPagination: [],
     };
   },
   mounted() {
@@ -555,28 +41,15 @@ export default {
     }
   },
   methods: {
-    onNodeClick(node, e) {
-      this.$emit("menuChange", node);
-      //获取当前点击节点的儿子节点,作为为table中的数据
-      const nodeChildren = node.children;
-      if (nodeChildren) {
-        if (nodeChildren.length > 0) {
-          this.nodeChildrenList = [];
-          for (let i = 0; i < nodeChildren.length; i++) {
-            this.nodeChildrenList.push(nodeChildren[i]);
-          }
-        }
-      } else {
-        this.nodeChildrenList.push(node);
-      }
-      this.$emit("sendTableList", this.nodeChildrenList);
-      //获取当前点击节点的父节点,作为breadcrumb的数据
-      this.nodeParentList = [];
-      while (e.parent) {
-        this.nodeParentList.unshift(e);
-        e = e.parent;
-      }
-      this.$emit("sendBreadcrumbList", this.nodeParentList);
+    onNodeClick(node){
+      
+      apiService.getLeafNodeList(node.id, 1, 10)
+      .then((data) => {
+        this.transferResult = data.data.data;
+        this.transferPagination = data.data.pagination;
+        this.$emit('menuChange', this.transferResult, this.transferPagination, node.id);
+      }).catch(() => {
+      });
     },
     loadNode(node, resolve) {
       if (node.level === 0) {
@@ -586,7 +59,7 @@ export default {
         apiService
           .getMenuNodeByParentId(-1)
           .then((tree) => {
-            return resolve(tree.data.data);
+            return resolve(tree.data);
           })
           .catch(() => {
             resolve([]);
@@ -594,11 +67,12 @@ export default {
 
         return;
       }
+
       if (!node.isLeaf) {
         apiService
           .getMenuNodeByParentId(node.data.id)
           .then((tree) => {
-            return resolve(tree.data.data);
+            return resolve(tree.data);
           })
           .catch(() => {
             resolve([]);
@@ -609,9 +83,9 @@ export default {
     },
     renderContent(h, { node }) {
       return (
-        <span class="transfer-menu-node">
+        <span class="search-menu-node">
           {(() => {
-            if (node.isLeaf) {
+            if (node.level === 1 || node.isLeaf) {
               return null;
             } else {
               return node.expanded ? (
@@ -625,7 +99,14 @@ export default {
         </span>
       );
     },
-  },
+    
+  }
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import "@/styles/util.scss";
+.el-tree{
+  font-size: $font-md;
+}
+
+</style>
