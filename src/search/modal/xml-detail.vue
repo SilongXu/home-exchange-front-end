@@ -38,10 +38,10 @@ export default {
       this.atob= window.atob(data.data);
       this.loadingXml = false;
     }).catch(() => {
-      this.loadingXml = false;
-      this.$message("获取xml文件失败");
-      const faildFetchXml = document.getElementsByClassName('dialog-bottom');
-      faildFetchXml[0].innerHTML = '<strong>找不到xml文件</strong>';
+      this.loadingXml = false;
+      this.$message("获取xml文件失败");
+      const faildFetchXml = document.getElementsByClassName('dialog-bottom');
+      faildFetchXml[0].innerHTML = '<strong>找不到xml文件</strong>';
     });
   }
 }
