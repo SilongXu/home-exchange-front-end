@@ -3,10 +3,10 @@
     <search-input @inputChange="onInputChange" ref="input"></search-input>
     <div class="search-empty-box"></div>
     <div class="search-content">
-      <div class="search-content-left">
+      <div class="search-content-left" :style="{height: clientHeight - 240 + 'px'}">
         <search-menu @menuChange="onMenuChange"></search-menu>
       </div>
-      <div class="search-content-right">
+      <div class="search-content-right" :style="{height: clientHeight - 240 + 'px'}">
         <search-filter
           ref="filter"
           @filterChange="onFilterChange"
@@ -37,6 +37,7 @@ export default {
   },
   data: () => {
     return {
+      clientHeight: document.body.clientHeight,
       inputFilter: "",
       menuFilter: null,
       needFilter: false,
@@ -48,6 +49,26 @@ export default {
   },
   mounted() {
     this.fetchResult();
+    const that = this
+    window.onresize = () => {
+      return (() => {
+        window.screenHeight = document.body.clientHeight
+        that.clientHeight = window.screenHeight
+      })()
+    }
+  },
+  watch: {
+    clientHeight(val) {
+      if(!this.timer) {
+        this.clientHeight = val
+        this.timer = true
+        let that = this;
+        setTimeout(() => {
+          console.log(that.clientHeight)
+          that.timer = false;
+        }, 400);
+      }
+    }
   },
   methods: {
     //通过监听接收子节点传送来的数据
@@ -277,18 +298,14 @@ export default {
     &-left {
       flex-shrink: 0;
       width: 400px;
-      // min-height: 100vh;
       border-right: 1px solid $border-dark;
       overflow: auto;
-      height: 74.5vh;
-      
     }
 
     &-right {
       flex: 1;
       min-width: 0;
       overflow: auto;
-      height: 74.5vh;
     }
   }
   

@@ -1,19 +1,15 @@
 <template>
   <div class="transfer">
-    <div class="transfer-left">
+    <div class="transfer-left" :style="{height: clientHeight - 150 + 'px'}">
       <transfer-menu
         ref="searchMenuTree"
         @menuChange="onMenuChange"
-        @sendBreadcrumbList="acceptBreadcrumbList"
-        @sendTableList="acceptTableList"
       >
       </transfer-menu>
     </div>
-    <div class="transfer-right">
+    <div class="transfer-right" :style="{height: clientHeight - 150 + 'px'}">
       <transfer-config
         ref="config"
-        :transferBreadcrumbList="breadcrumbList"
-        :transferTableList="tableList"
       ></transfer-config>
     </div>
   </div>
@@ -32,13 +28,34 @@ export default {
   },
   data: () => {
     return {
-      // node: null,
-      breadcrumbList: [],
-      tableList: [],
+      clientHeight: document.body.clientHeight,
       transferResultFinal: [],
       transferPaginationFinal: [],
       nodeId: null,
+      transferResultLoading: false,
     };
+  },
+  mounted(){
+    const that = this
+    window.onresize = () => {
+      return (() => {
+        window.screenHeight = document.body.clientHeight
+        that.clientHeight = window.screenHeight
+      })()
+    }
+  },
+  watch: {
+    clientHeight(val) {
+      if(!this.timer) {
+        this.clientHeight = val
+        this.timer = true
+        let that = this;
+        setTimeout(() => {
+          console.log(that.clientHeight)
+          that.timer = false;
+        }, 400);
+      }
+    }
   },
   methods: {
     onMenuChange(transferResult, transferPagination, nodeId){
@@ -48,7 +65,7 @@ export default {
       this.$refs.config.transferResult = this.transferResultFinal;
       this.$refs.config.pagination = this.transferPaginationFinal;
       this.$refs.config.nodeId = this.nodeId;
-      console.log(this.$refs.config.transferResult);
+      this.$refs.config.transferResultLoading = false;
     },
     acceptBreadcrumbList(list) {
       this.breadcrumbList = list;
@@ -68,12 +85,13 @@ export default {
   display: flex;
   align-items: stretch;
   background: $bg-light;
+  height: 100%;
 
   &-left {
     flex-shrink: 0;
-    width: 400px;
+    overflow-y: auto;
     height: 84.4vh;
-    overflow: auto;
+    width: 400px;
     border-right: 1px solid $border-dark;
   }
 

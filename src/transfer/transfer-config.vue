@@ -3,31 +3,31 @@
     <div class="transfer-config-header">
       <!-- <div class="transfer-config-header-title">
         <el-breadcrumb separator="/">
-          <el-breadcrumb-item
-            v-for="item in transferBreadcrumbList"
-            :key="item.id"
-          >
-            {{ item.data.label }}
-          </el-breadcrumb-item>
+          <el-breadcrumb-item v-for="breadItem in breadCrumbList" :key="breadItem.name">{{breadItem}}</el-breadcrumb-item>
         </el-breadcrumb>
       </div> -->
       <div class="transfer-config-header-operation">
         <div class="transfer-config-header-operation-set">
-          <el-button type="primary" size="mini" @click="setTransfers()">
-            <svg-icon icon="setting"></svg-icon>
-            <span class="transfer-config-header-operation-set-span"
-              >批量设置</span >
-          </el-button>
-          <el-button type="primary" size="mini" @click="gotoTransferLogs()">
-            <svg-icon icon="view-detail"></svg-icon>
-            <span class="transfer-config-header-operation-set-span"
-              >查看日志</span>
-          </el-button>
+          <el-breadcrumb separator="/">
+            <el-breadcrumb-item v-for="breadItem in breadCrumbList" :key="breadItem.name">{{breadItem}}</el-breadcrumb-item>
+          </el-breadcrumb>
+          <div>
+            <el-button type="primary" size="mini" @click="setTransfers()">
+              <svg-icon icon="setting"></svg-icon>
+              <span class="transfer-config-header-operation-set-span"
+                >批量设置</span >
+            </el-button>
+            <el-button type="primary" size="mini" @click="gotoTransferLogs()">
+              <svg-icon icon="view-detail"></svg-icon>
+              <span class="transfer-config-header-operation-set-span"
+                >查看日志</span>
+            </el-button>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="transfer-config-content">
+    <div class="transfer-config-content" :style="{height: clientHeight - 200 + 'px'}">
       <div class="transfer-config-content-header">
         <div class="transfer-config-content-header-name">目录名称</div>
         <div class="transfer-config-content-header-type">同步类型</div>
@@ -113,9 +113,9 @@ export default {
     TransferSetting,
     TransferRefresh,
   },
-  props: ["transferBreadcrumbList", "transferTableList"],
   data: () => {
     return {
+      clientHeight: document.body.clientHeight,
       searchKey: "",
       setDialogVisible: false,
       refreshDialogVisible: false,
@@ -123,7 +123,29 @@ export default {
       pagination: {},
       nodeId: null,
       transferResultLoading: false,
+      breadCrumbList: [],
     };
+  },
+  mounted(){
+    const that = this
+    window.onresize = () => {
+      return (() => {
+        window.screenHeight = document.body.clientHeight
+        that.clientHeight = window.screenHeight
+      })()
+    }
+  },
+  watch: {
+    clientHeight(val) {
+      if(!this.timer) {
+        this.clientHeight = val
+        this.timer = true
+        let that = this;
+        setTimeout(() => {
+          that.timer = false;
+        }, 400);
+      }
+    }
   },
   methods: {
     onSizeChange(size){
@@ -134,6 +156,7 @@ export default {
         this.transferResult = data.data.data;
         this.pagination = data.data.pagination;
         this.transferResultLoading=false;
+        document.getElementsByClassName('transfer-config-content')[0].scrollTop = 0;
       })
     },
     onPageChange(page){
@@ -143,8 +166,8 @@ export default {
       .then((data) => {
         this.transferResult = data.data.data;
         this.pagination = data.data.pagination;
-        console.log(this.pagination)
         this.transferResultLoading=false;
+        document.getElementsByClassName('transfer-config-content')[0].scrollTop = 0;
       })
     },
     setTransfers() {
@@ -194,11 +217,8 @@ export default {
     border-bottom: 1px solid $border-dark;
 
     &-operation {
-      &-set{
-        @include flex-align(center, flex-end);
-      }
-
       &-set {
+        @include flex-align(center, space-between);
         .svg-icon {
           margin-right: 4px;
         }
@@ -212,8 +232,8 @@ export default {
   }
 
   &-content {
-    overflow: auto;
-    height: 73vh;
+    overflow-y: auto;
+
     &-header{
       display: flex;
       border-bottom: 1px solid $bg-default;

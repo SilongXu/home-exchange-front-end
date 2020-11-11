@@ -28,10 +28,10 @@ export default {
         disabled: "disabled",
         isLeaf: "isLeaf",
       },
-      nodeChildrenList: [],
-      nodeParentList: [],
       transferResult: [],
       transferPagination: [],
+      currentNodeId: null,
+      breadCrumbList: [],
     };
   },
   mounted() {
@@ -42,14 +42,27 @@ export default {
   },
   methods: {
     onNodeClick(node){
-      
-      apiService.getLeafNodeList(node.id, 1, 10)
-      .then((data) => {
-        this.transferResult = data.data.data;
-        this.transferPagination = data.data.pagination;
-        this.$emit('menuChange', this.transferResult, this.transferPagination, node.id);
-      }).catch(() => {
-      });
+      if(this.currentNodeId != node.id){
+        this.$parent.$refs.config.transferResultLoading =true
+        apiService.getLeafNodeList(node.id, 1, 20)
+        .then((data) => {
+          this.transferResult = data.data.data;
+          this.transferPagination = data.data.pagination;
+          this.$emit('menuChange', this.transferResult, this.transferPagination, node.id);
+          this.currentNodeId = node.id;
+          document.getElementsByClassName('transfer-config-content')[0].scrollTop = 0;
+        }).catch(() => {
+        });
+      }
+      //同步管理一级页面 面包屑 相关逻辑
+      this.breadCrumbList = [];
+      this.breadCrumbList.push(node.name);
+      if(node.paths.length != 0){
+        for(var i=node.paths.length-1;i>-1;i--){
+          this.breadCrumbList.unshift(node.paths[i].name);
+        }
+      }
+      this.$parent.$refs.config.breadCrumbList=this.breadCrumbList;
     },
     loadNode(node, resolve) {
       if (node.level === 0) {
