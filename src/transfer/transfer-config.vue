@@ -1,11 +1,6 @@
 <template>
   <div class="transfer-config">
     <div class="transfer-config-header">
-      <!-- <div class="transfer-config-header-title">
-        <el-breadcrumb separator="/">
-          <el-breadcrumb-item v-for="breadItem in breadCrumbList" :key="breadItem.name">{{breadItem}}</el-breadcrumb-item>
-        </el-breadcrumb>
-      </div> -->
       <div class="transfer-config-header-operation">
         <div class="transfer-config-header-operation-set">
           <el-breadcrumb separator="/">
