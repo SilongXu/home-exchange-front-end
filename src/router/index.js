@@ -41,7 +41,7 @@ export default new Router({
           component: menu,
         },
         {
-          path: 'monitor',
+          path: 'monitor**',
           name: 'monitor',
           component: monitor,
         },

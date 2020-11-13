@@ -48,7 +48,7 @@
 
 <script>
 import * as moment from 'moment-mini';
-import apiService from './monitor.service';
+import apiService from '../monitor.service';
 
 const TREND_LINE_OPTIONS = {
   tooltip: {
@@ -199,7 +199,7 @@ const SEARCH_LINE_OPTIONS = {
 export default {
   name: 'MonitorChart',
   components: {
-    'monitor-error-detail': () => import('./modal/monitor-error-detail'),
+    'monitor-error-detail': () => import('./monitor-error-detail'),
   },
   mounted() {
     this.getTrendData();

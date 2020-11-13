@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import apiService from './monitor.service';
+import apiService from '../monitor.service';
 
 export default {
   name: 'MonitorTop',

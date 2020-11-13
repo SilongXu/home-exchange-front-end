@@ -1,38 +1,27 @@
 <template>
-  <div class="monitor">
-    <monitor-top></monitor-top>
-    <monitor-chart></monitor-chart>
-    <monitor-chart-panel></monitor-chart-panel>
-  </div>
+  <router-view></router-view>
 </template>
 
 <script>
-import MonitorTop from './monitor-top';
-import MonitorChart from './monitor-chart';
-import MonitorChartPanel from './monitor-chart-panel';
+import monitorWelcome from './monitor-welcome'
+import monitorArchive from './monitor-archive'
+import monitorInterface from './monitor-interface'
+import router from './monitor-router';
+
 
 export default {
-  name: 'Monitor',
+  name: 'Import',
   components: {
-    MonitorTop,
-    MonitorChart,
-    MonitorChartPanel,
+    /* eslint-disable */
+    monitorWelcome,
+    monitorArchive,
+    monitorInterface
+    /* eslint-enable */
   },
+  router
 }
-</script>
+</script> 
 
 <style lang="scss" scoped>
-@import '@/styles/util.scss';
-
-.monitor {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  margin-top: 30px;
-  overflow: auto;
-}
 
 </style>
