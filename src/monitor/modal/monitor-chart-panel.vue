@@ -1,6 +1,5 @@
 <template>
   <div class="monitor-panel" v-loading="loadingTabs" element-loading-background="rgba(0, 0, 0, 0.4)">
-    <el-button type="primary" @click="goToArchive()">归档统计跳转</el-button>
     <el-tabs v-model="activeTab" :before-leave="toggleTab">
       <el-tab-pane :lazy="true" v-for="tab in tabs" :key="tab.nodeCode" :label="tab.nodeName" :name="tab.nodeCode + ''">
         <monitor-history-trend v-if="activeTab === tab.nodeCode" :nodeCode="tab.nodeCode"></monitor-history-trend>
@@ -29,9 +28,6 @@ export default {
     this.getTabs();
   },
   methods: {
-    goToArchive(){
-      this.$router.push('./monitor/monitorArchive');
-    },
     getTabs() {
       this.loadingTabs = true;
       apiService.getMenuTabs()

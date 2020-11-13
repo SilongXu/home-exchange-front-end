@@ -10,6 +10,10 @@
         </el-tab-pane>
       </el-tabs>
 
+      <el-button type="primary" size="mini" @click="goToNewBatch()" class="import-tab-dataBatch">
+        <svg-icon icon="import-manage"></svg-icon>
+        批量数据导入
+      </el-button>
       <el-button type="primary" size="mini" @click="goToNewSpecial()" class="import-tab-dataInt">
         <svg-icon icon="import-manage"></svg-icon>
         网络数据导入
@@ -37,6 +41,9 @@ export default {
     }
   },
   methods: {
+    goToNewBatch(){
+      this.$router.push('./import/newBatch');
+    },
     goToNewSpecial(){
       this.$router.push('./import/newSpecial');
     },
@@ -53,16 +60,21 @@ export default {
   overflow: auto;
   &-tab{
     position: relative;
+    &-dataBatch{
+      position: absolute;
+      top: 8px;
+      right: 150px;
+    }
 
     &-dataInt{
       position: absolute;
       top: 8px;
-      right: 130px;
+      right: 20px;
     }
     &-data {
       position: absolute;
       top: 8px;
-      right: 20px;
+      right: 280px;
     }
     .el-button{
       ::v-deep span{

@@ -98,16 +98,12 @@
           :total="pagination.total">
         </el-pagination>
       </div>
-
-      <monitor-errors :dialogVisible='dialogErrorsVisible' @close='closeErrorsPage'></monitor-errors> </monitor-errors>
       <monitor-interface-content  :dialogVisible='dialogInterfaceContentVisible' @close="closeInterfaceContentPage" :messageXml='dialogInterfaceContent' ></monitor-interface-content>
     </div>
   </div>
 </template>
 
 <script>
-import { forIn } from "lodash-es";
-import MonitorErrors from "./modal/monitor-errors";
 import MonitorInterfaceContent from "./modal/monitor-interface-content";
 import apiService from "./monitor.service";
 export default {
@@ -137,33 +133,23 @@ export default {
     };
   },
   components: {
-    "monitor-errors": MonitorErrors,
     "monitor-interface-content": MonitorInterfaceContent,
   },
   mounted() {
     apiService.getInterfaceType().then((res) => {
-      // this.searchObj.interfaceType
-      console.log(res.data.detail[0].items);
       this.interfaceTypeList = res.data.detail[0].items;
-      console.log(this.interfaceTypeList);
     });
 
     apiService.getAccepterList().then((res) => {
-      console.log(res.data.detail[0].items);
       this.receiverList = res.data.detail[0].items;
-      console.log(this.receiverList);
     });
     apiService.getSenderList().then((res) => {
-      console.log(res.data.detail[0].items);
       this.senderList = res.data.detail[0].items;
-      console.log(this.senderList);
     });
   },
   methods: {
     search() {
-      console.log(this.searchObj);
       var responseBody = this.getResponseBody();
-      console.log(responseBody);
       // alert("开始检索");
       apiService
         .getSearchContent(
@@ -172,10 +158,8 @@ export default {
           responseBody
         )
         .then((res) => {
-          // console.log(res.data.detail.total)
           this.pagination.total = res.data.detail.total;
           this.tableData = res.data.detail.list;
-          console.log(res.data.detail.list)
         });
     },
     getResponseBody() {

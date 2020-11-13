@@ -22,7 +22,6 @@ const state = () => ({
     },
     setTransferTableList(state,tableList){
       state.transferTableList = tableList;
-      // console.log(state.transferTableList)
     }
   }
   

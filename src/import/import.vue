@@ -7,6 +7,7 @@ import ImportList from './import-list';
 import ImportNew from './import-new';
 import router from './import-router';
 import ImportNewSpecial from './import-new-special';
+import ImportNewBatch from './import-new-batch';
 
 export default {
   name: 'Import',
@@ -15,6 +16,7 @@ export default {
     ImportList,
     ImportNew,
     ImportNewSpecial,
+    ImportNewBatch
     /* eslint-enable */
   },
   router

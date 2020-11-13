@@ -74,7 +74,6 @@ export default {
         this.timer = true;
         let that = this;
         setTimeout(() => {
-          console.log(that.clientHeight);
           that.timer = false;
         }, 400);
       }
@@ -137,12 +136,13 @@ export default {
       if (!this.menuFilter) {
         this.menuFilter = node;
         this.$refs.filter.fetchFilterList(this.menuFilter);
-      } else {
-        if (this.menuFilter.nodeCode != node.nodeCode) {
+      }else{
+        if(this.menuFilter.nodeCode != node.nodeCode){
           this.menuFilter = node;
           this.$refs.filter.fetchFilterList(this.menuFilter);
         }
       }
+
       this.$refs.input.search();
     },
     onFilterChange() {
