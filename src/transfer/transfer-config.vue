@@ -69,14 +69,14 @@
             <span
               class="set"
               title="设置"
-              @click="setTransfers()">
+              @click="setTransfers(entry)">
               <svg-icon icon="setting" color="default"></svg-icon>
             </span>
 
             <span
               class="refresh"
               title="刷新"
-              @click="refreshTransfer()">
+              @click="refreshTransfer(entry)">
               <svg-icon icon="refresh" color="default"></svg-icon>
             </span>
           </div>
@@ -99,7 +99,7 @@
       @close="onSettingClose"
       ref="transferSetting"
     ></transfer-setting>
-    <transfer-refresh :visible="refreshDialogVisible" @close="onRefreshClose">
+    <transfer-refresh :visible="refreshDialogVisible" @close="onRefreshClose" ref="transferRefresh">
     </transfer-refresh>
   </div>
 </template>
@@ -107,16 +107,18 @@
 import apiService from './transfer.service'
 import TransferSetting from "./transfer-setting";
 import TransferRefresh from "./transfer-refresh";
-
+import Router from '../router/index'
 
 export default {
   name: "TransferConfig",
   components: {
     TransferSetting,
     TransferRefresh,
+
   },
   data: () => {
     return {
+      singleOrBatch: "",
       transferConfigSearchBar: '',
       clientHeight: document.body.clientHeight,
       searchKey: "",
@@ -174,40 +176,80 @@ export default {
       })
     },
     transferConfigBatch(){
+      Router.replace('/search')
+
+      this.$router.replace('/search')
+
+      // this.singleOrBatch = "batch";
+      // this.setDialogVisible = true;
+      // apiService.getTransgerConfigSelectOptions()
+      // .then((data) => {
+      //   this.$refs.transferSetting.transferTypes = data.data.types.filter((target) => {
+      //     if(target.key != "NONE"){
+      //       return target;
+      //     }
+      //   })
+      //   this.$refs.transferSetting.transferStrategies = data.data.periods.filter((target) => {
+      //     if(target.key != "NONE"){
+      //       return target;
+      //     }
+      //   })
+      // })
+    },
+    setTransfers(entry) {
+      this.$refs.transferSetting.configEntry = entry;
+      this.singleOrBatch ="single";
       this.setDialogVisible = true;
       apiService.getTransgerConfigSelectOptions()
       .then((data) => {
-        // console.log(data.data);
-      })
+        this.$refs.transferSetting.transferTypes = data.data.types.filter((target) => {
+          if(target.key != "NONE"){
+            return target;
+          }
+        })
+        this.$refs.transferSetting.transferStrategies = data.data.periods.filter((target) => {
+          if(target.key != "NONE"){
+            return target;
+          }
+        })
+      }).catch(() => {
+      });
+      apiService.getLastMenuConfigInfo(entry.id)
+      .then((data) => {
+        this.$refs.transferSetting.transferSetting.transferType = data.data.syncType;
+        this.$refs.transferSetting.transferSetting.transferStrategy = data.data.syncPeriod;
+        this.$refs.transferSetting.transferSetting.transferTime = data.data.syncPoint;
+        if(this.$refs.transferSetting.transferSetting.transferType =="NONE"){
+          this.$refs.transferSetting.transferSetting.transferType = "";
+        }
+        if(this.$refs.transferSetting.transferSetting.transferStrategy =="NONE"){
+          this.$refs.transferSetting.transferSetting.transferStrategy = "";
+        }
+      }).catch(() => {
+      });
     },
-    setTransfers() {
-      let selectedMenu = this.getSelectedMenu();
-      // TO DO do setting transfer
-      this.setDialogVisible = true;
+    gotoTransferLogs() {  
+      this.$router.push({path: '/search'})
     },
-    gotoTransferLogs(path) {  
-      // this.$router.push('./transfer/transferlog')
-
-    },
-    refreshTransfer() {
+    refreshTransfer(entry) {
       this.refreshDialogVisible = true;
+      apiService.syncCatalogMenuManual(entry.id)
+      .then((data) => {
+      }).catch(() => {
+      });
     },
     setTransfer(item) {
       this.setDialogVisible = true;
     },
 
-    getSelectedMenu() {
-      // TODO
-      return [];
-    },
-
     onSortChange() {},
 
-    onSettingClose(setting) {
+    onSettingClose() {
       this.setDialogVisible = false;
-      if (setting) {
+      this.$refs.transferSetting.transferSetting.transferType = "";
+      this.$refs.transferSetting.transferSetting.transferStrategy = "";
+      this.$refs.transferSetting.transferSetting.transferTime = "";
 
-      }
     },
     onRefreshClose(refreshItem) {
       this.refreshDialogVisible = false;

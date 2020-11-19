@@ -31,43 +31,31 @@ const MonitorService = {
   getErrorLog() {
     return http.get(`/${prefix}/system/log/importLog`);
   },
-  getInterfaceType() {
-    return http.post(`/${metaPrefix}/metaField/enum/list`, {
-      "fieldCodes": ["messageType"],
-      "nodeCode": "CHDL"
-    })
-  },
-  getAccepterList() {
-    return http.post(`/${metaPrefix}/metaField/enum/list`, {
-      "fieldCodes": ["systemCode"],
-      "nodeCode": "CHDL"
-    })
-  },
-  getSenderList(){
-    return http.post(`/${metaPrefix}/metaField/enum/list`, {
-      "fieldCodes": ["systemCode"],
-      "nodeCode": "CHDL"
-    })
-  },
-  getSearchContent(page,size,responseBody){
-    return http.post(`/${apiPrefix}/interfaceExcutionLog/list?page=${page}&size=${size}`,responseBody)
-  },
-  getArchiveDataType(dataType){
-    return http.post(`/${meta}/metaField/enum/list`,
-    {
-      "fieldCodes":[dataType],
-      "nodeCode": ""
-    });
-  },
-  getArchiveTrendeCharts(countType, dataTypes, startTime, endTime){
-    return http.post(`/${dataFlow}/importTrend/detail`,
+  getArchiveTrendeCharts(countType, satellites, sensors, productLevels, startTime, endTime){
+    return http.post(`/${prefix}/system/log/importTrend/detail`,
     {
       "countType": countType,
-      "dataTypes": dataTypes,
+      "satellites": satellites,
+      "sensors": sensors,
+      "productLevels": productLevels,
       "endTime": endTime,
       "startTime": startTime
     }
     )
+  },
+  downloadArchiveExcel(countType, satellites, sensors, productLevels, startTime, endTime){
+    return http.post(`/${prefix}/system/log/importTrend/excel`,
+    {
+      "countType": countType,
+      "satellites": satellites,
+      "sensors": sensors,
+      "productLevels": productLevels,
+      "endTime": endTime,
+      "startTime": startTime
+    },{responseType: 'blob'})
+  },
+  getArchiveBottomOptions(nodeCode){
+    return http.get(`${prefix}/system/options/importInfo/${nodeCode}`);
   },
 };
 

@@ -2,10 +2,12 @@
   <div class="layout-header">
     <div class="layout-header-top">
       <div class="layout-header-top-current">
+        <!--
         <div class="nav-item active" v-if="currentNavItem">
           <svg-icon :icon="currentNavItem.icon"></svg-icon>
           {{currentNavItem.name}}
         </div>
+        -->
       </div>
       <div class="layout-header-top-profile">
         <div class="nav-item" @click="navPath('/search')">
@@ -19,13 +21,15 @@
     </div>
     <div class="layout-header-nav">
       <div class="layout-header-nav-left">
-        <div class="nav-item" v-for="navItem in leftNavItems" :key="navItem.name" @click="navPath(navItem.path)">
+        <div :class="navItem.path==currentNavItem.path?'nav-item active':'nav-item'" 
+            v-for="navItem in leftNavItems" :key="navItem.name" @click="navPath(navItem.path)">
           <svg-icon :icon="navItem.icon"></svg-icon>
           {{navItem.name}}
         </div>
       </div>
       <div class="layout-header-nav-right">
-        <div class="nav-item" v-for="navItem in rightNavItems" :key="navItem.name" @click="navPath(navItem.path)">
+        <div :class="navItem.path==currentNavItem.path?'nav-item active':'nav-item'" 
+            v-for="navItem in rightNavItems" :key="navItem.name" @click="navPath(navItem.path)">
           <svg-icon :icon="navItem.icon"></svg-icon>
           {{navItem.name}}
         </div>
@@ -47,13 +51,18 @@ export default {
     return {
       leftNavItems: [
         {
+          icon: 'search', 
+          name: '数据检索',
+          path: '/search',
+        },
+        {
           icon: 'folder-open',
           name: '目录管理',
           path: '/menu',
         },
         {
           icon: 'import-manage',
-          name: '导入管理',
+          name: '归档管理',
           path: '/import'
         },
         // {
@@ -82,6 +91,11 @@ export default {
           path: '/monitor',
         },
         {
+          icon: 'taskflow',
+          name: '接口管理',
+          path: '/interface',
+        },
+        {
           icon: 'transfer',
           name: '同步管理',
           path: '/transfer',
@@ -107,7 +121,7 @@ export default {
     currentNavItem() {
       const path = this.$route.path;
       const navItem = [...this.leftNavItems, ...this.rightNavItems, ...this.extraNavItems].find((_navItem) => {
-        return _navItem.path && path.indexOf(_navItem.path) > -1;
+        return _navItem.path && path==_navItem.path; //path.indexOf(_navItem.path) > -1;
       });
       return navItem;
     }
@@ -182,21 +196,17 @@ export default {
     &-left {
       @include flex-align(center, center);
       flex: 1;
-      max-width: calc(50% - 260px);
-      margin-left: -80px;
-      padding-left: 20px;
+      max-width: calc(50% - 200px);
     }
 
     &-right {
       @include flex-align(center, center);
       flex: 1;
-      max-width: calc(50% - 300px);
-      margin-right: 20px;
-      padding-right: 20px;
+      max-width: calc(50% - 200px);
     }
 
     .nav-item{
-      padding-left: 80px;
+      padding-left: 5%;
     }
   }
 

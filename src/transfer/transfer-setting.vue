@@ -8,16 +8,32 @@
   >
     <div>
       <div class="setting-selector">
-        <div class="label">同步类型</div>
-        <div class="selector">
-          <el-select v-model="transferSetting.transferType">
+        <div class="syncType">
+          <span>同步类型</span>
+          <el-select v-model="transferSetting.transferType" placeholder="请选择同步类型">
             <el-option
-              v-for="(item, index) in transferTypes"
-              :key="index"
-              :value="item">
-              {{ item }}
+              v-for="item in transferTypes"
+              :key="item.key"
+              :label="item.value"
+              :value="item.value">
             </el-option>
           </el-select>
+        </div>
+        <div class="syncStrategy">
+          <span>同步策略</span>
+          <el-select v-model="transferSetting.transferStrategy" placeholder="请选择同步策略">
+            <el-option
+              v-for="item in transferStrategies"
+              :key="item.key"
+              :label="item.value"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
+        <div class="syncDate">
+          <span>同步时间</span>
+          <el-date-picker v-model="transferSetting.transferTime" type="datetime" placeholder="请选择同步时间">
+          </el-date-picker>
         </div>
       </div>
       <div class="operator">
@@ -30,18 +46,21 @@
   </el-dialog>
 </template>
 <script>
+import apiService from "./transfer.service";
+
 export default {
   name: "TransferSetting",
   props: ["visible"],
   data: () => {
     return {
+      configEntry: "",
       transferSetting: {
-        transferType: null,
-        transferStrategy: null,
-        transferTime: null,
+        transferType: "",
+        transferStrategy: "",
+        transferTime: "",
       },
-      transferTypes: ["实时", "定时", "不定时"],
-      transferStrategies: ["每天一次", "每小时一次"],
+      transferTypes: [],
+      transferStrategies: []
     };
   },
   methods: {
@@ -49,7 +68,20 @@ export default {
       this.$emit("close", null);
     },
     verifySetting() {
-      this.$emit("close", this.transferSetting);
+
+      if(this.$parent.singleOrBatch == "single"){
+        apiService.updateTransferConfigSettingSingle(this.configEntry.id, this.transferSetting.transferStrategy, this.transferSetting.transferTime, this.transferSetting.transferType)
+        .then((data) => {
+
+          this.$emit("close", this.transferSetting);
+        }).catch(() => {
+        });
+      }else if(this.$parent.singleOrBatch == "batch"){
+        apiService.updateTransferConfigSettingBatch(this.configEntry.id, this.$parent.transferConfigSearchBar, this.transferSetting.transferStrategy, this.transferSetting.transferTime, this.transferSetting.transferType)
+        .then((data) => {
+          this.$emit("close", this.transferSetting);
+        })
+      }
     },
   },
 };
@@ -58,9 +90,20 @@ export default {
 @import "@/styles/util.scss";
 
 .setting-selector {
-  @include flex-xy-center;
-  justify-content: flex-start;
-  padding: 10px;
+  font-size: 16px;
+  padding: 20px;
+  .syncType{
+    padding: 15px;
+  }
+  .syncStrategy{
+    padding: 15px;
+  }
+  .syncDate{
+    padding: 15px;
+  }
+  span{
+    padding-right: 15px;
+  }
 
   .label {
     margin-right: 80px;

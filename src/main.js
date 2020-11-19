@@ -18,4 +18,6 @@ new Vue({
   router
 }).$mount('#app')
 
+location.hash = '/search';
+
 Vue.config.productionTip = false
