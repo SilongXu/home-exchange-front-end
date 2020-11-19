@@ -70,8 +70,8 @@ export default {
     acceptBreadcrumbList(list) {
       this.breadcrumbList = list;
     },
-    acceptTableList(list) {
-      this.tableList = list;
+    acceptTableList(node) {
+      this.$refs.config.getMenuNodeLeavesByParentId(node)
 
     },
   },

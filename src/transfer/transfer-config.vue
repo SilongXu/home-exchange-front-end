@@ -97,10 +97,11 @@
     </transfer-refresh>
   </div>
 </template>
-<script>
+<script>49624
+import apiService from './transfer.service'
 import TransferSetting from "./transfer-setting";
 import TransferRefresh from "./transfer-refresh";
-import apiService from "./transfer.service";
+
 
 export default {
   name: "TransferConfig",
