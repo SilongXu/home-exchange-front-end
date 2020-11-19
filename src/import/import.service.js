@@ -24,7 +24,24 @@ const importService = {
   },*/
   importData(formData){
     return http.post(`${prefix}/system/data/manual/upload`, formData);
-  }
+  },
+  //批量导入接口
+  getImportBatchNodeList(){
+    return http.get(`/${prefix}/system/options/nodeInfo`);
+  },
+  getImportBatchInfoList(nodeCode){
+    return http.get(`${prefix}/system/options/importInfo/${nodeCode}`);
+  },
+  importDataBatch(importPath, productLevel, satellite, sensor){
+    return http.post(`/${prefix}/system/data/manual/upload/batch`,
+    {
+      "importPath": importPath,
+      "productLevel": productLevel,
+      "satellite": satellite,
+      "sensor": sensor
+    }
+    )
+  },
 };
 
 export default importService;

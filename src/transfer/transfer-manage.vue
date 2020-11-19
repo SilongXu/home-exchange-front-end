@@ -1,13 +1,13 @@
 <template>
   <div class="transfer">
-    <div class="transfer-left" :style="{height: clientHeight - 150 + 'px'}">
+    <div class="transfer-left">
       <transfer-menu
         ref="searchMenuTree"
         @menuChange="onMenuChange"
       >
       </transfer-menu>
     </div>
-    <div class="transfer-right" :style="{height: clientHeight - 150 + 'px'}">
+    <div class="transfer-right">
       <transfer-config
         ref="config"
       ></transfer-config>
@@ -51,7 +51,6 @@ export default {
         this.timer = true
         let that = this;
         setTimeout(() => {
-          console.log(that.clientHeight)
           that.timer = false;
         }, 400);
       }
@@ -81,7 +80,6 @@ export default {
 @import "@/styles/util.scss";
 .transfer {
   flex: 1;
-  // overflow: auto;
   display: flex;
   align-items: stretch;
   background: $bg-light;
@@ -90,7 +88,6 @@ export default {
   &-left {
     flex-shrink: 0;
     overflow-y: auto;
-    height: 84.4vh;
     width: 400px;
     border-right: 1px solid $border-dark;
   }

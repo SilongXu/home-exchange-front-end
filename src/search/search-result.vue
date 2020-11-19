@@ -2,17 +2,18 @@
   <div class="search-result" ref="result">
     <add-tag-modal v-if="tagDialogVisible" :visible="tagDialogVisible" @addTagChange="onAddTag" @cancel="onCancelAddTag"></add-tag-modal>
     <search-detail v-if="dialogVisible" :visible="dialogVisible" :detail="currentEntry" @close="onDetailClose"></search-detail>
+    <xml-detail v-if="xmlDetailVisible" :visible="xmlDetailVisible" @closeXml="closeXml" :detailXml="currentEntry"></xml-detail>
 
     <div class="search-result-operation">
       <div class="search-result-operation-left">
-         <el-button type="primary" size="mini" @click="clearItems()" class="search-result-operation-left">
+         <el-button type="primary" size="mini" @click="clearItems()">
         清空所选项
-      </el-button>
-      <el-button type="primary" size="mini" @click="addTag()" class="search-result-operation-right">
-        批量添加标签
-      </el-button>
-      </div class="search-result-operation-right">
-      <div>
+        </el-button>
+        <el-button type="primary" size="mini" @click="addTag()">
+          批量添加标签
+        </el-button>
+      </div>
+      <div class="search-result-operation-right">
           <span class="search-result-operation-right-btn">
             <el-button type="primary" size="mini" > 导入全部为Excel </el-button>
             <el-button type="primary" size="mini" > 导入选中为Excel </el-button>
@@ -40,6 +41,10 @@
               <span :title="entry.name">{{entry.name}}</span>
             </div>
             <div class="entry-right-top-operation">
+              <div class="link-btn" @click="viewXmlDetail(entry)">
+                <svg-icon icon="view-detail"></svg-icon>
+                xml详情
+              </div>
               <div class="link-btn" @click="viewDetail(entry)">
                 <svg-icon icon="view-detail"></svg-icon>
                 查看详情
@@ -95,14 +100,16 @@ import saveAs from "file-saver";
 export default {
   name: "SearchResult",
   components: {
-    "add-tag-modal": () => import("./modal/add-tag"),
-    "search-detail": () => import("./modal/search-detail"),
+    'add-tag-modal': () => import('./modal/add-tag'),
+    'search-detail': () => import('./modal/search-detail'),
+    'xml-detail': () => import('./modal/xml-detail'),
   },
   props: ["filters"],
   data() {
     return {
       tagDialogVisible: false,
       dialogVisible: false,
+      xmlDetailVisible: false,
       filterPagination: 0,
       pagination: {
         page: 1,
@@ -150,8 +157,6 @@ export default {
           }
         }
       }
-
-      console.log(this.checkedList)
     },
     download(entry) {
       apiService
@@ -169,6 +174,10 @@ export default {
     },
     getThumbImgPath(path) {
       return `data:image/jpg;base64,${path}`;
+    },
+    viewXmlDetail(entry){
+      this.currentEntry = entry;
+      this.xmlDetailVisible = true;
     },
     viewDetail(entry) {
       this.currentEntry = entry;
@@ -209,6 +218,9 @@ export default {
     },
     onDetailClose() {
       this.dialogVisible = false;
+    },
+    closeXml(){
+      this.xmlDetailVisible = false;
     },
     fetchResult(searchParam = {}) {
       //回到页面顶部

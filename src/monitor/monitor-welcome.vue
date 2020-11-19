@@ -3,6 +3,7 @@
     <monitor-top></monitor-top>
     <monitor-chart></monitor-chart>
     <monitor-chart-panel></monitor-chart-panel>
+    <el-button type="primary" @click="goToArchive()">归档统计跳转</el-button>
   </div>
 </template>
 
@@ -18,6 +19,11 @@ export default {
     MonitorChart,
     MonitorChartPanel,
   },
+  methods: {
+    goToArchive(){
+      this.$router.push('./monitor/monitorArchive');
+    },
+  }
 }
 </script>
 

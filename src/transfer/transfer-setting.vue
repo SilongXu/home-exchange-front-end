@@ -14,40 +14,12 @@
             <el-option
               v-for="(item, index) in transferTypes"
               :key="index"
-              :value="item"
-            >
+              :value="item">
               {{ item }}
             </el-option>
           </el-select>
         </div>
       </div>
-      <!-- <div class="setting-selector">
-        <div class="label">同步策略</div>
-        <div class="selector">
-          <el-select v-model="transferSetting.transferStrategy">
-            <el-option
-              v-for="(item, index) in transferStrategies"
-              :key="index"
-              :value="item"
-            >
-              {{ item }}
-            </el-option>
-          </el-select>
-        </div>
-      </div>
-      <div class="setting-selector">
-        <div class="label">同步时间</div>
-        <div class="selector">
-          <el-time-picker
-            v-model="transferSetting.transferTime"
-            :picker-options="{
-              selectableRange: '00:00:00 - 23:59:59',
-            }"
-            placeholder="任意时间点"
-          >
-          </el-time-picker>
-        </div>
-      </div> -->
       <div class="operator">
         <el-button size="medium" plain @click="onClose">取消</el-button>
         <el-button size="medium" type="primary" @click="verifySetting"

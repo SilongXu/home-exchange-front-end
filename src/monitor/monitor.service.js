@@ -4,6 +4,8 @@ const prefix = 'retrieval';
 const catalogPrefix = 'catalog';
 const metaPrefix = 'meta';
 const apiPrefix = 'api';
+const meta = 'meta';
+const dataFlow = "dataflow";
 
 const MonitorService = {
   getMenuTabs() {
@@ -49,7 +51,24 @@ const MonitorService = {
   },
   getSearchContent(page,size,responseBody){
     return http.post(`/${apiPrefix}/interfaceExcutionLog/list?page=${page}&size=${size}`,responseBody)
-  }
+  },
+  getArchiveDataType(dataType){
+    return http.post(`/${meta}/metaField/enum/list`,
+    {
+      "fieldCodes":[dataType],
+      "nodeCode": ""
+    });
+  },
+  getArchiveTrendeCharts(countType, dataTypes, startTime, endTime){
+    return http.post(`/${dataFlow}/importTrend/detail`,
+    {
+      "countType": countType,
+      "dataTypes": dataTypes,
+      "endTime": endTime,
+      "startTime": startTime
+    }
+    )
+  },
 };
 
 export default MonitorService;

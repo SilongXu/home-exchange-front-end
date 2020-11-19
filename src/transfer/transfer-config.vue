@@ -6,17 +6,22 @@
           <el-breadcrumb separator="/">
             <el-breadcrumb-item v-for="breadItem in breadCrumbList" :key="breadItem.name">{{breadItem}}</el-breadcrumb-item>
           </el-breadcrumb>
-          <div>
-            <el-button type="primary" size="mini" @click="setTransfers()">
+          <div class="searchButton">
+            <div class="search">
+              <el-input v-model="transferConfigSearchBar" placeholder="请输入关键词搜索"> 
+              </el-input>
+              <svg-icon icon="search" size="lg"></svg-icon>
+            </div>
+            <el-button type="primary" size="mini" @click="transferConfigBatch()">
               <svg-icon icon="setting"></svg-icon>
               <span class="transfer-config-header-operation-set-span"
                 >批量设置</span >
             </el-button>
-            <el-button type="primary" size="mini" @click="gotoTransferLogs()">
+            <!-- <el-button type="primary" size="mini" @click="gotoTransferLogs()">
               <svg-icon icon="view-detail"></svg-icon>
               <span class="transfer-config-header-operation-set-span"
                 >查看日志</span>
-            </el-button>
+            </el-button> -->
           </div>
         </div>
       </div>
@@ -92,6 +97,7 @@
     <transfer-setting
       :visible="setDialogVisible"
       @close="onSettingClose"
+      ref="transferSetting"
     ></transfer-setting>
     <transfer-refresh :visible="refreshDialogVisible" @close="onRefreshClose">
     </transfer-refresh>
@@ -111,6 +117,7 @@ export default {
   },
   data: () => {
     return {
+      transferConfigSearchBar: '',
       clientHeight: document.body.clientHeight,
       searchKey: "",
       setDialogVisible: false,
@@ -128,7 +135,7 @@ export default {
       return (() => {
         window.screenHeight = document.body.clientHeight
         that.clientHeight = window.screenHeight
-      })()
+      })() 
     }
   },
   watch: {
@@ -166,13 +173,21 @@ export default {
         document.getElementsByClassName('transfer-config-content')[0].scrollTop = 0;
       })
     },
+    transferConfigBatch(){
+      this.setDialogVisible = true;
+      apiService.getTransgerConfigSelectOptions()
+      .then((data) => {
+        // console.log(data.data);
+      })
+    },
     setTransfers() {
       let selectedMenu = this.getSelectedMenu();
       // TO DO do setting transfer
       this.setDialogVisible = true;
     },
-    gotoTransferLogs(path) {
-      this.$router.push('./transfer/transferlog')
+    gotoTransferLogs(path) {  
+      // this.$router.push('./transfer/transferlog')
+
     },
     refreshTransfer() {
       this.refreshDialogVisible = true;
@@ -208,7 +223,7 @@ export default {
 
 .transfer-config {
   &-header {
-    justify-content: space-between;
+    // justify-content: space-between;
     padding: 5px 15px;
     border-bottom: 1px solid $border-dark;
 
@@ -217,6 +232,17 @@ export default {
         @include flex-align(center, space-between);
         .svg-icon {
           margin-right: 4px;
+        }
+        .searchButton{
+          display: flex;
+          .search{
+            display: flex;
+            .svg-icon{
+              position: relative;
+              right: 35px;
+              top: 8px;
+            }
+          }
         }
         &-span {
           font-size: $font-md;
@@ -228,7 +254,8 @@ export default {
   }
 
   &-content {
-    overflow-y: auto;
+    overflow  : auto;
+    height: 78vh;
 
     &-header{
       display: flex;

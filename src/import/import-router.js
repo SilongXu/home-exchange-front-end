@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import ImportList from './import-list';
 import ImportNew from './import-new';
 import ImportNewSpecial from './import-new-special';
+import ImportNewBatch from './import-new-batch'
 
 export default new Router({
   routes: [
@@ -21,5 +22,10 @@ export default new Router({
       name: 'newSpecial',
       component: ImportNewSpecial
     },
+    {
+      path: '/import/newBatch',
+      name: 'newBatch',
+      component: ImportNewBatch
+    }
   ]
 })
