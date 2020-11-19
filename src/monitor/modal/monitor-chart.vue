@@ -16,7 +16,9 @@
       <div class="monitor-chart-right-content"></div>
     </div>
     <div class="monitor-chart-error">
-      <div class="monitor-chart-error-title">错误提示</div>
+      <div class="monitor-chart-error-title">错误提示
+        <el-button type="primary" size="mini" @click="goMonitorInterfacePage">接口监控</el-button>
+      </div>
       <div class="monitor-error-table">
         <el-table
           :data="errorTableData"
@@ -218,6 +220,9 @@ export default {
     };
   },
   methods: {
+    goMonitorInterfacePage(){
+      this.$router.push('./monitor/monitorInterface')
+    },
     getTrendData() {
       apiService.getImportTrend().then((trend) => {
         if (trend.data) {

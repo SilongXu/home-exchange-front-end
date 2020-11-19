@@ -3,10 +3,16 @@
     <search-input @inputChange="onInputChange" ref="input"></search-input>
     <div class="search-empty-box"></div>
     <div class="search-content">
-      <div class="search-content-left" :style="{height: clientHeight - 240 + 'px'}">
+      <div
+        class="search-content-left"
+        :style="{ height: clientHeight - 240 + 'px' }"
+      >
         <search-menu @menuChange="onMenuChange"></search-menu>
       </div>
-      <div class="search-content-right" :style="{height: clientHeight - 240 + 'px'}">
+      <div
+        class="search-content-right"
+        :style="{ height: clientHeight - 240 + 'px' }"
+      >
         <search-filter
           ref="filter"
           @filterChange="onFilterChange"
@@ -16,7 +22,11 @@
           @sendCountiesCache="accepCountiesCache"
         >
         </search-filter>
-        <search-result ref="result" :filters="getFilterList()" @clearItems = "onClearItems"></search-result>
+        <search-result
+          ref="result"
+          :filters="getFilterList()"
+          @clearItems="onClearItems"
+        ></search-result>
       </div>
     </div>
   </div>
@@ -49,26 +59,26 @@ export default {
   },
   mounted() {
     this.fetchResult();
-    const that = this
+    const that = this;
     window.onresize = () => {
       return (() => {
-        window.screenHeight = document.body.clientHeight
-        that.clientHeight = window.screenHeight
-      })()
-    }
+        window.screenHeight = document.body.clientHeight;
+        that.clientHeight = window.screenHeight;
+      })();
+    };
   },
   watch: {
     clientHeight(val) {
-      if(!this.timer) {
-        this.clientHeight = val
-        this.timer = true
+      if (!this.timer) {
+        this.clientHeight = val;
+        this.timer = true;
         let that = this;
         setTimeout(() => {
-          console.log(that.clientHeight)
+          console.log(that.clientHeight);
           that.timer = false;
         }, 400);
       }
-    }
+    },
   },
   methods: {
     //通过监听接收子节点传送来的数据
@@ -86,8 +96,8 @@ export default {
     },
     fetchResult() {
       //搜索的时候默认回到第一页
-      if(this.$refs.result.pagination.page !=0){
-        this.$refs.result.pagination.page=0;
+      if (this.$refs.result.pagination.page != 0) {
+        this.$refs.result.pagination.page = 0;
       }
       // 这里执行搜索
       this.$refs.result.fetchResult(this.getFilterForResult());
@@ -124,22 +134,21 @@ export default {
       this.fetchResult();
     },
     onMenuChange(node) {
-      if(!this.menuFilter){
+      if (!this.menuFilter) {
         this.menuFilter = node;
         this.$refs.filter.fetchFilterList(this.menuFilter);
-      }else{
-        this.menuFilter = node;
-        if(this.menuFilter.nodeCode != node.nodeCode){
+      } else {
+        if (this.menuFilter.nodeCode != node.nodeCode) {
+          this.menuFilter = node;
           this.$refs.filter.fetchFilterList(this.menuFilter);
         }
       }
       this.$refs.input.search();
-       
     },
     onFilterChange() {
       this.fetchResult();
     },
-    onClearItems(){
+    onClearItems() {
       this.$refs.filter.clearFilterItems();
     },
     checkFilterValue() {
@@ -149,8 +158,8 @@ export default {
       }
       fList = this.$refs.filter.filterList.filter((filter) => {
         switch (filter.queryType) {
-          case 11:{
-            if(filter.value != null && filter.value.length != 0){
+          case 11: {
+            if (filter.value != null && filter.value.length != 0) {
               return filter;
             }
             break;
@@ -220,7 +229,9 @@ export default {
               filter.county
             ) {
               if (filter.country.id) {
-                const newCountry = this.countriesCache.filter(function (target) {
+                const newCountry = this.countriesCache.filter(function (
+                  target
+                ) {
                   return target.id == filter.country.id;
                 })[0];
                 filter.country.id = newCountry.id;
@@ -228,7 +239,9 @@ export default {
               }
 
               if (filter.province.id) {
-                const newProvince = this.provincesCache.filter(function (target) {
+                const newProvince = this.provincesCache.filter(function (
+                  target
+                ) {
                   return target.id == filter.province.id;
                 })[0];
                 filter.province.id = newProvince.id;
@@ -278,13 +291,13 @@ export default {
 .search {
   flex: 1;
   // overflow: auto;
-  .search{
-    &-input{
+  .search {
+    &-input {
       right: 8px;
     }
   }
 
-  &-empty-box{
+  &-empty-box {
     width: 100%;
     height: 88px;
   }
@@ -308,7 +321,7 @@ export default {
       overflow: auto;
     }
   }
-  
+
   &-filter {
     border-bottom: 1px solid $border-dark;
   }

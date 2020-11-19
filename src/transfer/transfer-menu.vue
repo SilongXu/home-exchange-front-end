@@ -15,6 +15,7 @@
   </el-tree>
 </template>
 <script>
+import { forEach, result } from "lodash-es";
 import apiService from "./transfer.service";
 
 export default {
@@ -77,7 +78,6 @@ export default {
           .catch(() => {
             resolve([]);
           });
-
         return;
       }
 
