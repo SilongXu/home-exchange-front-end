@@ -41,6 +41,7 @@ export default {
       this.$refs.searchMenuTree.getCurrentNode();
     },
     onNodeClick(node) {
+      // console.log(node.id)
       this.$emit("menuChange", node);
     },
     loadNode(node, resolve) {

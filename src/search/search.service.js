@@ -52,7 +52,19 @@ const SearchService = {
 
   getXmlDetail(path) {
     return http.post(`/retrieval/system/data/getBase64?filePath=${path}`);
-  }
+  },
+  getExportSelectedAsExcel(selectedDataList){
+    return http.post(`${prefix}/system/data/export/excel`,selectedDataList,{responseType: 'blob'})
+  },
+  getExportAllAsExcel(requestBody){
+    return http.post(`${prefix}/system/search/export/excel`,requestBody,{responseType: 'blob'})
+  },
+  getExportSelectedAsShapefile(selectedDataList){
+    return http.post(`${prefix}/system/data/export/shapefile`,selectedDataList,{responseType: 'blob'})
+  },
+  getExportAllAsShapefile(requestBody){
+    return http.post(`${prefix}/system/search/export/shapefile`,requestBody,{responseType: 'blob'})
+  },
 };
 
 export default SearchService;

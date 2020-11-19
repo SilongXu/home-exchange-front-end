@@ -1,44 +1,66 @@
 <template>
   <div class="search-result" ref="result">
-    <add-tag-modal v-if="tagDialogVisible" :visible="tagDialogVisible" @addTagChange="onAddTag" @cancel="onCancelAddTag"></add-tag-modal>
-    <search-detail v-if="dialogVisible" :visible="dialogVisible" :detail="currentEntry" @close="onDetailClose"></search-detail>
-    <xml-detail v-if="xmlDetailVisible" :visible="xmlDetailVisible" @closeXml="closeXml" :detailXml="currentEntry"></xml-detail>
+    <add-tag-modal
+      v-if="tagDialogVisible"
+      :visible="tagDialogVisible"
+      @addTagChange="onAddTag"
+      @cancel="onCancelAddTag"
+    ></add-tag-modal>
+    <search-detail
+      v-if="dialogVisible"
+      :visible="dialogVisible"
+      :detail="currentEntry"
+      @close="onDetailClose"
+    ></search-detail>
+    <xml-detail
+      v-if="xmlDetailVisible"
+      :visible="xmlDetailVisible"
+      @closeXml="closeXml"
+      :detailXml="currentEntry"
+    ></xml-detail>
 
     <div class="search-result-operation">
       <div class="search-result-operation-left">
-         <el-button type="primary" size="mini" @click="clearItems()">
-        清空所选项
+        <el-button type="primary" size="mini" @click="clearItems()">
+          清空所选项
         </el-button>
         <el-button type="primary" size="mini" @click="addTag()">
           批量添加标签
         </el-button>
       </div>
       <div class="search-result-operation-right">
-          <span class="search-result-operation-right-btn">
-            <el-button type="primary" size="mini" > 导入全部为Excel </el-button>
-            <el-button type="primary" size="mini" > 导入选中为Excel </el-button>
-             <el-button type="primary" size="mini" > 导入全部为Shapefile </el-button>
-            <el-button type="primary" size="mini" > 导入选中为Shapefile </el-button>
-          </span>
-          <span>
-            <el-checkbox @change="selectAllToogle" :checked="selectAll">
-              全选
-            </el-checkbox>
-          </span>
+        <span class="search-result-operation-right-btn">
+          <el-button type="primary" size="mini" @click="exportAllAsExcel"> 导出全部为Excel </el-button>
+          <el-button type="primary" size="mini" @click="exportSelectedAsExcel"> 导出选中为Excel </el-button>
+          <el-button type="primary" size="mini" @click="exportAllAsShapefile">导出全部为Shapefile</el-button>
+          <el-button type="primary" size="mini" @click="exportSelectedAsShapefile"> 导出选中为Shapefile</el-button>
+        </span>
+        <span>
+          <el-checkbox
+            @change="selectAllToogle"
+            :value="selectAll"
+            :indeterminate="isIndeterminate"
+          >
+            全选
+          </el-checkbox>
+        </span>
       </div>
     </div>
 
-    <div class="result" v-loading="resultLoading" element-loading-background="rgba(0, 0, 0, 0.4)">
+    <div
+      class="result"
+      v-loading="resultLoading"
+      element-loading-background="rgba(0, 0, 0, 0.4)"
+    >
       <div class="entry" v-for="entry in searchResult" :key="entry.id">
-        
         <div class="entry-left">
-          <img class="entry-left-img" :src="getThumbImgPath(entry.thumb)"/>
+          <img class="entry-left-img" :src="getThumbImgPath(entry.thumb)" />
         </div>
         <div class="entry-right">
           <div class="entry-right-top">
             <div class="entry-right-top-info">
               <svg-icon icon="file"></svg-icon>
-              <span :title="entry.name">{{entry.name}}</span>
+              <span :title="entry.name">{{ entry.name }}</span>
             </div>
             <div class="entry-right-top-operation">
               <div class="link-btn" @click="viewXmlDetail(entry)">
@@ -53,29 +75,40 @@
                 <svg-icon icon="download"></svg-icon>
                 下载
               </div>
-              <div class="link-btn" >
-                  <el-checkbox  :value="entry.checked" @change="changeBoxState(entry)"> </el-checkbox>
+              <div class="link-btn">
+                <el-checkbox
+                  :value="entry.checked"
+                  @change="changeBoxState(entry)"
+                >
+                </el-checkbox>
               </div>
             </div>
           </div>
           <div class="entry-right-path">
-            <div class="property" :title="entry.path">资源路径: {{entry.path}}</div>
+            <div class="property" :title="entry.path">
+              资源路径: {{ entry.path }}
+            </div>
           </div>
           <div class="entry-right-tags">
-            <div class="entry-right-tags-property" v-for="tag in entry.tags" :key="tag.id">
-              {{tag.name}}
+            <div
+              class="entry-right-tags-property"
+              v-for="tag in entry.tags"
+              :key="tag.id"
+            >
+              {{ tag.name }}
             </div>
           </div>
           <div class="entry-right-property">
-            <div class="property">数据类型: {{entry.type}}</div>
-            <div class="property">文件大小: {{entry.fileSize}}</div>
-            <div class="property">归属节点: {{entry.node}}</div>
-            <div class="property">归属分系统: {{entry.subSystem}}</div>
-            <div class="property">入库时间: {{entry.time}}</div>
-            <div class="property">是否同步：{{entry.syncFlag == 0 ? '否' : '是'}}</div>
+            <div class="property">数据类型: {{ entry.type }}</div>
+            <div class="property">文件大小: {{ entry.fileSize }}</div>
+            <div class="property">归属节点: {{ entry.node }}</div>
+            <div class="property">归属分系统: {{ entry.subSystem }}</div>
+            <div class="property">入库时间: {{ entry.time }}</div>
+            <div class="property">
+              是否同步：{{ entry.syncFlag == 0 ? "否" : "是" }}
+            </div>
           </div>
         </div>
-       
       </div>
     </div>
 
@@ -83,11 +116,12 @@
       <el-pagination
         @size-change="onSizeChange"
         @current-change="onPageChange"
-        :current-page="pagination.page + 1" 
+        :current-page="pagination.page + 1"
         :page-sizes="[5, 10, 20]"
         :page-size.sync="pagination.size"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="pagination.total">
+        :total="pagination.total"
+      >
       </el-pagination>
     </div>
   </div>
@@ -100,9 +134,9 @@ import saveAs from "file-saver";
 export default {
   name: "SearchResult",
   components: {
-    'add-tag-modal': () => import('./modal/add-tag'),
-    'search-detail': () => import('./modal/search-detail'),
-    'xml-detail': () => import('./modal/xml-detail'),
+    "add-tag-modal": () => import("./modal/add-tag"),
+    "search-detail": () => import("./modal/search-detail"),
+    "xml-detail": () => import("./modal/xml-detail"),
   },
   props: ["filters"],
   data() {
@@ -117,10 +151,12 @@ export default {
         total: 0,
       },
       resultLoading: false,
-      selectAll: false,
-      searchResult: [],
-      currentEntry: {},
-      checkedList: [],
+      selectAll: false, //是否全选
+      isIndeterminate: false,  //半选状态
+      searchResult: [], 
+      currentEntry: {}, 
+      checkedList: [],  //全选的数据列表,保存选中的项的dataId和productType数据,
+      searchConditions:null,
     };
   },
   mounted() {
@@ -130,9 +166,24 @@ export default {
     changeBoxState(entry) {
       entry.checked = !entry.checked;
       if (entry.checked) {
-        this.checkedList.push(entry.id);
+        this.checkedList.push({ dataId: entry.id, productType: entry.productType });
       } else {
-        this.checkedList.splice(this.checkedList.indexOf(entry.id), 1);
+        for (var j = 0; j < this.checkedList.length; j++) {
+          if (this.checkedList[j].dataId == entry.id) {
+            this.checkedList.splice(j, 1);
+          }
+        }
+      }
+      if (this.checkedList.length == this.pagination.size) {
+        this.selectAll = true;
+        this.isIndeterminate = false;
+      } else {
+        this.selectAll = false;
+        if (this.checkedList.length > 0 && this.checkedList.length < this.pagination.size) {
+          this.isIndeterminate = true;
+        }else{
+          this.isIndeterminate = false;
+        }
       }
     },
     selectAllToogle() {
@@ -140,23 +191,63 @@ export default {
       if (this.selectAll) {
         for (var i = 0; i < this.searchResult.length; i++) {
           this.searchResult[i].checked = true;
-          if (this.searchResult[i].checked) {
-            if (this.checkedList.indexOf(this.searchResult[i].id) == -1) {
-              this.checkedList.push(this.searchResult[i].id);
+          var flag = true;
+          for (var j = 0; j < this.checkedList.length; j++) {
+            if (this.checkedList[j].dataId == this.searchResult[i].id) {
+              flag = false;
+              break;
             }
           }
+          if (flag) {
+            this.checkedList.push({
+              dataId: this.searchResult[i].id,
+              productType: this.searchResult[i].productType,
+            });
+          }
         }
+        this.isIndeterminate = false;
       } else {
         for (var i = 0; i < this.searchResult.length; i++) {
           this.searchResult[i].checked = false;
-          if (!this.searchResult[i].checked) {
-            this.checkedList.splice(
-              this.checkedList.indexOf(this.searchResult[i].id),
-              1
-            );
-          }
+          this.checkedList = [];
         }
       }
+      
+      if (this.checkedList.length == this.pagination.size) {
+        this.isIndeterminate = false;
+      }
+    },
+    exportSelectedAsExcel(){
+      apiService.getExportSelectedAsExcel(this.checkedList).then((href) => {
+        const blob = new Blob([href.data], {type: href.header['content-type']});
+        const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
+        saveAs(blob, fileName);
+      }).catch(() => {
+      });
+    },
+    exportAllAsExcel(){
+      apiService.getExportAllAsExcel(this.searchConditions).then((href) => {
+        const blob = new Blob([href.data], {type: href.header['content-type']});
+        const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
+        saveAs(blob, fileName);
+      }).catch(() => {
+      });
+    },
+    exportSelectedAsShapefile(){
+      apiService.getExportSelectedAsShapefile(this.checkedList).then((href) => {
+        const blob = new Blob([href.data], {type: href.header['content-type']});
+        const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
+        saveAs(blob, fileName);
+      }).catch(() => {
+      });
+    },
+    exportAllAsShapefile(){
+      apiService.getExportAllAsShapefile(this.searchConditions).then((href) => {
+        const blob = new Blob([href.data], {type: href.header['content-type']});
+        const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
+        saveAs(blob, fileName);
+      }).catch(() => {
+      });
     },
     download(entry) {
       apiService
@@ -175,7 +266,7 @@ export default {
     getThumbImgPath(path) {
       return `data:image/jpg;base64,${path}`;
     },
-    viewXmlDetail(entry){
+    viewXmlDetail(entry) {
       this.currentEntry = entry;
       this.xmlDetailVisible = true;
     },
@@ -219,13 +310,14 @@ export default {
     onDetailClose() {
       this.dialogVisible = false;
     },
-    closeXml(){
+    closeXml() {
       this.xmlDetailVisible = false;
     },
     fetchResult(searchParam = {}) {
       //回到页面顶部
       const page = this.pagination.page;
       const size = this.pagination.size;
+      this.searchConditions = searchParam;
       this.searchResult = [];
       //返回到顶端
       // 缓存上一次搜索的filterList
