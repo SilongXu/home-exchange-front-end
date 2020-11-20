@@ -27,6 +27,10 @@
         <el-button type="primary" size="mini" @click="addTag()">
           批量添加标签
         </el-button>
+        <el-button type="primary" size="mini" @click="goSearchMenuTemplate()">
+          保存搜索条件
+        </el-button>
+        <search-menu-template :visible="searchMenutemplateDialogVisible" @closeMenuTemplateDialog="closeMenuTemplateDialog" ref="searchMenuTemplate"></search-menu-template>
       </div>
       <div class="search-result-operation-right">
         <span class="search-result-operation-right-btn">
@@ -140,6 +144,7 @@ export default {
     "add-tag-modal": () => import("./modal/add-tag"),
     "search-detail": () => import("./modal/search-detail"),
     "xml-detail": () => import("./modal/xml-detail"),
+    "search-menu-template": () => import("./modal/search-menu-template"),
   },
   props: ["filters"],
   data() {
@@ -160,12 +165,19 @@ export default {
       currentEntry: {}, 
       checkedList: [],  //全选的数据列表,保存选中的项的dataId和productType数据,
       searchConditions:null,
+      searchMenutemplateDialogVisible:false,
     };
   },
   mounted() {
     document.documentElement.scrollTop = 0;
   },
   methods: {
+    goSearchMenuTemplate(){
+      this.searchMenutemplateDialogVisible = true;
+    },
+    closeMenuTemplateDialog(){
+      this.searchMenutemplateDialogVisible = false;
+    },
     changeBoxState(entry) {
       entry.checked = !entry.checked;
       if (entry.checked) {
@@ -363,6 +375,11 @@ export default {
           document.getElementsByClassName(
             "search-content-right"
           )[0].scrollTop = 0;
+          
+          //把搜索结果传递给QA
+          console.log(this.searchResult);
+          // this.$parent.$refs.filter.circleArea(0, 3, null);
+          this.$parent.$refs.filter.circleArea(0, 4, this.searchResult);
         })
         .catch(() => {});
     },

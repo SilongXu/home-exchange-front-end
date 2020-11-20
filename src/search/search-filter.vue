@@ -1,11 +1,34 @@
 <template>
   <div class="search-filter">
+    <div class="digitalEarth">
+      <div class="digitalEarth-name">
+        选择方式:
+      </div>
+      <div class="digitalEarth-select">
+        <el-select v-model="digitalEarthSelected" placeholder="请选择区域选择方式" size="small" style="width:200px">
+          <el-option
+            v-for="item in digitalEarthOptions"
+            :key="item.id"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </div>
+      <div class="digitalEarth-button">
+        <el-button type="primary" @click="runDigitalEarth()" size="small">运行数字地球</el-button>
+      </div>
+      <div class="digitalEarth-display">
+        <div class="digitalEarth-display-title">
+          坐标:
+        </div>
+        <el-input v-model="digitalEarthContent" type="primary" size="small" readonly style="width:500px"></el-input>
+      </div>
+    </div>
     <div
       class="search-filter-entry"
       :class="filter.queryType === 54 ? 'large' : ''"
       v-for="(filter, index) in filterList"
-      :key="index"
-    >
+      :key="index">
       <div class="label" :class="{ bottom: filter.queryType === 53 }">
         {{ filter.fieldName }}
       </div>
@@ -156,6 +179,7 @@
           size="small"
         ></el-input>
       </div>
+
       <div class="input-group" v-if="filter.queryType === 54">
         <el-input
           v-model="filter.lons"
@@ -170,6 +194,7 @@
           size="small"
         ></el-input>
       </div>
+
       <div class="input-group-container" v-if="filter.queryType === 53">
         <div class="input-group bottom">
           <el-input
@@ -349,12 +374,14 @@
           </el-option>
         </el-select>
       </div>
+
     </div>
   </div>
 </template>
 <script>
 import { filter } from "lodash-es";
 import apiService from "./search.service";
+import {createWebSocket, getLockReconnect} from "../shared/websocket";
 
 export default {
   name: "SearchFilter",
@@ -371,7 +398,6 @@ export default {
       loadingDistrict: false, //是否开启自动加载远程数据
       countries: [], //国家列表
       provinces: [], //省/州列表
-      cities: [], //城市列表
       counties: [], //区/县列表
       fileList: [],
       countriesCache: [], //国家列表缓存
@@ -382,6 +408,24 @@ export default {
       provincesDisable: true,
       citiesDisable: true,
       countiesDisable: true,
+      websocket: null,
+      copyType: "2",
+      polygonList: [],
+      wsUri: "ws://127.0.0.1:1235/",
+      digitalEarthContent: "",
+      digitalEarthSelected: "",
+      digitalEarthOptions: [
+        {
+          id: 1,
+          label: "区域",
+          value: "areaSelect",
+        },
+        {
+          id: 2,
+          label: "点",
+          value: "pointSelct",
+        }
+      ]
     };
   },
   methods: {
@@ -584,7 +628,163 @@ export default {
     },
     clearFilterItems() {
       this.filterList = JSON.parse(JSON.stringify(this.resetFilterList));
+      this.circleArea(0, 3, null);
     },
+    runDigitalEarth(){
+      //this.circleArea(0, 3, null);
+      if(this.digitalEarthSelected == "areaSelect"){
+        this.circleArea(0, 1, null);
+      }else if(this.digitalEarthSelected == "pointSelect"){
+        this.circleArea(0, 2, null);
+      }
+    },
+
+    circleArea(index, flag, args) {
+      console.log(flag);
+      let name = "SG";
+      let that = this;
+      let params = null;
+      if(flag == 1) {
+        // this.$message.warning({
+        //   message: "请再数字地球选择区域",
+        //   offset: 200,
+        // });
+        params = {
+          name: name,
+          use: "ChooseArea",
+          argument: "",
+        };
+      }else if(flag == 2){
+        // this.$message.warning({
+        //   message: "请在数字地球选择目标",
+        //   offset: 200,
+        // })
+        params = {
+          name: name,
+          use: "ChoosePoint",
+          argument: "",
+        };
+      }else if(flag ==3){
+        params = {
+          name: name,
+          use: "Close",
+          argument: ""
+        };
+      }else if(flag ==4){
+        params = {
+          name: name,
+          use: "DataTransmit",
+          argument: args,
+        };
+      }
+      this.websocket = createWebSocket(this.wsUri);
+      let lockReconnect = getLockReconnect();
+      console.log(lockReconnect);
+      if (lockReconnect == true){
+        console.log("ok");
+        clearInterval(that.timer);
+        setTimeout(function() {
+          that.websocket.send(JSON.stringify(params));
+          if(flag == 1 || flag == 2){
+            that.websocket.onmessage = function(event) {
+              console.log("区域圈选数据:" + event.data);
+              try{
+                let getdata = JSON.parse(event.data)
+                that.digitalEarthContent = JSON.parse(event.data).argument.points;
+                let pointsList = getdata.argument.points.split(";")
+                let size = pointsList.length
+                if(size > 0) {
+                  clearInterval(that.timer);
+                  let value = {
+                    type: that.copyType
+                  };
+                  console.log("flagflag===" + flag + "index===" + index);
+
+                  if(flag == 1){
+                    let item = that.polygonList[index];
+                    item["leftTopCoord"] = size>3?pointsList[0]:'';
+                    item["rightTopCoord"] = size>3?pointsList[1]:'';
+                    item["leftBottomCoord"] = size>3?pointsList[2]:'';
+                    item["rightBottomCoord"] = size>3?pointsList[3]:'';
+                    that.$set(that.polygonList, index, item);
+                    value.list = JSON.parse(JSON.stringify(that.polygonList)); 
+                  }else if(flag == 2){
+                    let item = that.targetList[index];
+                    let pointList = pointsList[0].split(",");
+                    if(pointList.length > 0){
+                      item["lng"] = pointList[0];
+                      item["lat"] = pointList[1];
+                      that.$set(that.targetList, index, item);
+                      value.list = JSON.parse(JSON.stringify(that.targetList));
+                    }
+                  }
+                }
+              }catch(error) {
+                console.log("获取经纬度出现异常");
+              }
+            };
+          }
+        }, 2000);
+      } else if (flag == 4) {
+        that.websocket.send(JSON.stringify(params));
+      }else{
+        //创建a标签启动应用
+        let target = document.createElement("a");
+        target.setAttribute("href","startDG://" + JSON.stringify(params));
+        target.click();
+        this.websocket = createWebSocket(this.wsUri);
+        this.timer = setInterval(function() {
+          let lockReconnect = getLockReconnect();
+          if(lockReconnect == true) {
+            setTimeout(function() {
+              that.websocket.send(JSON.stringify(params));
+              if(flag == 1 || flag == 2){
+                that.websocket.onmessage = function(event) {
+                  try{
+                    let getdata = JSON.parse(event.data)
+                    that.digitalEarthContent = JSON.parse(event.data).argument.points;
+                    let pointsList = getdata.argument.points.split(",")
+                    let size = pointsList.length
+                    if(size > 0){
+                      clearInterval(that.timer);
+                      let value = {
+                        type: that.copyType
+                      }
+
+                      if(flag == 1){
+                        let item = that.polygonList[index];
+                        item["leftTopCoord"] = size>3?pointsList[0]:'';
+                        item["rightTopCoord"] = size>3?pointsList[1]:'';
+                        item["leftBottomCoord"] = size>3?pointsList[2]:'';
+                        item["rightBottomCoord"] = size>3?pointsList[3]:'';
+                        that.$set(that.polygonList, index, item);
+                        value.list = JSON.parse(JSON.stringify(that.polygonList));
+                      }else if(flag == 2){
+                        let item = that.targetList[index];
+                        let pointList = pointsList[0].split(",");
+                        if(pointList.length > 0){
+                          item["lng"] = pointList[0];
+                          item["lat"] = pointList[1];
+                          that.$set(that.targetList, index, item);
+                          value.list = JSON.parse(JSON.stringify(that.targetList));
+                        }
+
+                      }
+                      that.$emit("input", value);
+                    }
+                  }catch(error){
+                    console.log("a获取经纬度出现异常")
+                  }
+                };
+              }
+            }, 2000);
+            clearInterval(that.timer);
+          }else{
+            that.websocket = createWebSocket(that.wsUri);
+          }
+        }, 1500)
+      }
+    }
   },
 };
 </script>
@@ -595,6 +795,32 @@ export default {
   @include flex-align(flex-start, flex-start);
   flex-wrap: wrap;
   padding: 20px 20px 4px 20px;
+  .digitalEarth{
+    display: flex;
+    &-name{
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin: 0px 15px 16px 0px;
+      font-size: $font-md;
+    }
+    &-display{
+      display: flex;
+      &-title{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin: 0px 15px 16px 0px;
+        font-size: $font-md;
+      }
+    }
+    .el-input ::v-deep{
+      margin: 0px 15px 15px 0px;
+    }
+    .el-button ::v-deep{
+      margin: 0px 15px 15px 0px
+    }
+  }
 
   &-entry {
     display: flex;
@@ -659,7 +885,7 @@ export default {
   width: 360px;
 }
 
-.el-input /deep/ {
+.el-input ::v-deep {
   input[type="number"] {
     -moz-appearance: textfield;
   }

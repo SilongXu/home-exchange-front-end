@@ -212,7 +212,7 @@ export default {
         .el-input{
           padding-left: 70px;
           width: 57%;
-          /deep/.el-input__inner{
+          ::v-deep .el-input__inner{
             background: $bg-default;
           }
         }

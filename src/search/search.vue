@@ -24,7 +24,7 @@
         </search-filter>
         <search-result
           ref="result"
-          :filters="getFilterList()"
+          :filters="getFilterForResult()"
           @clearItems="onClearItems"
         ></search-result>
       </div>
@@ -144,7 +144,6 @@ export default {
           this.menuFilter = node;
         }
       }
-
       this.$refs.input.search();
     },
     onFilterChange() {
