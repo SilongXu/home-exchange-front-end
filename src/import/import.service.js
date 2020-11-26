@@ -42,6 +42,9 @@ const importService = {
     }
     )
   },
+  getImportListContentTables(page,size,requestBody){
+    return http.post(`${prefix}/system/log/importLog/detail?page=${page}&size=${size}`,requestBody)
+  }
 };
 
 export default importService;

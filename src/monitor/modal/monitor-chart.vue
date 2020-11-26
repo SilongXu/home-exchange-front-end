@@ -15,36 +15,6 @@
       <div class="monitor-chart-right-title">搜索次数</div>
       <div class="monitor-chart-right-content"></div>
     </div>
-    <div class="monitor-chart-error">
-      <div class="monitor-chart-error-title">错误提示
-        <el-button type="primary" size="mini" @click="goMonitorInterfacePage">接口监控</el-button>
-      </div>
-      <div class="monitor-error-table">
-        <el-table
-          :data="errorTableData"
-          style="width: 100%"
-        >
-          <el-table-column
-            prop="id"
-            label="编号"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="date"
-            label="时间"
-            min-width="200"
-          >
-          </el-table-column>
-          <el-table-column
-            label="错误原因"
-          >
-            <template slot-scope="scope">
-              <span class="reason" @click="checkErrorDetail(scope.row.failReason)">详情</span>  
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -277,21 +247,23 @@ export default {
       this.searchLine = this.$echarts.init(document.querySelector('.monitor-chart-right-content'));
       SEARCH_LINE_OPTIONS.legend = this.getLegend(this.legendSearchLine);
       SEARCH_LINE_OPTIONS.series = [];
-      this.searchLineData.trends.map((data, index) => {
-        SEARCH_LINE_OPTIONS.series.push({
-          name: data.nodeName,
-          type: 'line',
-          smooth: false,
-          showSymbol: false,
-          data: data.trend.map((data) => data.value),
-          itemStyle: {
-            color: colorMap[index],
-          },
-          lineStyle: {
-            color: colorMap[index],
-          },
+      if(this.searchLineData.trends){
+        this.searchLineData.trends.map((data, index) => {
+          SEARCH_LINE_OPTIONS.series.push({
+            name: data.nodeName,
+            type: 'line',
+            smooth: false,
+            showSymbol: false,
+            data: data.trend.map((data) => data.value),
+            itemStyle: {
+              color: colorMap[index],
+            },
+            lineStyle: {
+              color: colorMap[index],
+            },
+          });
         });
-      });
+      }
 
       SEARCH_LINE_OPTIONS.xAxis.data = this.searchLineData.trends[0].trend.map((data) => {
         return data.date;

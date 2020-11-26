@@ -25,45 +25,27 @@ module.exports = {
   devServer: {
     proxy: {
       "/api/v1/retrieval": {
-        // target: "http://192.168.0.167:28500/", 
         target: "http://192.168.0.167:28500",
-        //target: "http://172.16.1.81:28500/",  //以后常用服务器,公司vpn
-        //target: "http://172.29.202.51:28500/",
-        //target: "http://10.0.0.31:28500/",//测绘
         secure: false,
         changeOrigin: true,
       },
       "/api/v1/catalog": {
-        // target: "http://192.168.0.167:28500/", 
         target: "http://192.168.0.167:28500",
-        //target: "http://172.26.4.51:28500/",
-        //target: "http://172.16.1.81:28500/",  //以后常用服务器,公司vpn
-        //target: "http://172.29.203.60:28500/", //监控运维，田润
-        //target: "http://10.0.0.31:28500/",//测绘
         secure: false,
         changeOrigin: true,
       },
       "/api/v1/meta": {
-        // target: "http://192.168.0.167:28500/", 
         target: "http://192.168.0.167:28500",
-        //target: "http://172.26.4.51:28500/",
-        //target: "http://172.16.1.81:28500/",  //以后常用服务器,公司vpn
-        //target: "http://172.29.203.60:28500/", //监控运维，田润
-        //target: "http://10.0.0.31:28500/",//测绘
         secure: false,
         changeOrigin: true,
       },
       "/api/v1/api": {
-        // target: "http://192.168.0.167:28500/", 
         target: "http://192.168.0.167:28500",
-        //target: "http://172.26.4.51:28500/",
-        //target: "http://172.16.1.81:28500/",  //以后常用服务器,公司vpn
-        //target: "http://10.0.0.31:28500/",//测绘
         secure: false,
         changeOrigin: true,
       },
       "/api/v1/dataflow": {
-        target: "http://192.168.0.151:28300/", 
+        target: "http://192.168.0.167:28500/",
         secure: false,
         changeOrigin: true,
       },

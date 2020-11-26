@@ -5,7 +5,6 @@
 <script>
 import monitorWelcome from './monitor-welcome'
 import monitorArchive from './monitor-archive'
-import monitorInterface from './monitor-interface'
 import router from './monitor-router';
 
 
@@ -15,7 +14,6 @@ export default {
     /* eslint-disable */
     monitorWelcome,
     monitorArchive,
-    monitorInterface
     /* eslint-enable */
   },
   router

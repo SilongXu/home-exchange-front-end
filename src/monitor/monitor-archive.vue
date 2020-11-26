@@ -1,8 +1,8 @@
  <template>
   <div class="monitorArchive">
-    <div class="monitorArchive-title">
-      <b>归档统计</b>
-    </div>
+    <!-- <div class="monitorArchive-title">
+      <span>归档管理 > 归档统计</span>
+    </div> -->
     <div class="monitorArchive-filters">
       <div class="monitorArchive-filters-topFilter">
         <div class="monitorArchive-filters-topFilter-dateType">
@@ -27,12 +27,44 @@
             value-format="yyyy-MM-dd">
           </el-date-picker>
         </div>
-
+        <div class="monitorArchive-filters-bottomFilter-satellite">
+          <span>卫星编号</span>
+          <el-select v-model="satellitesSelected" placeholder="请选择卫星编号" multiple filterable collapse-tags>
+            <el-option
+              v-for="item in satellitesOptions"
+              :key="item.itemCode"
+              :label="item.itemCode"
+              :value="item.itemCode">
+            </el-option>
+          </el-select>
+        </div>
+        <div class="monitorArchive-filters-bottomFilter-sensor">
+          <span>载荷标识</span>
+          <el-select v-model="sensorsSelected" placeholder="请选择载荷标识" multiple filterable collapse-tags>
+            <el-option
+              v-for="item in sensorsOptions"
+              :key="item.itemCode"
+              :label="item.itemCode"
+              :value="item.itemCode">
+            </el-option>
+          </el-select>
+        </div>
+        <div class="monitorArchive-filters-bottomFilter-productLevel">
+          <span>产品级别</span>
+          <el-select v-model="productLevelsSelected" placeholder="请选择产品级别" multiple filterable collapse-tags>
+            <el-option
+              v-for="item in productLevelsOptions"
+              :key="item.itemCode"
+              :label="item.itemCode"
+              :value="item.itemCode">
+            </el-option>
+          </el-select>
+        </div>
       </div>
       <div class="monitorArchive-filters-bottomFilter">
         <div class="monitorArchive-filters-bottomFilter-chartType">
           <span>图表类型</span>
-          <el-select v-model="chartType" placeholder="请选择图表类型" @change="chartInitial()">
+          <el-select v-model="chartType" placeholder="请选择图表类型">
             <el-option
               v-for="option in chartTypeOptions"
               :key="option.value"
@@ -41,7 +73,7 @@
             </el-option>
           </el-select>
         </div>
-        <div class="monitorArchive-filters-bottomFilter-dataType">
+        <!-- <div class="monitorArchive-filters-bottomFilter-dataType">
           <span>数据类型</span>
           <el-select v-model="dataType" placeholder="请选择数据类型(默认选中所有数据类型)" multiple collapse-tags @change="dataTypeChange()" filterable>
             <el-option
@@ -51,16 +83,19 @@
               :value="option.itemCode">
             </el-option>
           </el-select>
+        </div> -->
+        <div style="text-align: right;flex:1;padding-right:30px">
+          <el-button type="primary" @click="trendCharts()">检索</el-button>
+          <el-button type="primary" @click="resetAll()">重置</el-button>
+          <el-button type="primary" @click="downloadExcel()">导出Excel</el-button>
+
         </div>
 
       </div>
     </div>
-    <div class="monitorArchive-operation">
-      <el-button @click="trendCharts()">检索</el-button>
-      <el-button @click="resetAll()">重置</el-button>
-      <el-button>导出Excel</el-button>
+    <!-- <div class="monitorArchive-operation">
 
-    </div>
+    </div> -->
     <div class="monitorArchive-chart" v-loading="monitorArchiveLoading" element-loading-background="rgba(0, 0, 0, 0.4)">
 
     </div>
@@ -68,7 +103,8 @@
 </template>
 
 <script>
-import apiService from './monitor.service'
+import apiService from './monitor.service';
+import saveAs from "file-saver";
 
 const monitorArchiveLine = {
   title: {
@@ -131,8 +167,8 @@ const monitorArchiveLine = {
       show: true,
       xAxisIndex: [0],
       bottom: 5,
-      start: 10,
-      end: 80 //初始化滚动条  
+      start: 0,
+      end: 100 //初始化滚动条  
   }],
   series: [
     {
@@ -210,8 +246,8 @@ const monitorArchiveBar = {
       show: true,
       xAxisIndex: [0],
       bottom: 5,
-      start: 10,
-      end: 80 //初始化滚动条  
+      start: 0,
+      end: 100 //初始化滚动条  
   }],
   series: [
     {
@@ -232,6 +268,12 @@ export default {
   name: 'monitorArchive',
   data() {
     return {
+      satellitesSelected: [],
+      sensorsSelected: [],
+      productLevelsSelected: [],
+      satellitesOptions: [],
+      sensorsOptions: [],
+      productLevelsOptions: [],
       monitorArchiveLoading: false,
       dateRange: '',
       dateType: '',
@@ -259,18 +301,28 @@ export default {
     }
   },
   mounted(){
-    apiService.getArchiveDataType("dataType")
+    this.dateType = "DAY";//"日";
+    this.chartType = "折线图";
+
+    apiService.getArchiveBottomOptions("CHDL")
     .then((data) => {
-      this.dataTypeOptions = data.data.detail[0].items;
+      this.satellitesOptions = data.data.satellite;
+      this.sensorsOptions=data.data.sensor;
+      this.productLevelsOptions=data.data.productLevel;
     }).catch(() => {
     });
+
+    this.trendCharts();
   },
   methods: {
     resetAll(){
-      this.dateType = '';
+      this.dateType = "DAY";//"日";
       this.dateRange ='';
       this.chartType ='';
       this.dataType='';
+      this.satellitesSelected = [];
+      this.sensorsSelected = [];
+      this.productLevelsSelected = [];
     },
     trendCharts(){
       this.monitorArchiveLoading = true;
@@ -282,19 +334,28 @@ export default {
       monitorArchiveBar.series[0].data=[];
       monitorArchiveBar.series[1].data=[];
 
-      apiService.getArchiveTrendeCharts(this.dateType, this.dataType, this.dateRange[0], this.dateRange[1])
-      .then((data) => {
+      apiService.getArchiveTrendeCharts(this.dateType, 
+        this.satellitesSelected, 
+        this.sensorsSelected, 
+        this.productLevelsSelected, 
+        this.dateRange && this.dateRange[0] || null, 
+        this.dateRange && this.dateRange[1] || null
+      ).then((data) => {
         this.monitorArchiveDraw ='';
         this.monitorArchiveDraw = this.$echarts.init(document.querySelector('.monitorArchive-chart'));
 
-        data.data.detail.forEach(target => {
+        data.data.detail.importTrends.forEach(target => {
           monitorArchiveLine.xAxis.data.push(target.dataTime);
           monitorArchiveLine.series[0].data.push(target.dataAmount);
-          monitorArchiveLine.series[1].data.push(target.dataSize);
+          monitorArchiveLine.series[1].data.push(target.dataSizeUnitValue);
           monitorArchiveBar.xAxis.data.push(target.dataTime);
           monitorArchiveBar.series[0].data.push(target.dataAmount);
-          monitorArchiveBar.series[1].data.push(target.dataSize);
+          monitorArchiveBar.series[1].data.push(target.dataSizeUnitValue);
         })
+
+        monitorArchiveLine.yAxis[1].name = '数据量('+data.data.detail.dataSizeUnit+')';
+        monitorArchiveBar.yAxis[1].name = '数据量('+data.data.detail.dataSizeUnit+')';
+
         if(this.chartType == '折线图'){
           this.monitorArchiveDraw.setOption(monitorArchiveLine);
         }else if(this.chartType == '柱状图'){
@@ -306,6 +367,21 @@ export default {
       }).catch(() => {
       });
     },
+    downloadExcel(){
+      apiService.downloadArchiveExcel(this.dateType, this.satellitesSelected, this.sensorsSelected,this.productLevelsSelected, this.dateRange[0], this.dateRange[1])
+      .then((href) => {    
+        const blob = new Blob([href.data], {
+          type: href.header["content-type"],
+        });
+
+        // const fileName = href.header["content-disposition"]
+        //   .split(";")[1]
+        //   .split("filename=")[1];
+        const fileName = "Excel.xlsx"
+        saveAs(blob, fileName);
+      }).catch(() => {
+      })
+    },
   }
 }
 </script>
@@ -315,18 +391,20 @@ export default {
 
 .monitorArchive{
   overflow: auto;
-  width: 70%;
+  width: 100%;
   height: 100%;
-  margin-left: 15%;
+  // margin-left: 10%;
   background: $bg-light;
   &-title{
-    padding: 30px;
-    font-size: 35px;
+    padding: 30px 15px 15px 30px;
+    // font-size: 35px;
     font-family: $text-mute;
   }
   &-filters{
+    padding-bottom: 20px;
+    border-bottom: 1px solid #034866;
     &-topFilter{
-      padding: 30px 0px;
+      padding: 20px 0px;
       display: flex;
     }
     &-bottomFilter{
@@ -344,7 +422,7 @@ export default {
   &-chart{
     padding-top: 20px;
     width: 100%;
-    height: 70vh;
+    height: 60vh;
   }
 }
 

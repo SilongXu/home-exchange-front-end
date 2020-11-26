@@ -15,7 +15,6 @@
   </el-tree>
 </template>
 <script>
-import { forEach, result } from "lodash-es";
 import apiService from "./transfer.service";
 
 export default {
@@ -58,9 +57,11 @@ export default {
       //同步管理一级页面 面包屑 相关逻辑
       this.breadCrumbList = [];
       this.breadCrumbList.push(node.name);
-      if(node.paths.length != 0){
-        for(var i=node.paths.length-1;i>-1;i--){
-          this.breadCrumbList.unshift(node.paths[i].name);
+      if(node.paths){
+        if(node.paths.length != 0){
+          for(var i=node.paths.length-1;i>-1;i--){
+            this.breadCrumbList.unshift(node.paths[i].name);
+          }
         }
       }
       this.$parent.$refs.config.breadCrumbList=this.breadCrumbList;

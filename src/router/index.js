@@ -8,6 +8,7 @@ const menu = () => import(/* webpackChunkName: "menu" */ '@/menu/menu')
 const monitor = () => import(/* webpackChunkName: "monitor" */ '@/monitor/monitor')
 const userAuthority = () => import(/* webpackChunkName: "userAuthority" */ '@/userAuthority/userAuthority')
 const transfer = () => import(/* webpackChunkName: "transfer" */ '@/transfer/transfer')
+const interfaceManager = () => import(/* webpackChunkName: "interface" */ '@/interface/interface')
 
 
 Vue.use(Router)
@@ -49,6 +50,11 @@ export default new Router({
           path: 'userAuthority**',
           name: 'userAuthority',
           component: userAuthority,
+        },
+        {
+          path: 'interface',
+          name: 'interface',
+          component: interfaceManager,
         },
       ],
     }

@@ -29,14 +29,6 @@
           </el-option>
         </el-select>
       </div>
-       <div class="input-group">
-        <span>业务号</span>
-        <el-input
-          placeholder="请输入业务号"
-          style="width: 300px"
-          v-model="searchObj.workNumber"
-        ></el-input>
-      </div>
       <div class="input-group">
         <span>发送时间</span>
         <el-date-picker
@@ -57,10 +49,18 @@
         >
         </el-date-picker>
       </div>
+       <div class="input-group">
+        <span>业务流水号</span>
+        <el-input
+          placeholder="请输入业务流水号"
+          style="width: 500px"
+          v-model="searchObj.workNumber"
+        ></el-input>
+      </div>
      
       <div class="input-group">
         <span>任务号 </span>
-        <el-input placeholder="请输入接口类型" style="width: 300px" v-model="searchObj.taskNumber"></el-input>
+        <el-input placeholder="请输入任务号" style="width: 500px" v-model="searchObj.taskNumber"></el-input>
       </div>
       <div class="input-group">
         <el-button type="primary" @click="search">检索</el-button>
@@ -71,20 +71,19 @@
     <div class="interface-content">
       <el-table
       :data="tableData" @cell-click='getCurrentRowMsg'>
-       <el-table-column label="序号" prop="id" width="50px"> </el-table-column>
-        <el-table-column label="接口类型" prop="messageType" width="200px"> </el-table-column>
-        <el-table-column label="发送方"  prop="originatorAddress" width="150px">  </el-table-column>
-        <el-table-column label="接收方"  prop="recipientAddress" width="150px"> </el-table-column>
-        <el-table-column label="发送时间"  prop="creationTime" width="250px"> </el-table-column>
-        <el-table-column label="业务号" prop="flowNo" width="250px"> </el-table-column>
-        <el-table-column label="任务号" prop="taskID" width="250px"> </el-table-column>
-        <el-table-column label="接口内容" >
+       <el-table-column label="序号" prop="id"  min-width="50px"> </el-table-column>
+        <el-table-column label="接口类型" prop="messageType"  min-width="150px"> </el-table-column>
+        <el-table-column label="发送方"  prop="originatorAddress"  min-width="100px">  </el-table-column>
+        <el-table-column label="接收方"  prop="recipientAddress"  min-width="100px"> </el-table-column>
+        <el-table-column label="发送时间"  prop="creationTimeDesc"  min-width="160px"> </el-table-column>
+        <el-table-column label="业务流水号" prop="flowNo" min-width="200px"> </el-table-column>
+        <el-table-column label="任务号" prop="taskId"  min-width="200px"> </el-table-column>
+        <el-table-column label="接口内容"  min-width="100px">
             <template>
                 <el-button type="primary" size="mini" @click="goInterfaceContentPage"> 
                     查看
                 </el-button>
             </template>
-
          </el-table-column>
       </el-table>
 
@@ -98,14 +97,15 @@
           :total="pagination.total">
         </el-pagination>
       </div>
-      <monitor-interface-content  :dialogVisible='dialogInterfaceContentVisible' @close="closeInterfaceContentPage" :messageXml='dialogInterfaceContent' ></monitor-interface-content>
+      <interface-content  :dialogVisible='dialogInterfaceContentVisible' @close="closeInterfaceContentPage" :messageXml='dialogInterfaceContent' ></interface-content>
     </div>
   </div>
 </template>
 
 <script>
-import MonitorInterfaceContent from "./modal/monitor-interface-content";
-import apiService from "./monitor.service";
+import InterfaceContent from "./interface-content";
+import apiService from "./interface.service";
+import * as moment from 'moment-mini';
 export default {
   data() {
     return {
@@ -133,7 +133,7 @@ export default {
     };
   },
   components: {
-    "monitor-interface-content": MonitorInterfaceContent,
+    "interface-content": InterfaceContent,
   },
   mounted() {
     apiService.getInterfaceType().then((res) => {
@@ -146,11 +146,12 @@ export default {
     apiService.getSenderList().then((res) => {
       this.senderList = res.data.detail[0].items;
     });
+    
+      this.search();
   },
   methods: {
     search() {
       var responseBody = this.getResponseBody();
-      // alert("开始检索");
       apiService
         .getSearchContent(
           this.pagination.page,
@@ -158,8 +159,14 @@ export default {
           responseBody
         )
         .then((res) => {
+          document.getElementsByClassName('interface-content')[0].scrollTop = 0;
           this.pagination.total = res.data.detail.total;
-          this.tableData = res.data.detail.list;
+          this.tableData = res.data.detail.list.map(item => {
+            return {
+              ...item,
+              creationTimeDesc: item.creationTime ? moment(item.creationTime).format('YYYY-MM-DD HH:mm:ss') : '--'
+            }
+          });
         });
     },
     getResponseBody() {
@@ -231,24 +238,33 @@ export default {
   margin-right: 7px;
 }
 
+
 .interface {
   position: relative;
-  width: 80%;
+  width: 100%;
   background-color: $bg-default;
   margin: 0 auto;
   &-header {
    border-bottom: 1px solid $border-dark;
+   height: 141px;
+   overflow: auto;
   }
   &-content {
     margin-top: 10px;
-    height: 650px;
-    overflow: auto;
+    height: calc(100vh - 300px);
+    overflow-y: auto;
     position: relative;
     &-block {
-      padding: 10px;
       position: absolute;
-      right: 10px;
+      padding: 10px;
+      right: 20px;
     }
   }
+}
+ /deep/ .cell {
+  padding:0 28px;
+}
+/deep/ .el-table th > .cell{
+  padding:0 28px;
 }
 </style>

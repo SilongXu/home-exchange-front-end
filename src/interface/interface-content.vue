@@ -5,9 +5,6 @@
         {{ '\n' + messageXml }}
       </pre>
     </div>
-    <!-- <span slot="footer">
-      <el-button @click="onclose">确定</el-button>
-    </span> -->
   </el-dialog>
 </template>
 
