@@ -2,21 +2,15 @@
   <div class="layout-header">
     <div class="layout-header-top">
       <div class="layout-header-top-current">
-        <!--
-        <div class="nav-item active" v-if="currentNavItem">
-          <svg-icon :icon="currentNavItem.icon"></svg-icon>
-          {{currentNavItem.name}}
-        </div>
-        -->
       </div>
       <div class="layout-header-top-profile">
         <div class="nav-item" @click="navPath('/search')">
           <svg-icon icon="search"></svg-icon>
         </div>
-        <div class="nav-item">
+        <!-- <div class="nav-item">
           <svg-icon icon="avator"></svg-icon>
           admin
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="layout-header-nav">
@@ -65,26 +59,8 @@ export default {
           name: '归档管理',
           path: '/import'
         },
-        // {
-        //   icon: 'export-manage',
-        //   name: '导出管理',
-        // },
       ],
       rightNavItems: [
-        // {
-        //   icon: 'connection',
-        //   name: '连接中心',
-        //   //path: '/connect',
-        // },
-        // {
-        //   icon: 'user-admin',
-        //   name: '用户与权限管理',
-        //   path:'/userAuthority'
-        // },
-        // {
-        //   icon: 'life-cycle',
-        //   name: '生命周期管理',
-        // },
         {
           icon: 'operation',
           name: '监控运维',

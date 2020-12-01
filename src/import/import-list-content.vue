@@ -61,14 +61,14 @@
           v-model="searchObj.dataId"
         ></el-input>
       </div>
-
-      <div class="input-group">
-        <el-button type="primary" @click="onClickSearchButton">检索</el-button>
-        <el-button type="primary" @click="reset">重置</el-button>
-        <el-button type="primary" @click="goMonitorArchive"
-          >归档统计 >
-        </el-button>
-      </div>
+      
+        <div class="input-group" style="float:right">
+          <el-button type="primary" @click="onClickSearchButton">检索</el-button>
+          <el-button type="primary" @click="reset">重置</el-button>
+          <el-button type="primary" @click="goMonitorArchive">归档统计 > </el-button>
+        </div>
+      <!-- <div style="width:100%;text-align:right;">
+      </div> -->
     </div>
 
     <div
@@ -130,6 +130,7 @@
             </span>
           </template>
         </el-table-column>
+        -->
       </el-table>
     </div>
     <div class="content-pagination">
@@ -303,6 +304,9 @@ export default {
     border-bottom: 1px solid $border-dark;
     overflow: auto;
     height: calc(100vh - 398px);
+    .el-table::before {
+       z-index: inherit; 
+    }
   }
   &-pagination {
     padding: 10px;

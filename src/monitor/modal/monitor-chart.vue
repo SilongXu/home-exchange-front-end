@@ -1,12 +1,5 @@
 <template>
   <div class="monitor-chart">
-    <monitor-error-detail
-      :visible='errorDetailVisible'
-      :detail='errorDetailData'
-      @close="onDetailClose"
-    >
-    
-    </monitor-error-detail>
     <div class="monitor-chart-left">
       <div class="monitor-chart-left-title">导入趋势</div>
       <div class="monitor-chart-left-content"></div>
@@ -170,9 +163,9 @@ const SEARCH_LINE_OPTIONS = {
 
 export default {
   name: 'MonitorChart',
-  components: {
-    'monitor-error-detail': () => import('./monitor-error-detail'),
-  },
+  // components: {
+  //   'monitor-error-detail': () => import('./monitor-error-detail'),
+  // },
   mounted() {
     this.getTrendData();
     this.getSearchData();
@@ -333,25 +326,25 @@ export default {
   &-error {
     margin-left: 20px;
 
-    .monitor-error-table {
-      overflow: auto;
-      text-align: center;
+    // .monitor-error-table {
+    //   overflow: auto;
+    //   text-align: center;
 
-      .reason {
-          @include flex-align(center, flex-start);
-          color: $brand-primary;
-          cursor: pointer;
+    //   .reason {
+    //       @include flex-align(center, flex-start);
+    //       color: $brand-primary;
+    //       cursor: pointer;
 
-          &:hover {
-            text-decoration: underline;
-          }
+    //       &:hover {
+    //         text-decoration: underline;
+    //       }
 
-          &:not(:last-of-type) {
-            margin-right: 24px;
-          }
+    //       &:not(:last-of-type) {
+    //         margin-right: 24px;
+    //       }
 
-      }
-    }
+    //   }
+    // }
 
   }
 }

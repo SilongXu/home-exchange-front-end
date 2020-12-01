@@ -62,7 +62,7 @@
         <span>任务号 </span>
         <el-input placeholder="请输入任务号" style="width: 500px" v-model="searchObj.taskNumber"></el-input>
       </div>
-      <div class="input-group">
+      <div class="input-group" style="float:right">
         <el-button type="primary" @click="search">检索</el-button>
         <el-button type="primary" @click="resetSearch">重置</el-button>
       </div>

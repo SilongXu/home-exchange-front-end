@@ -140,6 +140,8 @@ export default {
         if(this.menuFilter.nodeCode != node.nodeCode){
           this.menuFilter = node;
           this.$refs.filter.fetchFilterList(this.menuFilter);
+        }else{
+          this.menuFilter = node;
         }
       }
 
@@ -290,7 +292,6 @@ export default {
 
 .search {
   flex: 1;
-  // overflow: auto;
   .search {
     &-input {
       right: 8px;
