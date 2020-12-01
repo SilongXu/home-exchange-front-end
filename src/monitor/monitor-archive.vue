@@ -1,8 +1,5 @@
  <template>
   <div class="monitorArchive">
-    <!-- <div class="monitorArchive-title">
-      <span>归档管理 > 归档统计</span>
-    </div> -->
     <div class="monitorArchive-filters">
       <div class="monitorArchive-filters-topFilter">
         <div class="monitorArchive-filters-topFilter-dateType">
@@ -73,17 +70,6 @@
             </el-option>
           </el-select>
         </div>
-        <!-- <div class="monitorArchive-filters-bottomFilter-dataType">
-          <span>数据类型</span>
-          <el-select v-model="dataType" placeholder="请选择数据类型(默认选中所有数据类型)" multiple collapse-tags @change="dataTypeChange()" filterable>
-            <el-option
-              v-for="option in dataTypeOptions" 
-              :key="option.itemCode"
-              :label="option.itemName"
-              :value="option.itemCode">
-            </el-option>
-          </el-select>
-        </div> -->
         <div style="text-align: right;flex:1;padding-right:30px">
           <el-button type="primary" @click="trendCharts()">检索</el-button>
           <el-button type="primary" @click="resetAll()">重置</el-button>
@@ -117,8 +103,9 @@ const monitorArchiveLine = {
   tooltip: {
     trigger: 'axis',
   },
+  color: ['#E1BC43','6CCBFA'],
   legend: {
-    data: ['产品数量','数据量'],
+    data: [{name: '产品数量',icon: 'rect'},{name: '数据量', icon: 'rect'}],
     textStyle: {
       color: 'rgb(255, 250, 250)'
     }
@@ -193,11 +180,12 @@ const monitorArchiveBar = {
       color: 'rgb(255, 250, 250)'
     }
   },
+  color: ['#E1BC43','6CCBFA'],
   tooltip: {
     trigger: 'axis',
   },
   legend: {
-    data: ['产品数量','数据量'],
+    data: [{name: '产品数量',icon: 'rect'},{name: '数据量', icon: 'rect'}],
     textStyle: {
       color: 'rgb(255, 250, 250)'
     }

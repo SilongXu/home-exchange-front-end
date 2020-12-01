@@ -2,7 +2,7 @@ import Router from 'vue-router'
 
 import TransferLogs from './transfer-logs.vue'
 import TransferManage from './transfer-manage.vue'
-import search from '../search/search.vue'
+
 
 export default new Router({
     routes:[
@@ -16,10 +16,5 @@ export default new Router({
             name:'transferlog',
             component:TransferLogs
         },
-        // {
-        //     path:'/search',
-        //     name: 'search',
-        //     component: search
-        // }
     ]
 })

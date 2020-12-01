@@ -31,18 +31,6 @@
         <div class="logs-content-header-syncResult">同步结果</div>
         <div class="logs-content-header-operation">操作</div>
       </div>
-      <!-- <el-table :data="treeData" @row-click="getDetail">
-        <el-table-column label="文件名称" prop="fileName"> </el-table-column>
-        <el-table-column label="子目录" prop="childMenu"> </el-table-column>
-        <el-table-column label="数据类型" prop="dataType"> </el-table-column>
-        <el-table-column label="节点存储路径" prop="nodePath">
-        </el-table-column>
-        <el-table-column label="中心存储路径" prop="centerPath">
-        </el-table-column>
-        <el-table-column label="同步时间" prop="syncTime"> </el-table-column>
-        <el-table-column label="同步结果" prop="syncResult"> </el-table-column>
-        <el-table-column label="操作"> </el-table-column>
-      </el-table> -->
     </div>
     <div class="logs-footer"></div>
   </div>

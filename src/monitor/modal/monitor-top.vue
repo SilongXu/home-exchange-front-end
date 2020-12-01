@@ -4,30 +4,24 @@
       <div class="title">本部门目录数</div>
       <div class="content">
         <div>
-          <div v-loading="loading" element-loading-background="rgba(113, 186, 215, 0.2)"><span class="total">{{topData.catalogCountStat ? topData.catalogCountStat.value : ''}}</span>个</div>
-          <div class="subText">总目录数</div>
+          <span class="total" v-loading="loading" element-loading-background="rgba(113, 186, 215, 0.2)">{{topData.catalogCount}}</span>
         </div>
-        <div class="subText" v-loading="loading" element-loading-background="rgba(113, 186, 215, 0.2)">环比上月{{topData.catalogCountStat ? topData.catalogCountStat.monthRate : ''}}%</div>
       </div>
     </div>
     <div class="monitor-top-resource">
       <div class="title">本部门资源数</div>
       <div class="content">
         <div>
-          <div v-loading="loading" element-loading-background="rgba(113, 186, 215, 0.2)"><span class="total">{{topData.resourceCountStat ? topData.resourceCountStat.value : ''}}</span>个</div>
-          <div class="subText">总目录数</div>
+          <span class="total" v-loading="loading" element-loading-background="rgba(113, 186, 215, 0.2)">{{topData.resourceCount}}</span>
         </div>
-        <div class="subText" v-loading="loading" element-loading-background="rgba(113, 186, 215, 0.2)">环比上月{{topData.resourceCountStat ? topData.resourceCountStat.monthRate : ''}}%</div>
       </div>
     </div>
     <div class="monitor-top-size">
       <div class="title">数据大小统计</div>
       <div class="content">
         <div>
-          <div v-loading="loading" element-loading-background="rgba(113, 186, 215, 0.2)"><span class="total">{{topData.resourceSizeStat ? topData.resourceSizeStat.value : ''}}</span>GB</div>
-          <div class="subText">总目录数</div>
+          <span class="total" v-loading="loading" element-loading-background="rgba(113, 186, 215, 0.2)">{{topData.resourceSize}}</span>
         </div>
-        <div class="subText" v-loading="loading" element-loading-background="rgba(113, 186, 215, 0.2)">环比上月{{topData.resourceSizeStat ? topData.resourceSizeStat.monthRate : ''}}%</div>
       </div>
     </div>
   </div>

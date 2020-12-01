@@ -9,14 +9,14 @@
     </div>
     <div class="transfer-right">
       <transfer-config
-        ref="config"
-      ></transfer-config>
+        ref="config" :style="{height: clientHeight - 203 + 'px'}">
+        </transfer-config>
     </div>
   </div>
 </template>
 
 <script>
-import TransferMenu from "./transfer-menu";
+import TransferMenu from "./transfer-menu"; 
 import TransferConfig from "./transfer-config";
 import apiService from "./transfer.service";
 
@@ -51,6 +51,7 @@ export default {
         this.timer = true
         let that = this;
         setTimeout(() => {
+          console.log(that.clientHeight);
           that.timer = false;
         }, 400);
       }
@@ -94,8 +95,7 @@ export default {
 
   &-right {
     flex: 1;
-    // overflow: auto;
-    // height: 80vh;
+    overflow: auto;
     min-width: 0;
   }
 }

@@ -68,11 +68,9 @@ export default {
       this.$emit("close", null);
     },
     verifySetting() {
-
       if(this.$parent.singleOrBatch == "single"){
         apiService.updateTransferConfigSettingSingle(this.configEntry.id, this.transferSetting.transferStrategy, this.transferSetting.transferTime, this.transferSetting.transferType)
         .then((data) => {
-
           this.$emit("close", this.transferSetting);
         }).catch(() => {
         });

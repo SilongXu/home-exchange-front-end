@@ -27,10 +27,7 @@
         <svg-icon icon="import-manage"></svg-icon>
         <span>网络数据导入</span>
       </el-button>
-
-
     </div>
-
     <import-content></import-content>
   </div>
 </template>

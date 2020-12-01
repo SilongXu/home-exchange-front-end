@@ -107,6 +107,9 @@
             <div class="property">
               是否同步：{{ entry.syncFlag == 0 ? "否" : "是" }}
             </div>
+            <!-- <div class="property">
+              上次同步结果：{{entry.syncResult}}
+            </div> -->
           </div>
         </div>
       </div>

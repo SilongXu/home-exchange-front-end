@@ -1,6 +1,6 @@
 <template>
   <el-dialog :title="'失败原因'" :visible='visible' @close="onClose">
-      <h1>{{errorContent}}</h1>
+      <div class="content">{{errorContent}}</div>
   </el-dialog>
 </template>
 
@@ -15,6 +15,14 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.content{
+    overflow: auto;
+    height: 50vh;
+    font-size: 20px;
+    padding: 10px 60px;
+    margin-top: 10px;
+    background: rgba(0, 0, 0, 0.4);
+}
 
 </style>

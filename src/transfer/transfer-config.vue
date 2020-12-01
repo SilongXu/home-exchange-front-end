@@ -17,17 +17,12 @@
               <span class="transfer-config-header-operation-set-span"
                 >批量设置</span >
             </el-button>
-            <!-- <el-button type="primary" size="mini" @click="gotoTransferLogs()">
-              <svg-icon icon="view-detail"></svg-icon>
-              <span class="transfer-config-header-operation-set-span"
-                >查看日志</span>
-            </el-button> -->
           </div>
         </div>
       </div>
     </div>
 
-    <div class="transfer-config-content" :style="{height: clientHeight - 200 + 'px'}">
+    <div class="transfer-config-content">
       <div class="transfer-config-content-header">
         <div class="transfer-config-content-header-name">目录名称</div>
         <div class="transfer-config-content-header-type">同步类型</div>
@@ -62,7 +57,7 @@
             <span
               class="logs"
               title="查看日志"
-              @click="gotoTransferLogs()">
+              @click="goSearchPage()">
               <svg-icon icon="view-detail" color="default"></svg-icon>
             </span>
 
@@ -120,7 +115,6 @@ export default {
     return {
       singleOrBatch: "",
       transferConfigSearchBar: '',
-      clientHeight: document.body.clientHeight,
       searchKey: "",
       setDialogVisible: false,
       refreshDialogVisible: false,
@@ -130,27 +124,6 @@ export default {
       transferResultLoading: false,
       breadCrumbList: [],
     };
-  },
-  mounted(){
-    const that = this
-    window.onresize = () => {
-      return (() => {
-        window.screenHeight = document.body.clientHeight
-        that.clientHeight = window.screenHeight
-      })() 
-    }
-  },
-  watch: {
-    clientHeight(val) {
-      if(!this.timer) {
-        this.clientHeight = val
-        this.timer = true
-        let that = this;
-        setTimeout(() => {
-          that.timer = false;
-        }, 400);
-      }
-    }
   },
   methods: {
     onSizeChange(size){
@@ -176,25 +149,21 @@ export default {
       })
     },
     transferConfigBatch(){
-      Router.replace('/search')
-
-      this.$router.replace('/search')
-
-      // this.singleOrBatch = "batch";
-      // this.setDialogVisible = true;
-      // apiService.getTransgerConfigSelectOptions()
-      // .then((data) => {
-      //   this.$refs.transferSetting.transferTypes = data.data.types.filter((target) => {
-      //     if(target.key != "NONE"){
-      //       return target;
-      //     }
-      //   })
-      //   this.$refs.transferSetting.transferStrategies = data.data.periods.filter((target) => {
-      //     if(target.key != "NONE"){
-      //       return target;
-      //     }
-      //   })
-      // })
+      this.singleOrBatch = "batch";
+      this.setDialogVisible = true;
+      apiService.getTransgerConfigSelectOptions()
+      .then((data) => {
+        this.$refs.transferSetting.transferTypes = data.data.types.filter((target) => {
+          if(target.key != "NONE"){
+            return target;
+          }
+        })
+        this.$refs.transferSetting.transferStrategies = data.data.periods.filter((target) => {
+          if(target.key != "NONE"){
+            return target;
+          }
+        })
+      })
     },
     setTransfers(entry) {
       this.$refs.transferSetting.configEntry = entry;
@@ -297,7 +266,6 @@ export default {
 
   &-content {
     overflow  : auto;
-    height: 78vh;
 
     &-header{
       display: flex;
