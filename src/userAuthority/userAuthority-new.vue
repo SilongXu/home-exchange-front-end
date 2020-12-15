@@ -362,10 +362,10 @@ export default {
         margin-left: 20px;
       }
     }
-    /deep/ .el-form-item{
+    ::v-deep .el-form-item{
       margin-bottom: 5px;
     }
-    /deep/ .el-form-item__label{
+    ::v-deep .el-form-item__label{
       margin-left: -35px;
       font-size: 16px;
     }
@@ -391,8 +391,8 @@ export default {
         }
         &-content{
           padding: 15px 10px 15px;
-          /deep/ .el-checkbox__input{
-            top:-17px; 
+          ::v-deep .el-checkbox__input{
+            top: -17px; 
           }  
           .checkBox{
             display: grid;
@@ -417,7 +417,7 @@ export default {
         &-content{
           padding: 15px 10px 15px;
 
-          /deep/ .el-checkbox__input{
+          ::v-deep .el-checkbox__input{
             top:-17px; 
           }
 
@@ -521,7 +521,7 @@ export default {
       position:absolute;
       right: 18%;
       margin-top: 11px;
-      /deep/ .el-button{
+      ::v-deep .el-button{
         padding: 6px 20px;
         font-size: 10px;
      }

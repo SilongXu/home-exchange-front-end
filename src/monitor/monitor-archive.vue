@@ -18,7 +18,7 @@
           <span>时间范围</span>
           <el-date-picker 
             v-model="dateRange"
-            type="daterange" 
+            type="datetimerange" 
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             value-format="yyyy-MM-dd">
@@ -102,8 +102,9 @@ const monitorArchiveLine = {
   },
   tooltip: {
     trigger: 'axis',
+    show: false,
   },
-  color: ['#E1BC43','6CCBFA'],
+  color: ['#E1BC43','#6CCBFA'],
   legend: {
     data: [{name: '产品数量',icon: 'rect'},{name: '数据量', icon: 'rect'}],
     textStyle: {
@@ -119,7 +120,7 @@ const monitorArchiveLine = {
   xAxis: {
     type: 'category',
     boundaryGap: false,
-    data: [],//要给值！
+    data: [],
     axisLine: {
       lineStyle: {
         color: 'rgb(255, 250, 250)',
@@ -161,13 +162,31 @@ const monitorArchiveLine = {
     {
       name: '产品数量',
       type: 'line',
-      data: []//给值！
+      data: [],
+      label: {
+      	normal: {
+          show: true,
+          position: 'top',
+          textStyle: {
+            color: 'rgb(255, 250, 250)'
+          }
+        },
+      }
     },
     {
       name: '数据量',
       type: 'line',
       yAxisIndex: 1,
-      data: []//给值！
+      data: [],
+      label: {
+      	normal: {
+          show: true,
+          position: 'top',
+          textStyle: {
+            color: 'rgb(255, 250, 250)'
+          }
+        },
+      }
     },
   ]
 };
@@ -180,9 +199,10 @@ const monitorArchiveBar = {
       color: 'rgb(255, 250, 250)'
     }
   },
-  color: ['#E1BC43','6CCBFA'],
+  color: ['#E1BC43','#6CCBFA'],
   tooltip: {
     trigger: 'axis',
+    show: false,
   },
   legend: {
     data: [{name: '产品数量',icon: 'rect'},{name: '数据量', icon: 'rect'}],
@@ -241,13 +261,31 @@ const monitorArchiveBar = {
     {
       name: '产品数量',
       type: 'bar',
-      data: []
+      data: [],
+      label: {
+      	normal: {
+          show: true,
+          position: 'top',
+          textStyle: {
+            color: 'rgb(255, 250, 250)'
+          }
+        },
+      }
     },
     {
       name: '数据量',
       type: 'bar',
       yAxisIndex: 1,
-      data: []
+      data: [],
+      label: {
+      	normal: {
+          show: true,
+          position: 'top',
+          textStyle: {
+            color: 'rgb(255, 250, 250)'
+          }
+        },
+      }
     },
   ]
 }

@@ -78,12 +78,12 @@
         <el-table-column
           label="业务流水号"
           prop="flowNo"
-          min-width="300px"
+          min-width="150px"
         ></el-table-column>
         <el-table-column
           label="归档类型"
           prop="sourceTypeDesc"
-          min-width="120px"
+          min-width="100px"
         ></el-table-column>
         <el-table-column
           label="产品类型"
@@ -108,7 +108,7 @@
         <el-table-column
           label="任务状态"
           prop="resultTypeDesc"
-          min-width="120px"
+          min-width="100px"
         >
           <template slot-scope="scope">
             <span v-if="scope.row.resultTypeDesc == '失败'">
@@ -130,7 +130,15 @@
             </span>
           </template>
         </el-table-column>
+<<<<<<< HEAD
         -->
+=======
+
+        <el-table-column label="接口管理" min-width="100px">
+          <el-button type="primary" size="mini" @click="runInterface()">调用</el-button>
+        </el-table-column>
+
+>>>>>>> 52fa195... after12-12
       </el-table>
     </div>
     <div class="content-pagination">
@@ -149,13 +157,18 @@
       :errorContent="errorContent"
       @close="closeErrorReasonDialog"
     ></error-reason>
+    <first-dialog :visible="firstDialogVisible" :firstDialogContent="interfaceTableData" @close="closefirstDialogVisible" :pagination="interfacePagination"></first-dialog>
   </div>
 </template>
 
 <script>
 import apiService from "./import.service";
+import apiServiceInterface from "../interface/interface.service";
 import * as moment from "moment-mini";
 import errorReason from "./import-error-reason";
+import firstDialog from "./interface/firstDialog"
+
+
 export default {
   data() {
     return {
@@ -189,15 +202,80 @@ export default {
       },
       errorReasonDialogVisible: false,
       errorContent: null,
+      interfaceSearchObj: {
+        interfaceType: null,
+        sender: null,
+        receiver: null,
+        fromTime: null,
+        toTime: null,
+        taskNumber: null,
+        workNumber: null,
+      },
+      interfacePagination: {
+        page: 1,
+        size: 10,
+        total: 0,
+      },
+      interfaceTableData: null,
+      flowNo: null,
+      firstDialogVisible: false,
     };
   },
   mounted: function () {
+    //import部分的search
     this.search();
   },
   components: {
     "error-reason": errorReason,
+    "first-dialog": firstDialog,
   },
   methods: {
+    runInterface(){
+      this.goFirstDialog();
+      var responseBody = this.getInterfaceResponseBody();
+      apiServiceInterface
+        .getSearchContent(
+          this.interfacePagination.page,
+          this.interfacePagination.size,
+          responseBody
+        )
+        .then((res) => {
+          // document.getElementsByClassName('interface-content')[0].scrollTop = 0;
+          this.interfacePagination.total = res.data.detail.total;
+          this.interfaceTableData = res.data.detail.list.map(item => {
+            return {
+              ...item,
+              creationTimeDesc: item.creationTime ? moment(item.creationTime).format('YYYY-MM-DD HH:mm:ss') : '--'
+            }
+          });
+        });
+    },
+
+
+    getInterfaceResponseBody(){ 
+      var obj = {};
+      if (this.interfaceSearchObj.interfaceType) {
+        obj["messageType"] = this.interfaceSearchObj.interfaceType;
+      }
+      if (this.interfaceSearchObj.sender) {
+        obj["originatorAddress"] = this.interfaceSearchObj.sender;
+      }
+      if (this.interfaceSearchObj.receiver) {
+        obj["recipientAddress"] = this.interfaceSearchObj.receiver;
+      }
+      if (this.interfaceSearchObj.fromTime) {
+        obj["startTime"] = this.interfaceSearchObj.fromTime;
+      }
+      if (this.interfaceSearchObj.toTime) {
+        obj["endTime"] = this.interfaceSearchObj.toTime;
+      }
+      obj["flowNo"] = this.flowNo;
+      if (this.interfaceSearchObj.taskNumber) {
+        obj["taskID"] = this.interfaceSearchObj.taskNumber;
+      }
+      return obj;
+    },
+
     search() {
       apiService
         .getImportListContentTables(
@@ -218,6 +296,7 @@ export default {
               ),
             };
           });
+          console.log(this.tableData);
         });
     },
 
@@ -252,12 +331,19 @@ export default {
     },
     getCurrentRowMsg(row) {
       this.errorContent = row.failReason;
+      this.flowNo= row.flowNo;
     },
     goErrorReason() {
       this.errorReasonDialogVisible = true;
     },
     closeErrorReasonDialog() {
       this.errorReasonDialogVisible = false;
+    },
+    goFirstDialog(){
+      this.firstDialogVisible = true;
+    },
+    closefirstDialogVisible(){
+      this.firstDialogVisible = false;
     },
     onClickSearchButton() {
       this.pagination = {
@@ -314,10 +400,10 @@ export default {
     right: 10px;
   }
 }
-/deep/ .cell {
+::v-deep .cell {
   padding: 0 28px;
 }
-/deep/ .el-table th > .cell {
+::v-deep .el-table th > .cell {
   padding: 0 28px;
 }
 </style>

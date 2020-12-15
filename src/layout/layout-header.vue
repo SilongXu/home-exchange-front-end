@@ -56,7 +56,7 @@ export default {
         },
         {
           icon: 'import-manage',
-          name: '归档管理',
+          name: '任务管理',
           path: '/import'
         },
       ],

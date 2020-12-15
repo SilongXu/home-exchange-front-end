@@ -127,6 +127,8 @@ export default {
       metadataLoading: true,
       metaData: [],
       imagePath: '',
+      fileInfoArray: [],
+      fileInfoTree: [],
     };
   },
   mounted() {
@@ -134,6 +136,7 @@ export default {
     apiService.getMetadata(this.detail.id, this.detail.productType)
     .then((meta) => {
       this.metaData = meta.data.fieldValues;
+      console.log(this.metaData);
       this.metadataLoading=false; 
       this.filterObject(this.metaData);
     }).catch(() => {
@@ -145,6 +148,24 @@ export default {
       obj.forEach((item) => {
         if(item.dataType=="object"){
           item.value = '';
+        }
+        if(item.code == "fileInfo"){
+          this.fileInfoArray= item.value.split(";");
+          this.fileInfoArray.pop();
+          this.fileInfoArray.forEach((item) => {
+            var obj = {}
+            obj.code = "";
+            obj.dataType = "text";
+            obj.enumName = null;
+            obj.subs = null;
+            obj.name = "";
+            obj.value = item
+            this.fileInfoTree.push(obj);
+          })
+          item.value="";
+          item.subs = [];
+          item.subs = this.fileInfoTree;
+
         }
         if(item.subs != null){
           this.filterObject(item.subs);
@@ -397,7 +418,7 @@ export default {
 .el-select {
   width: 360px;
 }
-/deep/ .el-dialog{
+::v-deep .el-dialog{
   height: auto;
 }
 </style>

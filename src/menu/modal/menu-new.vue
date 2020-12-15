@@ -12,7 +12,7 @@
             { required : true, message: '请选择目录类型', trigger: 'blur'},
           ]">
           <div class="menu-new-dialog-type-choose">
-            <el-select v-model="classValue" placeholder="请选择" @change="fetchMenuSelectData(classValue)">
+            <el-select v-model="classValue" placeholder="请选择" @change="fetchMenuSelectData(classValue)" filterable>
               <el-option
                 v-for="type in menuTypes"
                 :key="type.code"

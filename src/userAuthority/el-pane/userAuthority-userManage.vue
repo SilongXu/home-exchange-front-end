@@ -170,7 +170,7 @@ export default {
           display: flex;
           position: absolute;
           right: 25px;
-          /deep/ .el-button{
+          ::v-deep .el-button{
             padding: 5px 10px 10px 10px;
           }
           .svg-icon{

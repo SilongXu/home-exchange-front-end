@@ -107,7 +107,7 @@ export default {
     margin-right: 80px;
   }
 
-  /deep/ .el-input--suffix .el-input__inner {
+  ::v-deep .el-input--suffix .el-input__inner {
     width: 400px;
   }
 }

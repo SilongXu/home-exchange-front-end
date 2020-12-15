@@ -62,6 +62,10 @@
         <span>任务号 </span>
         <el-input placeholder="请输入任务号" style="width: 500px" v-model="searchObj.taskNumber"></el-input>
       </div>
+      <div class="input-group">
+        <span>需求号 </span>
+        <el-input placeholder="请输入需求号" style="width: 200px" v-model="searchObj.reqId"></el-input>
+      </div>
       <div class="input-group" style="float:right">
         <el-button type="primary" @click="search">检索</el-button>
         <el-button type="primary" @click="resetSearch">重置</el-button>
@@ -78,6 +82,7 @@
         <el-table-column label="发送时间"  prop="creationTimeDesc"  min-width="160px"> </el-table-column>
         <el-table-column label="业务流水号" prop="flowNo" min-width="200px"> </el-table-column>
         <el-table-column label="任务号" prop="taskId"  min-width="200px"> </el-table-column>
+        <el-table-column label="需求号" prop="reqId"  min-width="150px"> </el-table-column>
         <el-table-column label="接口内容"  min-width="100px">
             <template>
                 <el-button type="primary" size="mini" @click="goInterfaceContentPage"> 
@@ -123,6 +128,7 @@ export default {
         toTime: null,
         taskNumber: null,
         workNumber: null,
+        reqId: null,
       },
       tableData: null,
       pagination: {
@@ -191,6 +197,9 @@ export default {
       }
       if (this.searchObj.taskNumber) {
         obj["taskID"] = this.searchObj.taskNumber;
+      }
+      if (this.searchObj.reqId) {
+        obj["reqID"] = this.searchObj.reqId;
       }
       return obj;
     },
@@ -261,10 +270,10 @@ export default {
     }
   }
 }
- /deep/ .cell {
+  ::v-deep .cell {
   padding:0 28px;
 }
-/deep/ .el-table th > .cell{
+::v-deep .el-table th > .cell{
   padding:0 28px;
 }
 </style>
