@@ -43,7 +43,7 @@ export default {
     SearchFilter,
     SearchInput,
     SearchMenu,
-    SearchResult,
+    SearchResult
   },
   data: () => {
     return {
@@ -54,7 +54,7 @@ export default {
       countriesCache: [], //接收国家列表的数据
       provincesCache: [], //接收省列表的数据
       citiesCache: [], //接收城市列表的数据
-      countiesCache: [], //接收县区列表的数据
+      countiesCache: [] //接收县区列表的数据
     };
   },
   mounted() {
@@ -77,7 +77,7 @@ export default {
           that.timer = false;
         }, 400);
       }
-    },
+    }
   },
   methods: {
     //通过监听接收子节点传送来的数据
@@ -107,7 +107,7 @@ export default {
         input: this.inputFilter,
         filters: this.$refs.filter
           ? JSON.stringify(this.$refs.filter.filterList)
-          : "[]",
+          : "[]"
       };
     },
     getFilterForResult() {
@@ -122,10 +122,10 @@ export default {
                 fieldName: null,
                 queryType: 0,
                 dataType: null,
-                value: this.inputFilter,
+                value: this.inputFilter
               })
             )
-          : "[]",
+          : "[]"
       };
     },
     onInputChange(filter) {
@@ -136,11 +136,11 @@ export default {
       if (!this.menuFilter) {
         this.menuFilter = node;
         this.$refs.filter.fetchFilterList(this.menuFilter);
-      }else{
-        if(this.menuFilter.nodeCode != node.nodeCode){
+      } else {
+        if (this.menuFilter.nodeCode != node.nodeCode) {
           this.menuFilter = node;
           this.$refs.filter.fetchFilterList(this.menuFilter);
-        }else{
+        } else {
           this.menuFilter = node;
         }
       }
@@ -157,7 +157,7 @@ export default {
       if (!this.$refs.filter) {
         return null;
       }
-      fList = this.$refs.filter.filterList.filter((filter) => {
+      fList = this.$refs.filter.filterList.filter(filter => {
         switch (filter.queryType) {
           case 11: {
             if (filter.value != null && filter.value.length != 0) {
@@ -233,9 +233,7 @@ export default {
               filter.county
             ) {
               if (filter.country.id) {
-                const newCountry = this.countriesCache.filter(function (
-                  target
-                ) {
+                const newCountry = this.countriesCache.filter(function(target) {
                   return target.id == filter.country.id;
                 })[0];
                 filter.country.id = newCountry.id;
@@ -243,7 +241,7 @@ export default {
               }
 
               if (filter.province.id) {
-                const newProvince = this.provincesCache.filter(function (
+                const newProvince = this.provincesCache.filter(function(
                   target
                 ) {
                   return target.id == filter.province.id;
@@ -253,7 +251,7 @@ export default {
               }
 
               if (filter.city.id) {
-                const newCity = this.citiesCache.filter(function (target) {
+                const newCity = this.citiesCache.filter(function(target) {
                   return target.id == filter.city.id;
                 })[0];
                 filter.city.id = newCity.id;
@@ -261,7 +259,7 @@ export default {
               }
 
               if (filter.county.id) {
-                const newCounty = this.countiesCache.filter(function (target) {
+                const newCounty = this.countiesCache.filter(function(target) {
                   return target.id == filter.county.id;
                 })[0];
                 filter.county.id = newCounty.id;
@@ -286,14 +284,13 @@ export default {
       });
 
       //解析数字地球坐标传给后端
-      this.$refs.filter.filterDigitalEarth.value = this.$refs.filter.digitalEarthContent;
-      if(this.$refs.filter.filterDigitalEarth.value != ""){
-        fList.push(this.$refs.filter.filterDigitalEarth)
+      this.$refs.filter.filterDigitalEarth.shape = this.$refs.filter.digitalEarthContent;
+      if (this.$refs.filter.filterDigitalEarth.shape != "") {
+        fList.push(this.$refs.filter.filterDigitalEarth);
       }
-      
       return fList;
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

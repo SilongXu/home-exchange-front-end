@@ -444,8 +444,7 @@ export default {
         fieldName: "",
         dataType: null,
         queryType: 55,
-        shape: "POLYGON",
-        value: "",
+        shape: "",
       },
     };
   },
@@ -752,7 +751,7 @@ export default {
                 let getdata = JSON.parse(event.data);
                 let shape = that.shapeConvert(getdata);
                 that.digitalEarthContent = shape;
-                that.filterDigitalEarth.value = that.digitalEarthContent;
+                that.filterDigitalEarth.shape = that.digitalEarthContent;
               } catch (error) {
                 console.log("获取经纬度出现异常");
               }
@@ -779,7 +778,7 @@ export default {
                     let getdata = JSON.parse(event.data);
                     let shape = that.shapeConvert(getdata);
                     that.digitalEarthContent = shape;
-                    that.filterDigitalEarth.value = that.digitalEarthContent;
+                    that.filterDigitalEarth.shape = that.digitalEarthContent;
                   } catch (error) {
                     console.log("获取经纬度出现异常");
                   }

@@ -40,20 +40,11 @@
       <div class="input-group">
         <span>归档时间</span>
         <el-date-picker
-          type="datetime"
-          placeholder="请选择开始时间"
-          format="yyyy-MM-dd HH:mm:ss"
+          v-model="dateRangeImportListContent"
+          type="datetimerange"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
           value-format="yyyy-MM-dd HH:mm:ss"
-          v-model="searchObj.startTime"
-        >
-        </el-date-picker>
-        至
-        <el-date-picker
-          type="datetime"
-          placeholder="请选择结束时间"
-          format="yyyy-MM-dd HH:mm:ss"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          v-model="searchObj.endTime"
         >
         </el-date-picker>
       </div>
@@ -73,19 +64,19 @@
           v-model="searchObj.dataId"
         ></el-input>
       </div>
-      
-        <div class="input-group" style="float:right">
-          <el-button type="primary" @click="onClickSearchButton">检索</el-button>
-          <el-button type="primary" @click="reset">重置</el-button>
-          <el-button type="primary" @click="goMonitorArchive">归档统计 > </el-button>
-        </div>
+
+      <div class="input-group" style="float:right">
+        <el-button type="primary" @click="onClickSearchButton">检索</el-button>
+        <el-button type="primary" @click="reset">重置</el-button>
+        <el-button type="primary" @click="goMonitorArchive"
+          >归档统计 >
+        </el-button>
+      </div>
       <!-- <div style="width:100%;text-align:right;">
       </div> -->
     </div>
 
-    <div
-      class="content-table"
-    >
+    <div class="content-table">
       <el-table :data="tableData" @row-click="getCurrentRowMsg">
         <el-table-column
           label="业务流水号"
@@ -115,11 +106,14 @@
         <el-table-column
           label="数据大小"
           prop="dataSize, dataSizeUnit"
-          min-width="150px">
+          min-width="150px"
+        >
           <template slot-scope="scope">
-            {{scope.row.dataSize}}/<span class="dataSizeUnit">{{scope.row.dataSizeUnit}}</span>
+            {{ scope.row.dataSize }}/<span class="dataSizeUnit">{{
+              scope.row.dataSizeUnit
+            }}</span>
           </template>
-          </el-table-column>
+        </el-table-column>
         <el-table-column
           label="归档时间"
           prop="createTimeDesc"
@@ -153,11 +147,11 @@
 
         <el-table-column label="接口管理" min-width="100px">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="getDetail(scope.row)">接口</el-button>
+            <el-button type="primary" size="mini" @click="getDetail(scope.row)"
+              >接口</el-button
+            >
           </template>
-          
         </el-table-column>
-
       </el-table>
       <div class="contentPagination">
         <el-pagination
@@ -166,7 +160,8 @@
           :current-page="pagination.page"
           :page-sizes="[5, 10, 20]"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="pagination.total">
+          :total="pagination.total"
+        >
         </el-pagination>
       </div>
     </div>
@@ -176,7 +171,12 @@
       :errorContent="errorContent"
       @close="closeErrorReasonDialog"
     ></error-reason>
-    <first-dialog :visible="firstDialogVisible" :firstDialogContent="interfaceTableData" @close="closefirstDialogVisible" :pagination="interfacePagination"></first-dialog>
+    <first-dialog
+      :visible="firstDialogVisible"
+      :firstDialogContent="interfaceTableData"
+      @close="closefirstDialogVisible"
+      :pagination="interfacePagination"
+    ></first-dialog>
   </div>
 </template>
 
@@ -185,8 +185,7 @@ import apiService from "./import.service";
 import apiServiceInterface from "../interface/interface.service";
 import * as moment from "moment-mini";
 import errorReason from "./import-error-reason";
-import firstDialog from "./interface/firstDialog"
-
+import firstDialog from "./interface/firstDialog";
 
 export default {
   data() {
@@ -195,21 +194,21 @@ export default {
         { code: "", label: "全部" },
         { code: 0, label: "失败" }, //不要改成'0'
         { code: 1, label: "成功" },
-        { code: 2, label: "部分成功" },
+        { code: 2, label: "部分成功" }
       ],
       sourceTypeList: [
         { code: "", label: "全部" },
         { code: 0, label: "自动归档" },
-        { code: 1, label: "手动导入" },
+        { code: 1, label: "手动导入" }
         // {code: 2, label: '引接'},
       ],
       systemCodeList: [
-        { code: '', label: "全部", value: ""},
-        { code: 0, label: "预处理分系统-DPPS", value: "DPPS"},
-        { code: 1, label: "专业处理分系统-SPPS", value:"SPPS"},
-        { code: 2, label: "定标与质量评定分系统-CQAS", value: "CQAS"},
-        { code: 3, label: "一体化管控分系统-INCOS", value: "INCOS"},
-        { code: 4, label: "航天网络化分系统-NETSS", VALUE: "NETSS"},
+        { code: "", label: "全部", value: "" },
+        { code: 0, label: "预处理分系统-DPPS", value: "DPPS" },
+        { code: 1, label: "专业处理分系统-SPPS", value: "SPPS" },
+        { code: 2, label: "定标与质量评定分系统-CQAS", value: "CQAS" },
+        { code: 3, label: "一体化管控分系统-INCOS", value: "INCOS" },
+        { code: 4, label: "航天网络化分系统-NETSS", VALUE: "NETSS" }
       ],
       productTypeList: [], //产品类型
       searchObj: {
@@ -220,13 +219,13 @@ export default {
         endTime: null,
         startTime: null,
         flowNo: null,
-        dataId: null,
+        dataId: null
       },
       tableData: null,
       pagination: {
         page: 1,
         size: 10,
-        total: 0,
+        total: 0
       },
       errorReasonDialogVisible: false,
       errorContent: null,
@@ -237,32 +236,33 @@ export default {
         fromTime: null,
         toTime: null,
         taskNumber: null,
-        workNumber: null,
+        workNumber: null
       },
       interfacePagination: {
         page: 1,
         size: 10,
-        total: 0,
+        total: 0
       },
       interfaceTableData: null,
       flowNo: null,
       firstDialogVisible: false,
+      dateRangeImportListContent: ""
     };
   },
-  mounted: function () {
+  mounted: function() {
     //import部分的search
     this.search();
   },
   components: {
     "error-reason": errorReason,
-    "first-dialog": firstDialog,
+    "first-dialog": firstDialog
   },
   methods: {
-    getDetail(row){
+    getDetail(row) {
       this.flowNo = row.flowNo;
       this.runInterface();
     },
-    runInterface(){
+    runInterface() {
       this.goFirstDialog();
       var responseBody = this.getInterfaceResponseBody();
       apiServiceInterface
@@ -271,20 +271,21 @@ export default {
           this.interfacePagination.size,
           responseBody
         )
-        .then((res) => {
+        .then(res => {
           // document.getElementsByClassName('interface-content')[0].scrollTop = 0;
           this.interfacePagination.total = res.data.detail.total;
           this.interfaceTableData = res.data.detail.list.map(item => {
             return {
               ...item,
-              creationTimeDesc: item.creationTime ? moment(item.creationTime).format('YYYY-MM-DD HH:mm:ss') : '--'
-            }
+              creationTimeDesc: item.creationTime
+                ? moment(item.creationTime).format("YYYY-MM-DD HH:mm:ss")
+                : "--"
+            };
           });
         });
     },
 
-
-    getInterfaceResponseBody(){ 
+    getInterfaceResponseBody() {
       var obj = {};
       if (this.interfaceSearchObj.interfaceType) {
         obj["messageType"] = this.interfaceSearchObj.interfaceType;
@@ -309,23 +310,27 @@ export default {
     },
 
     search() {
+      if (this.dateRangeImportListContent) {
+        this.searchObj.startTime = this.dateRangeImportListContent[0];
+        this.searchObj.endTime = this.dateRangeImportListContent[1];
+      }
       apiService
         .getImportListContentTables(
           this.pagination.page,
           this.pagination.size,
           this.searchObj
         )
-        .then((res) => {
-          document.getElementsByClassName('content-table')[0].scrollTop = 0;
+        .then(res => {
+          document.getElementsByClassName("content-table")[0].scrollTop = 0;
           this.pagination.total = res.data.detail.total;
-          this.tableData = res.data.detail.list.map((item) => {
+          this.tableData = res.data.detail.list.map(item => {
             return {
               ...item,
               sourceTypeDesc: this.getSourceTypeDesc(item.sourceType),
               resultTypeDesc: this.getResultTypeDesc(item.resultType),
               createTimeDesc: moment(item.createTime).format(
                 "YYYY-MM-DD HH:mm:ss"
-              ),
+              )
             };
           });
         });
@@ -340,7 +345,7 @@ export default {
         endTime: null,
         startTime: null,
         flowNo: null,
-        dataId: null,
+        dataId: null
       };
     },
 
@@ -352,18 +357,18 @@ export default {
       if (resultType == null || resultType === "") {
         return "--";
       }
-      return this.resultTypeList.find((item) => item.code === resultType).label;
+      return this.resultTypeList.find(item => item.code === resultType).label;
     },
 
     getSourceTypeDesc(sourceType) {
       if (sourceType == null || sourceType === "") {
         return "--";
       }
-      return this.sourceTypeList.find((item) => item.code === sourceType).label;
+      return this.sourceTypeList.find(item => item.code === sourceType).label;
     },
     getCurrentRowMsg(row) {
       this.errorContent = row.failReason;
-      this.flowNo= row.flowNo;
+      this.flowNo = row.flowNo;
     },
     goErrorReason() {
       this.errorReasonDialogVisible = true;
@@ -371,17 +376,17 @@ export default {
     closeErrorReasonDialog() {
       this.errorReasonDialogVisible = false;
     },
-    goFirstDialog(){
+    goFirstDialog() {
       this.firstDialogVisible = true;
     },
-    closefirstDialogVisible(){
+    closefirstDialogVisible() {
       this.firstDialogVisible = false;
     },
     onClickSearchButton() {
       this.pagination = {
         page: 1,
         size: 10,
-        total: 0,
+        total: 0
       };
       this.search();
     },
@@ -392,8 +397,8 @@ export default {
     onCurrentPage(page) {
       this.pagination.page = page;
       this.search();
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -422,15 +427,15 @@ export default {
     border-bottom: 1px solid $border-dark;
     overflow: auto;
     height: calc(100vh - 438px);
-    position: relative  ;
+    position: relative;
     bottom: 2px;
-    .dataSizeUnit{
-      color: #DC143C;
+    .dataSizeUnit {
+      color: #dc143c;
     }
     .el-table::before {
-       z-index: inherit; 
+      z-index: inherit;
     }
-    .contentPagination{
+    .contentPagination {
       padding: 10px;
       position: fixed;
       bottom: 40px;
