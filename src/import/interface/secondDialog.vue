@@ -14,9 +14,6 @@ export default {
   data() {
     return {};
   },
-  mounted(){
-    document.getElementsByClassName("xmlShow")[0].focus();
-  },
   methods: {
     onclose() {
       this.$emit("close");

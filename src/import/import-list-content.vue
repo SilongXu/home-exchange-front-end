@@ -14,7 +14,19 @@
         </el-select>
       </div>
       <div class="input-group">
-        <span>归档来源</span>
+        <span>数据来源</span>
+        <el-select v-model="searchObj.systemCode" style="width:300px">
+          <el-option
+            v-for="(item, index) in systemCodeList"
+            :label="item.label"
+            :key="index"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </div>
+      <div class="input-group">
+        <span>导入模式</span>
         <el-select v-model="searchObj.sourceType">
           <el-option
             v-for="(item, index) in sourceTypeList"
@@ -81,14 +93,19 @@
           min-width="150px"
         ></el-table-column>
         <el-table-column
-          label="归档类型"
+          label="数据来源"
+          prop="systemCode"
+          min-width="100px"
+        ></el-table-column>
+        <el-table-column
+          label="导入模式"
           prop="sourceTypeDesc"
           min-width="100px"
         ></el-table-column>
         <el-table-column
           label="产品类型"
           prop="productType"
-          min-width="200px"
+          min-width="150px"
         ></el-table-column>
         <el-table-column
           label="数据ID"
@@ -97,9 +114,12 @@
         ></el-table-column>
         <el-table-column
           label="数据大小"
-          prop="dataSize"
-          min-width="120px"
-        ></el-table-column>
+          prop="dataSize, dataSizeUnit"
+          min-width="150px">
+          <template slot-scope="scope">
+            {{scope.row.dataSize}}/<span class="dataSizeUnit">{{scope.row.dataSizeUnit}}</span>
+          </template>
+          </el-table-column>
         <el-table-column
           label="归档时间"
           prop="createTimeDesc"
@@ -130,28 +150,27 @@
             </span>
           </template>
         </el-table-column>
-<<<<<<< HEAD
-        -->
-=======
 
         <el-table-column label="接口管理" min-width="100px">
-          <el-button type="primary" size="mini" @click="runInterface()">调用</el-button>
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="getDetail(scope.row)">接口</el-button>
+          </template>
+          
         </el-table-column>
 
->>>>>>> 52fa195... after12-12
       </el-table>
+      <div class="contentPagination">
+        <el-pagination
+          @size-change="onSizeChange"
+          @current-change="onCurrentPage"
+          :current-page="pagination.page"
+          :page-sizes="[5, 10, 20]"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pagination.total">
+        </el-pagination>
+      </div>
     </div>
-    <div class="content-pagination">
-      <el-pagination
-        @size-change="onSizeChange"
-        @current-change="onCurrentPage"
-        :current-page="pagination.page"
-        :page-sizes="[5, 10, 20]"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="pagination.total"
-      >
-      </el-pagination>
-    </div>
+
     <error-reason
       :visible="errorReasonDialogVisible"
       :errorContent="errorContent"
@@ -184,11 +203,20 @@ export default {
         { code: 1, label: "手动导入" },
         // {code: 2, label: '引接'},
       ],
+      systemCodeList: [
+        { code: '', label: "全部", value: ""},
+        { code: 0, label: "预处理分系统-DPPS", value: "DPPS"},
+        { code: 1, label: "专业处理分系统-SPPS", value:"SPPS"},
+        { code: 2, label: "定标与质量评定分系统-CQAS", value: "CQAS"},
+        { code: 3, label: "一体化管控分系统-INCOS", value: "INCOS"},
+        { code: 4, label: "航天网络化分系统-NETSS", VALUE: "NETSS"},
+      ],
       productTypeList: [], //产品类型
       searchObj: {
         sourceType: "",
         resultType: "",
         importType: "",
+        systemCode: "",
         endTime: null,
         startTime: null,
         flowNo: null,
@@ -230,6 +258,10 @@ export default {
     "first-dialog": firstDialog,
   },
   methods: {
+    getDetail(row){
+      this.flowNo = row.flowNo;
+      this.runInterface();
+    },
     runInterface(){
       this.goFirstDialog();
       var responseBody = this.getInterfaceResponseBody();
@@ -296,7 +328,6 @@ export default {
               ),
             };
           });
-          console.log(this.tableData);
         });
     },
 
@@ -305,6 +336,7 @@ export default {
         sourceType: "",
         resultType: "",
         importType: "",
+        systemCode: "",
         endTime: null,
         startTime: null,
         flowNo: null,
@@ -389,15 +421,21 @@ export default {
   &-table {
     border-bottom: 1px solid $border-dark;
     overflow: auto;
-    height: calc(100vh - 398px);
+    height: calc(100vh - 438px);
+    position: relative  ;
+    bottom: 2px;
+    .dataSizeUnit{
+      color: #DC143C;
+    }
     .el-table::before {
        z-index: inherit; 
     }
-  }
-  &-pagination {
-    padding: 10px;
-    position: absolute;
-    right: 10px;
+    .contentPagination{
+      padding: 10px;
+      position: fixed;
+      bottom: 40px;
+      right: 5px;
+    }
   }
 }
 ::v-deep .cell {

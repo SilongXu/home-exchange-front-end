@@ -1,37 +1,4 @@
 <template>
-<<<<<<< HEAD
-  <div class="import">
-    <div style="padding: 10px;text-align: right;background-color: #01202F;border-bottom: 1px solid #034866;">
-      <el-button
-        type="primary"
-        size="mini"
-        @click="goToNew()"
-        class="import-tab-data">
-        <svg-icon icon="import-manage"></svg-icon>
-        <span>数据导入</span>
-      </el-button>
-
-      <el-button
-        type="primary"
-        size="mini"
-        @click="goToNewBatch()"
-        class="import-tab-dataBatch">
-        <svg-icon icon="import-manage"></svg-icon>
-        <span>批量数据导入</span>
-      </el-button>
-      <el-button
-        type="primary"
-        size="mini"
-        @click="goToNewSpecial()"
-        class="import-tab-dataInt"
-      >
-        <svg-icon icon="import-manage"></svg-icon>
-        <span>网络数据导入</span>
-      </el-button>
-    </div>
-    <import-content></import-content>
-  </div>
-=======
   <el-tabs v-model="activeTab" class="importTabs">
     <el-tab-pane label="导入任务" name="import" class="importTab">
     <div class="import">
@@ -70,7 +37,6 @@
 
     </el-tab-pane>
   </el-tabs>
->>>>>>> 52fa195... after12-12
 </template>
 
 <script>

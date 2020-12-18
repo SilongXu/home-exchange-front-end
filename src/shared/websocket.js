@@ -66,16 +66,6 @@ export function initEventHandle(url){
     heartCheck.reset().start();//心跳检测重置
     lockReconnect= true;
   };
-
-  // ws.onmessage = function(event){
-  //   heartCheck.reset().start();
-  //   console.log(event.data);
-  //   if(event) {
-  //     console.log("收到消息了" + event.data);
-  //     return event.data;
-  //   }
-  //   return event.data;
-  // }
 }
 
 //获取socketIP地址

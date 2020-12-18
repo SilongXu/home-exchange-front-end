@@ -24,9 +24,9 @@
         <el-button type="primary" size="mini" @click="clearItems()">
           清空所选项
         </el-button>
-        <el-button type="primary" size="mini" @click="addTag()">
+        <!-- <el-button type="primary" size="mini" @click="addTag()">
           批量添加标签
-        </el-button>
+        </el-button> -->
         <el-button type="primary" size="mini" @click="goSearchMenuTemplate()">
           保存搜索条件
         </el-button>
@@ -137,6 +137,7 @@
 <script>
 import apiService from "./search.service";
 import saveAs from "file-saver";
+import { getLockReconnect } from "../shared/websocket";
 
 export default {
   name: "SearchResult",
@@ -166,6 +167,7 @@ export default {
       checkedList: [],  //全选的数据列表,保存选中的项的dataId和productType数据,
       searchConditions:null,
       searchMenutemplateDialogVisible:false,
+      lockReconnectSearchResult: null,
     };
   },
   mounted() {
@@ -373,13 +375,15 @@ export default {
             };
           }
           document.getElementsByClassName(
-            "search-content-right"
+            "search-content-right" 
           )[0].scrollTop = 0;
           
           //把搜索结果传递给QA
-          console.log(this.searchResult);
-          // this.$parent.$refs.filter.circleArea(0, 3, null);
-          this.$parent.$refs.filter.circleArea(0, 4, this.searchResult);
+          this.lockReconnectSearchResult = getLockReconnect();
+          if(this.lockReconnectSearchResult == true){
+            this.$parent.$refs.filter.circleArea(0, 3, null);
+            this.$parent.$refs.filter.circleArea(0, 4, this.searchResult);
+          }
         })
         .catch(() => {});
     },

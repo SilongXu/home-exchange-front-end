@@ -5,30 +5,44 @@
         选择方式:
       </div>
       <div class="digitalEarth-select">
-        <el-select v-model="digitalEarthSelected" placeholder="请选择区域选择方式" size="small" style="width:200px">
+        <el-select
+          v-model="digitalEarthSelected"
+          placeholder="请选择区域选择方式"
+          size="small"
+          style="width:200px"
+        >
           <el-option
             v-for="item in digitalEarthOptions"
             :key="item.id"
             :label="item.label"
-            :value="item.value">
+            :value="item.value"
+          >
           </el-option>
         </el-select>
       </div>
       <div class="digitalEarth-button">
-        <el-button type="primary" @click="runDigitalEarth()" size="small">运行数字地球</el-button>
+        <el-button type="primary" @click="runDigitalEarth()" size="small"
+          >运行数字地球</el-button
+        >
       </div>
       <div class="digitalEarth-display">
         <div class="digitalEarth-display-title">
           坐标:
         </div>
-        <el-input v-model="digitalEarthContent" type="primary" size="small" readonly style="width:500px"></el-input>
+        <el-input
+          v-model="digitalEarthContent"
+          type="primary"
+          size="small"
+          style="width:500px"
+        ></el-input>
       </div>
     </div>
     <div
       class="search-filter-entry"
       :class="filter.queryType === 54 ? 'large' : ''"
       v-for="(filter, index) in filterList"
-      :key="index">
+      :key="index"
+    >
       <div class="label" :class="{ bottom: filter.queryType === 53 }">
         {{ filter.fieldName }}
       </div>
@@ -374,14 +388,13 @@
           </el-option>
         </el-select>
       </div>
-
     </div>
   </div>
 </template>
 <script>
 import { filter } from "lodash-es";
 import apiService from "./search.service";
-import {createWebSocket, getLockReconnect} from "../shared/websocket";
+import { createWebSocket, getLockReconnect } from "../shared/websocket";
 
 export default {
   name: "SearchFilter",
@@ -413,19 +426,27 @@ export default {
       polygonList: [],
       wsUri: "ws://127.0.0.1:1235/",
       digitalEarthContent: "",
-      digitalEarthSelected: "",
+      digitalEarthSelected: "areaSelect",
       digitalEarthOptions: [
         {
           id: 1,
           label: "区域",
-          value: "areaSelect",
+          value: "areaSelect"
         },
         {
           id: 2,
           label: "点",
-          value: "pointSelct",
+          value: "pointSelect"
         }
-      ]
+      ],
+      filterDigitalEarth: {
+        fieldCode: "meta.image.corners",
+        fieldName: "",
+        dataType: null,
+        queryType: 55,
+        shape: "POLYGON",
+        value: "",
+      },
     };
   },
   methods: {
@@ -437,7 +458,7 @@ export default {
         this.loadingTags = true;
         apiService
           .getTagList()
-          .then((tags) => {
+          .then(tags => {
             this.tagOptions = tags.data;
             this.loadingTags = false;
           })
@@ -455,7 +476,7 @@ export default {
         } else {
           //异步http请求,请求国家的列表
           this.fetchDivisionById(this.divisionLevel[0], -1)
-            .then((options) => {
+            .then(options => {
               //对从后端获取的数据options进行过滤,用中间变量存储请求结果,避免每次都重复请求
               this.countriesCache = options.data;
               this.countries = this.countriesCache;
@@ -474,14 +495,14 @@ export default {
       this.loadingProvince = true; //开启远程加载省列表
       //当国家选定时,根据ID向后端请求省列表的数据
       this.fetchDivisionById(this.divisionLevel[1], countryId)
-        .then((options) => {
+        .then(options => {
           //将省列表数据存进中间变量
           this.provincesCache = options.data;
           //当省列表数据存在不为空的时候,省列表可用可选
           if (this.provincesCache.length > 0) {
             this.provincesDisable = false;
           }
-          this.filterList.map(function (item, index, arr) {
+          this.filterList.map(function(item, index, arr) {
             if (item.queryType == 56) {
               //切换国家时,后面的字段全部设置为空
               item.province.id = "";
@@ -514,7 +535,7 @@ export default {
       this.countiesDisable = true;
       this.loadingCity = true; //开启远程加载城市
       this.fetchDivisionById(this.divisionLevel[2], provinceId)
-        .then((options) => {
+        .then(options => {
           //将城市列表数据放入缓存
           this.citiesCache = options.data;
           //城市列表数据不为空,开启列表可用
@@ -522,7 +543,7 @@ export default {
             this.citiesDisable = false;
           }
           //在选定省时,城市和县区列表数据清空
-          this.filterList.map(function (item, index, arr) {
+          this.filterList.map(function(item, index, arr) {
             if (item.queryType == 56) {
               item.city.id = "";
               item.city.name = "";
@@ -543,7 +564,7 @@ export default {
       //清空省列表时,设置城市和县区列表禁用并清空他们的数据
       this.citiesDisable = true;
       this.countiesDisable = true;
-      this.filterList.map(function (item, index, arr) {
+      this.filterList.map(function(item, index, arr) {
         if (item.queryType == 56) {
           item.city.id = "";
           item.city.name = "";
@@ -559,12 +580,12 @@ export default {
     onSelectCity(cityId) {
       this.loadingDistrict = true;
       this.fetchDivisionById(this.divisionLevel[3], cityId)
-        .then((options) => {
+        .then(options => {
           this.countiesCache = options.data;
           if (this.countiesCache.length > 0) {
             this.countiesDisable = false;
           }
-          this.filterList.map(function (item, index, arr) {
+          this.filterList.map(function(item, index, arr) {
             if (item.queryType == 56) {
               item.county.id = "";
               item.county.name = "";
@@ -580,7 +601,7 @@ export default {
     },
     onClearCity() {
       this.countiesDisable = true;
-      this.filterList.map(function (item, index, arr) {
+      this.filterList.map(function(item, index, arr) {
         if (item.queryType == 56) {
           item.county.id = "";
           item.county.name = "";
@@ -611,7 +632,7 @@ export default {
       }
       apiService
         .getSearchFilters(node.nodeCode)
-        .then((filters) => {
+        .then(filters => {
           this.filterList = filters.data;
           this.resetFilterList = JSON.parse(JSON.stringify(this.filterList));
         })
@@ -628,15 +649,56 @@ export default {
     },
     clearFilterItems() {
       this.filterList = JSON.parse(JSON.stringify(this.resetFilterList));
-      this.circleArea(0, 3, null);
+      var lockReconnectClearFilterItems = getLockReconnect();
+      if (lockReconnectClearFilterItems == true) {
+        this.circleArea(0, 3, null);
+      }
     },
-    runDigitalEarth(){
+    runDigitalEarth() {
       //this.circleArea(0, 3, null);
-      if(this.digitalEarthSelected == "areaSelect"){
+      if (this.digitalEarthSelected == "areaSelect") {
         this.circleArea(0, 1, null);
-      }else if(this.digitalEarthSelected == "pointSelect"){
+      } else if (this.digitalEarthSelected == "pointSelect") {
         this.circleArea(0, 2, null);
       }
+    },
+
+    shapeConvert(getdata) {
+      let pointsStr = getdata.argument.points;
+      pointsStr = pointsStr.replace(/\s/g, "");
+      if (pointsStr.charAt(pointsStr.length - 1)) {
+        pointsStr = pointsStr.substr(0, pointsStr.length - 2);
+      }
+      let shape = "";
+      if (getdata.argument.type == 1) {
+        // Point
+        shape = shape + "POINT(";
+        let point = pointsStr.split(",");
+        shape = shape + point[0];
+        shape = shape + " " + point[1];
+      } else if (getdata.argument.type === 2) {
+        // Polygon
+        shape = shape + "POLYGON(";
+        let points = pointsStr.split(";");
+        for (let i = 0; i < points.length; i++) {
+          let element = points[i];
+          let point = element.split(",");
+          if (point.length == 2) {
+            if (i > 0) {
+              shape = shape + ",";
+            }
+            shape = shape + point[0];
+            shape = shape + " " + point[1];
+          }
+        }
+        if (points.length > 2) {
+          let point_0 = points[0].split(",");
+          shape = shape + "," + point_0[0];
+          shape = shape + " " + point_0[1];
+        }
+      }
+      shape = shape + ")";
+      return shape;
     },
 
     circleArea(index, flag, args) {
@@ -644,7 +706,7 @@ export default {
       let name = "SG";
       let that = this;
       let params = null;
-      if(flag == 1) {
+      if (flag == 1) {
         // this.$message.warning({
         //   message: "请再数字地球选择区域",
         //   offset: 200,
@@ -652,9 +714,9 @@ export default {
         params = {
           name: name,
           use: "ChooseArea",
-          argument: "",
+          argument: ""
         };
-      }else if(flag == 2){
+      } else if (flag == 2) {
         // this.$message.warning({
         //   message: "请在数字地球选择目标",
         //   offset: 200,
@@ -662,130 +724,78 @@ export default {
         params = {
           name: name,
           use: "ChoosePoint",
-          argument: "",
+          argument: ""
         };
-      }else if(flag ==3){
+      } else if (flag == 3) {
         params = {
           name: name,
           use: "Close",
           argument: ""
         };
-      }else if(flag ==4){
+      } else if (flag == 4) {
         params = {
           name: name,
           use: "DataTransmit",
-          argument: args,
+          argument: args
         };
       }
       this.websocket = createWebSocket(this.wsUri);
       let lockReconnect = getLockReconnect();
-      console.log(lockReconnect);
-      if (lockReconnect == true){
-        console.log("ok");
+      if (lockReconnect == true) {
         clearInterval(that.timer);
         setTimeout(function() {
           that.websocket.send(JSON.stringify(params));
-          if(flag == 1 || flag == 2){
+          if (flag == 1 || flag == 2) {
             that.websocket.onmessage = function(event) {
               console.log("区域圈选数据:" + event.data);
-              try{
-                let getdata = JSON.parse(event.data)
-                that.digitalEarthContent = JSON.parse(event.data).argument.points;
-                let pointsList = getdata.argument.points.split(";")
-                let size = pointsList.length
-                if(size > 0) {
-                  clearInterval(that.timer);
-                  let value = {
-                    type: that.copyType
-                  };
-                  console.log("flagflag===" + flag + "index===" + index);
-
-                  if(flag == 1){
-                    let item = that.polygonList[index];
-                    item["leftTopCoord"] = size>3?pointsList[0]:'';
-                    item["rightTopCoord"] = size>3?pointsList[1]:'';
-                    item["leftBottomCoord"] = size>3?pointsList[2]:'';
-                    item["rightBottomCoord"] = size>3?pointsList[3]:'';
-                    that.$set(that.polygonList, index, item);
-                    value.list = JSON.parse(JSON.stringify(that.polygonList)); 
-                  }else if(flag == 2){
-                    let item = that.targetList[index];
-                    let pointList = pointsList[0].split(",");
-                    if(pointList.length > 0){
-                      item["lng"] = pointList[0];
-                      item["lat"] = pointList[1];
-                      that.$set(that.targetList, index, item);
-                      value.list = JSON.parse(JSON.stringify(that.targetList));
-                    }
-                  }
-                }
-              }catch(error) {
+              try {
+                let getdata = JSON.parse(event.data);
+                let shape = that.shapeConvert(getdata);
+                that.digitalEarthContent = shape;
+                that.filterDigitalEarth.value = that.digitalEarthContent;
+              } catch (error) {
                 console.log("获取经纬度出现异常");
               }
             };
+          } else if (flag == 3) {
+          } else if (flag == 4) {
           }
         }, 2000);
-      } else if (flag == 4) {
-        that.websocket.send(JSON.stringify(params));
-      }else{
+        clearInterval(that.timer);
+      } else {
         //创建a标签启动应用
         let target = document.createElement("a");
-        target.setAttribute("href","startDG://" + JSON.stringify(params));
+        target.setAttribute("href", "startDG://" + JSON.stringify(params));
         target.click();
         this.websocket = createWebSocket(this.wsUri);
         this.timer = setInterval(function() {
           let lockReconnect = getLockReconnect();
-          if(lockReconnect == true) {
+          if (lockReconnect == true) {
             setTimeout(function() {
               that.websocket.send(JSON.stringify(params));
-              if(flag == 1 || flag == 2){
+              if (flag == 1 || flag == 2) {
                 that.websocket.onmessage = function(event) {
-                  try{
-                    let getdata = JSON.parse(event.data)
-                    that.digitalEarthContent = JSON.parse(event.data).argument.points;
-                    let pointsList = getdata.argument.points.split(",")
-                    let size = pointsList.length
-                    if(size > 0){
-                      clearInterval(that.timer);
-                      let value = {
-                        type: that.copyType
-                      }
-
-                      if(flag == 1){
-                        let item = that.polygonList[index];
-                        item["leftTopCoord"] = size>3?pointsList[0]:'';
-                        item["rightTopCoord"] = size>3?pointsList[1]:'';
-                        item["leftBottomCoord"] = size>3?pointsList[2]:'';
-                        item["rightBottomCoord"] = size>3?pointsList[3]:'';
-                        that.$set(that.polygonList, index, item);
-                        value.list = JSON.parse(JSON.stringify(that.polygonList));
-                      }else if(flag == 2){
-                        let item = that.targetList[index];
-                        let pointList = pointsList[0].split(",");
-                        if(pointList.length > 0){
-                          item["lng"] = pointList[0];
-                          item["lat"] = pointList[1];
-                          that.$set(that.targetList, index, item);
-                          value.list = JSON.parse(JSON.stringify(that.targetList));
-                        }
-
-                      }
-                      that.$emit("input", value);
-                    }
-                  }catch(error){
-                    console.log("a获取经纬度出现异常")
+                  try {
+                    let getdata = JSON.parse(event.data);
+                    let shape = that.shapeConvert(getdata);
+                    that.digitalEarthContent = shape;
+                    that.filterDigitalEarth.value = that.digitalEarthContent;
+                  } catch (error) {
+                    console.log("获取经纬度出现异常");
                   }
                 };
+              } else if (flag == 3) {
+              } else if (flag == 4) {
               }
             }, 2000);
             clearInterval(that.timer);
-          }else{
+          } else {
             that.websocket = createWebSocket(that.wsUri);
           }
-        }, 1500)
+        }, 1500);
       }
     }
-  },
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -795,18 +805,18 @@ export default {
   @include flex-align(flex-start, flex-start);
   flex-wrap: wrap;
   padding: 20px 20px 4px 20px;
-  .digitalEarth{
+  .digitalEarth {
     display: flex;
-    &-name{
+    &-name {
       display: flex;
       align-items: center;
       justify-content: flex-start;
       margin: 0px 15px 16px 0px;
       font-size: $font-md;
     }
-    &-display{
+    &-display {
       display: flex;
-      &-title{
+      &-title {
         display: flex;
         align-items: center;
         justify-content: flex-start;
@@ -814,11 +824,11 @@ export default {
         font-size: $font-md;
       }
     }
-    .el-input ::v-deep{
+    .el-input ::v-deep {
       margin: 0px 15px 15px 0px;
     }
-    .el-button ::v-deep{
-      margin: 0px 15px 15px 0px
+    .el-button ::v-deep {
+      margin: 0px 15px 15px 0px;
     }
   }
 

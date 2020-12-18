@@ -75,7 +75,7 @@
     <div class="interface-content">
       <el-table
       :data="tableData" @cell-click='getCurrentRowMsg'>
-       <el-table-column label="序号" prop="id"  min-width="50px"> </el-table-column>
+       <el-table-column label="序号" prop="id"  min-width="100px"> </el-table-column>
         <el-table-column label="接口类型" prop="messageType"  min-width="150px"> </el-table-column>
         <el-table-column label="发送方"  prop="originatorAddress"  min-width="100px">  </el-table-column>
         <el-table-column label="接收方"  prop="recipientAddress"  min-width="100px"> </el-table-column>
@@ -260,12 +260,13 @@ export default {
   }
   &-content {
     margin-top: 10px;
-    height: calc(100vh - 300px);
+    height: calc(100vh - 355px);
     overflow-y: auto;
     position: relative;
     &-block {
-      position: absolute;
+      position: fixed;
       padding: 10px;
+      bottom: 40px;
       right: 20px;
     }
   }

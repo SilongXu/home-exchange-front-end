@@ -222,6 +222,9 @@ export default {
             }
             break;
           }
+          // case 55: {
+
+          // }
           case 56: {
             if (
               filter.country &&
@@ -281,6 +284,13 @@ export default {
             return filter;
         }
       });
+
+      //解析数字地球坐标传给后端
+      this.$refs.filter.filterDigitalEarth.value = this.$refs.filter.digitalEarthContent;
+      if(this.$refs.filter.filterDigitalEarth.value != ""){
+        fList.push(this.$refs.filter.filterDigitalEarth)
+      }
+      
       return fList;
     },
   },
