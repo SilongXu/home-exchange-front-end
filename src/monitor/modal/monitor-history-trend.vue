@@ -49,7 +49,7 @@ const LINE_OPTIONS = {
             <div style="width: 12px; height: 4px; margin-right: 8px; border-radius: 2px; background: ${
               param.color
             };"></div>
-            ${
+            ${ 
               param.seriesName
             }: <div style="color: ${"#FFFFFF"}; margin-left: 4px;">${
           param.data
@@ -161,7 +161,7 @@ export default {
         },
         {
           type: "value",
-          name: "GB",
+          name: this.info.resourceSizeUnit, 
           boundaryGap: false,
           axisLine: {
             lineStyle: {
@@ -188,7 +188,7 @@ export default {
         (LINE_OPTIONS.series = [
           {
             name: "资源数量",
-            type: "line",
+            type: "bar",
             data: this.info.resourceCount.map(count => count.value),
             yAxisIndex: 0,
             itemStyle: {
@@ -206,8 +206,8 @@ export default {
           },
           {
             name: "数据量",
-            type: "line",
-            data: this.info.resourceSize.map(size => size.value),
+            type: "bar",
+            data: this.info.resourceSize.map(size => size.sizeUnit),
             yAxisIndex: 1,
             itemStyle: {
               color: "#6CCBFA"
