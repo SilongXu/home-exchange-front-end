@@ -51,7 +51,6 @@ export default {
         this.timer = true
         let that = this;
         setTimeout(() => {
-          console.log(that.clientHeight);
           that.timer = false;
         }, 400);
       }

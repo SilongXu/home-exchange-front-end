@@ -136,7 +136,6 @@ export default {
     apiService.getMetadata(this.detail.id, this.detail.productType)
     .then((meta) => {
       this.metaData = meta.data.fieldValues;
-      console.log(this.metaData);
       this.metadataLoading=false; 
       this.filterObject(this.metaData);
     }).catch(() => {

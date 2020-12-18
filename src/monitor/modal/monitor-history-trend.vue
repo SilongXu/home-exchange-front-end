@@ -1,12 +1,24 @@
 <template>
-  <div class="monitor-history-trend" v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.4)">
+  <div
+    class="monitor-history-trend"
+    v-loading="loading"
+    element-loading-background="rgba(0, 0, 0, 0.4)"
+  >
     <div class="top">
       <div class="top-title">历史趋势</div>
       <div class="top-operation">
-        <div class="top-operation-view" :class="{active: period === 'LAST_WEEK'}" @click="togglePeriod('LAST_WEEK')">
+        <div
+          class="top-operation-view"
+          :class="{ active: period === 'LAST_WEEK' }"
+          @click="togglePeriod('LAST_WEEK')"
+        >
           近一周
         </div>
-        <div class="top-operation-view" :class="{active: period === 'LAST_MONTH'}" @click="togglePeriod('LAST_MONTH')">
+        <div
+          class="top-operation-view"
+          :class="{ active: period === 'LAST_MONTH' }"
+          @click="togglePeriod('LAST_MONTH')"
+        >
           近一月
         </div>
       </div>
@@ -18,56 +30,65 @@
 </template>
 
 <script>
-import * as moment from 'moment-mini';
-import apiService from '../monitor.service';
+import * as moment from "moment-mini";
+import apiService from "../monitor.service";
 
 const LINE_OPTIONS = {
   tooltip: {
-    trigger: 'axis',
-    formatter: (params) => {
+    trigger: "axis",
+    formatter: params => {
       if (!(params instanceof Array)) {
         params = [params];
       }
-      let ret = '';
+      let ret = "";
       params.map((param, index) => {
         ret += `
-          <div style="${index !== 0 ? 'margin-top: 8px;' : ''} display: flex; align-items: center;">
-            <div style="width: 12px; height: 4px; margin-right: 8px; border-radius: 2px; background: ${param.color};"></div>
-            ${param.seriesName}: <div style="color: ${'#FFFFFF'}; margin-left: 4px;">${param.data}</div>
+          <div style="${
+            index !== 0 ? "margin-top: 8px;" : ""
+          } display: flex; align-items: center;">
+            <div style="width: 12px; height: 4px; margin-right: 8px; border-radius: 2px; background: ${
+              param.color
+            };"></div>
+            ${
+              param.seriesName
+            }: <div style="color: ${"#FFFFFF"}; margin-left: 4px;">${
+          param.data
+        }</div>
           </div>
         `;
       });
       return ret;
     },
-    position: 'right',
+    position: "right",
+    show:false,
   },
   grid: {
     left: 50,
     right: 30,
     top: 40,
     bottom: 48,
-    containLabel: true,
+    containLabel: true
   },
   xAxis: [
     {
-      type: 'category',
+      type: "category",
       data: [],
       axisLine: {},
       splitLine: {
-        show: false,
+        show: false
       },
       axisTick: {
-        show: false,
+        show: false
       },
       axisPointer: {
-        type: 'none',
-      },
-    },
+        type: "none"
+      }
+    }
   ],
   yAxis: [],
   series: [],
   textStyle: {
-    color: '#4A637C',
+    color: "#4A637C"
   },
   legend: {
     data: [],
@@ -75,28 +96,28 @@ const LINE_OPTIONS = {
     bottom: 12,
     selectedMode: true,
     textStyle: {
-      color: 'white',
-      fontSize: 12,
+      color: "white",
+      fontSize: 12
     },
-    icon: 'rect',
+    icon: "rect",
     itemWidth: 12,
-    itemHeight: 12,
-  },
+    itemHeight: 12
+  }
 };
 
 export default {
-  name: 'MonitorHistoryTrend',
-  props: ['nodeCode'],
+  name: "MonitorHistoryTrend",
+  props: ["nodeCode"],
   mounted() {
     this.getTabInfo();
   },
   data() {
     return {
       trendLine: null,
-      period: 'LAST_WEEK',
+      period: "LAST_WEEK",
       loading: false,
       info: {},
-      lineChart: null,
+      lineChart: null
     };
   },
   methods: {
@@ -106,103 +127,121 @@ export default {
     },
     getTabInfo() {
       this.loading = true;
-      apiService.getHistoryTrend(this.nodeCode, this.period)
-      .then((info) => {
-        this.loading = false;
-        if (info.data) {
-          this.info = info.data;
-          this.draw();
-        }
-      })
-      .catch(() => this.loading = false);
+      apiService
+        .getHistoryTrend(this.nodeCode, this.period)
+        .then(info => {
+          this.loading = false;
+          if (info.data) {
+            this.info = info.data;
+            this.draw();
+          }
+        })
+        .catch(() => (this.loading = false));
     },
     draw() {
-      this.lineChart = this.$echarts.init(document.querySelector('.chart-content'));
+      this.lineChart = this.$echarts.init(
+        document.querySelector(".chart-content")
+      );
       LINE_OPTIONS.yAxis = [
         {
-          type: 'value',
-          name: '个数',
+          type: "value",
+          name: "个数",
           boundaryGap: false,
           axisLine: {
             lineStyle: {
-              color: '#034866',
-            },
+              color: "#034866"
+            }
           },
           splitLine: {
-            show: false,
+            show: false
           },
           axisTick: {
-            show: false,
-          },
+            show: false
+          }
         },
         {
-          type: 'value',
-          name: 'GB',
+          type: "value",
+          name: "GB",
           boundaryGap: false,
           axisLine: {
             lineStyle: {
-              color: '#034866',
-            },
+              color: "#034866"
+            }
           },
           splitLine: {
-            show: false,
+            show: false
           },
           axisTick: {
-            show: false,
-          },
-        },
+            show: false
+          }
+        }
       ];
-      LINE_OPTIONS.xAxis[0].data = this.info.resourceCount.map((count) => {
-        return moment(count.date).format('MM/DD');
+      LINE_OPTIONS.xAxis[0].data = this.info.resourceCount.map(count => {
+        return moment(count.date).format("MM/DD");
       });
       LINE_OPTIONS.xAxis[0].axisLine = {
         lineStyle: {
-          color: '#034866',
-        },
+          color: "#034866"
+        }
       };
-      LINE_OPTIONS.legend.data = [
-        '资源数量',
-        '数据量',
-      ],
-      LINE_OPTIONS.series = [
-        {
-          name: '资源数量',
-          type: 'line',
-          data: this.info.resourceCount.map((count) => count.value),
-          yAxisIndex: 0,
-          itemStyle: {
-            color: '#E1BC43',
+      (LINE_OPTIONS.legend.data = ["资源数量", "数据量"]),
+        (LINE_OPTIONS.series = [
+          {
+            name: "资源数量",
+            type: "line",
+            data: this.info.resourceCount.map(count => count.value),
+            yAxisIndex: 0,
+            itemStyle: {
+              color: "#E1BC43"
+            },
+            label: {
+              normal: {
+                show: true,
+                position: "top",
+                textStyle: {
+                  color: "rgb(255, 250, 250)"
+                }
+              }
+            }
           },
-        },
-        {
-          name: '数据量',
-          type: 'line',
-          data: this.info.resourceSize.map((size) => size.value),
-          yAxisIndex: 1,
-          itemStyle: {
-            color: '#6CCBFA',
-          },
-        },
-      ];
+          {
+            name: "数据量",
+            type: "line",
+            data: this.info.resourceSize.map(size => size.value),
+            yAxisIndex: 1,
+            itemStyle: {
+              color: "#6CCBFA"
+            },
+            label: {
+              normal: {
+                show: true,
+                position: "top",
+                textStyle: {
+                  color: "rgb(255, 250, 250)"
+                }
+              }
+            }
+          }
+        ]);
       this.lineChart.setOption(LINE_OPTIONS);
-    },
-  },
-}
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/util.scss';
+@import "@/styles/util.scss";
 
 .monitor-history-trend {
   display: flex;
   flex-direction: column;
   padding: 16px;
   height: 400px;
- 
- .top {
+
+  .top {
     @include flex-align(center, space-between);
     height: 30px;
-    font-family: '黑体';
+    font-family: "黑体";
     font-size: 14px;
     color: white;
 

@@ -12,157 +12,173 @@
 </template>
 
 <script>
-import * as moment from 'moment-mini';
-import apiService from '../monitor.service';
+import * as moment from "moment-mini";
+import apiService from "../monitor.service";
 
 const TREND_LINE_OPTIONS = {
   tooltip: {
-    trigger: 'axis',
-    formatter: (params) => {
+    trigger: "axis",
+    formatter: params => {
       if (!(params instanceof Array)) {
         params = [params];
       }
-      let ret = '';
+      let ret = "";
       params.map((param, index) => {
         ret += `
-          <div style="${index !== 0 ? 'margin-top: 8px;' : ''} display: flex; align-items: center;">
-            <div style="width: 12px; height: 4px; margin-right: 8px; border-radius: 2px; background: ${param.color};"></div>
-            ${param.seriesName}: <div style="color: ${'#FFFFFF'}; margin-left: 4px;">${param.data}</div>
+          <div style="${
+            index !== 0 ? "margin-top: 8px;" : ""
+          } display: flex; align-items: center;">
+            <div style="width: 12px; height: 4px; margin-right: 8px; border-radius: 2px; background: ${
+              param.color
+            };"></div>
+            ${
+              param.seriesName
+            }: <div style="color: ${"#FFFFFF"}; margin-left: 4px;">${
+          param.data
+        }</div>
           </div>
         `;
       });
       return ret;
     },
-    position: 'right',
+    position: "right",
+    show: false
   },
   grid: {
     left: 16,
     right: 30,
     top: 20,
     bottom: 48,
-    containLabel: true,
+    containLabel: true
   },
   xAxis: {
-    type: 'category',
+    type: "category",
     data: [],
     axisLine: {
       lineStyle: {
-        color: '#034866',
-      },
+        color: "#034866"
+      }
     },
     axisTick: {
-      show: false,
+      show: false
     },
     axisPointer: {
-      type: 'none',
+      type: "none"
     },
     splitLine: {
-      show: false,
+      show: false
     },
     axisLabel: {
-      formatter: (value) => {
-        return moment(value).format('MM/DD');
-      },
+      formatter: value => {
+        return moment(value).format("MM/DD");
+      }
     },
-    boundaryGap: false,
+    boundaryGap: false
   },
   yAxis: {
-    type: 'value',
+    type: "value",
     axisLine: {
       lineStyle: {
-        color: '#034866',
-      },
+        color: "#034866"
+      }
     },
     axisTick: {
-      show: false,
+      show: false
     },
     splitLine: {
-      show: false,
-    },
+      show: false
+    }
   },
   textStyle: {
-    color: '#4A637C',
+    color: "#4A637C"
   },
-  legend: {
-  },
-  series: [],
+  legend: {},
+  series: []
 };
 
 const SEARCH_LINE_OPTIONS = {
   tooltip: {
-    trigger: 'axis',
-    formatter: (params) => {
+    trigger: "axis",
+    formatter: params => {
       if (!(params instanceof Array)) {
         params = [params];
       }
-      let ret = '';
+      let ret = "";
       params.map((param, index) => {
         ret += `
-          <div style="${index !== 0 ? 'margin-top: 8px;' : ''} display: flex; align-items: center;">
-            <div style="width: 12px; height: 4px; margin-right: 8px; border-radius: 2px; background: ${param.color};"></div>
-            ${param.seriesName}: <div style="color: ${'#FFFFFF'}; margin-left: 4px;">${param.data}</div>
+          <div style="${
+            index !== 0 ? "margin-top: 8px;" : ""
+          } display: flex; align-items: center;">
+            <div style="width: 12px; height: 4px; margin-right: 8px; border-radius: 2px; background: ${
+              param.color
+            };"></div>
+            ${
+              param.seriesName
+            }: <div style="color: ${"#FFFFFF"}; margin-left: 4px;">${
+          param.data
+        }</div>
           </div>
         `;
       });
       return ret;
     },
-    position: 'right',
+    position: "right",
+    show: false
   },
   grid: {
     left: 16,
     right: 30,
     top: 20,
     bottom: 48,
-    containLabel: true,
+    containLabel: true
   },
   xAxis: {
-    type: 'category',
+    type: "category",
     data: [],
     axisLine: {
       lineStyle: {
-        color: '#034866',
-      },
+        color: "#034866"
+      }
     },
     axisTick: {
-      show: false,
+      show: false
     },
     axisPointer: {
-      type: 'none',
+      type: "none"
     },
     splitLine: {
-      show: false,
+      show: false
     },
     axisLabel: {
-      formatter: (value) => {
-        return moment(value).format('MM/DD');
-      },
+      formatter: value => {
+        return moment(value).format("MM/DD");
+      }
     },
-    boundaryGap: false,
+    boundaryGap: false
   },
   yAxis: {
-    type: 'value',
+    type: "value",
     axisLine: {
       lineStyle: {
-        color: '#034866',
-      },
+        color: "#034866"
+      }
     },
     axisTick: {
-      show: false,
+      show: false
     },
     splitLine: {
-      show: false,
-    },
+      show: false
+    }
   },
   textStyle: {
-    color: '#4A637C',
+    color: "#4A637C"
   },
-  legend: {
-  },
-  series: [],
+  legend: {},
+  series: []
 };
 
 export default {
-  name: 'MonitorChart',
+  name: "MonitorChart",
   // components: {
   //   'monitor-error-detail': () => import('./monitor-error-detail'),
   // },
@@ -179,23 +195,23 @@ export default {
       searchLineData: [],
       errorTableData: [],
       errorDetailData: null,
-      errorDetailVisible: false,
+      errorDetailVisible: false
     };
   },
   methods: {
-    goMonitorInterfacePage(){
-      this.$router.push('./monitor/monitorInterface')
+    goMonitorInterfacePage() {
+      this.$router.push("./monitor/monitorInterface");
     },
     getTrendData() {
-      apiService.getImportTrend().then((trend) => {
+      apiService.getImportTrend().then(trend => {
         if (trend.data) {
           this.trendLineData = trend.data || [];
           this.drawTrendLine();
         }
-      })
+      });
     },
     getSearchData() {
-      apiService.getSearchTrend().then((search) => {
+      apiService.getSearchTrend().then(search => {
         if (search.data) {
           this.searchLineData = search.data || [];
           this.drawSearchLine();
@@ -203,64 +219,88 @@ export default {
       });
     },
     getErrorLog() {
-      apiService.getErrorLog().then((log) => {
+      apiService.getErrorLog().then(log => {
         if (log.data) {
           this.errorTableData = log.data.data || [];
         }
-      })
+      });
     },
     drawTrendLine() {
-      this.trendLine = this.$echarts.init(document.querySelector('.monitor-chart-left-content'));
-      TREND_LINE_OPTIONS.legend = this.getLegend(['导入数量']);
-      TREND_LINE_OPTIONS.series = [{
-        name: '导入数量',
-        type: 'line',
-        smooth: false,
-        showSymbol: false,
-        data: this.trendLineData.map((data) => data.value),
-        itemStyle: {
-          color: '#90AEFA',
-        },
-        lineStyle: {
-          color: '#90AEFA',
-        },
-        areaStyle: {
-          color: '#203477',
-          opacity: '0.5',
-        },
-      }];
-      TREND_LINE_OPTIONS.xAxis.data = this.trendLineData.map((data) => {
+      this.trendLine = this.$echarts.init(
+        document.querySelector(".monitor-chart-left-content")
+      );
+      TREND_LINE_OPTIONS.legend = this.getLegend(["导入数量"]);
+      TREND_LINE_OPTIONS.series = [
+        {
+          name: "导入数量",
+          type: "line",
+          smooth: false,
+          data: this.trendLineData.map(data => data.value),
+          itemStyle: {
+            color: "#90AEFA"
+          },
+          label: {
+            normal: {
+              show: true,
+              position: "top",
+              textStyle: {
+                color: "rgb(255, 250, 250)"
+              }
+            }
+          },
+          lineStyle: {
+            color: "#90AEFA"
+          },
+          areaStyle: {
+            color: "#203477",
+            opacity: "0.5"
+          }
+        }
+      ];
+      TREND_LINE_OPTIONS.xAxis.data = this.trendLineData.map(data => {
         return data.date;
       });
 
       this.trendLine.setOption(TREND_LINE_OPTIONS);
     },
     drawSearchLine() {
-      const colorMap = ['#58B3E0', '#4D4BD1', '#CE8D3D'];
-      this.searchLine = this.$echarts.init(document.querySelector('.monitor-chart-right-content'));
+      const colorMap = ["#58B3E0", "#4D4BD1", "#CE8D3D"];
+      this.searchLine = this.$echarts.init(
+        document.querySelector(".monitor-chart-right-content")
+      );
       SEARCH_LINE_OPTIONS.legend = this.getLegend(this.legendSearchLine);
       SEARCH_LINE_OPTIONS.series = [];
-      if(this.searchLineData.trends){
+      if (this.searchLineData.trends) {
         this.searchLineData.trends.map((data, index) => {
           SEARCH_LINE_OPTIONS.series.push({
             name: data.nodeName,
-            type: 'line',
+            type: "line",
             smooth: false,
-            showSymbol: false,
-            data: data.trend.map((data) => data.value),
+            data: data.trend.map(data => data.value),
             itemStyle: {
-              color: colorMap[index],
+              color: colorMap[index]
             },
             lineStyle: {
-              color: colorMap[index],
+              color: colorMap[index]
             },
+            label: {
+              normal: {
+                show: true,
+                position: "top",
+                textStyle: {
+                  color: "rgb(255, 250, 250)"
+                }
+              }
+            }
           });
         });
       }
 
-      SEARCH_LINE_OPTIONS.xAxis.data = this.searchLineData.trends[0].trend.map((data) => {
-        return data.date;
-      });
+      SEARCH_LINE_OPTIONS.xAxis.data = this.searchLineData.trends[0].trend.map(
+        data => {
+          return data.date;
+        }
+      );
       this.searchLine.setOption(SEARCH_LINE_OPTIONS);
     },
     getLegend(data) {
@@ -270,27 +310,27 @@ export default {
         bottom: 12,
         selectedMode: true,
         textStyle: {
-          color: 'white',
-          fontSize: 12,
+          color: "white",
+          fontSize: 12
         },
-        icon: 'rect',
+        icon: "rect",
         itemWidth: 12,
-        itemHeight: 12,
+        itemHeight: 12
       };
     },
     checkErrorDetail(detail) {
       this.errorDetailData = detail;
       this.errorDetailVisible = true;
     },
-     onDetailClose() {
+    onDetailClose() {
       this.errorDetailVisible = false;
-    },
-  },
-}
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/util.scss';
+@import "@/styles/util.scss";
 
 .monitor-chart {
   display: flex;
@@ -298,7 +338,9 @@ export default {
   height: 332px;
   margin-top: 20px;
 
-  &-left, &-right, &-error {
+  &-left,
+  &-right,
+  &-error {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -310,11 +352,11 @@ export default {
     &-title {
       height: 30px;
       font-weight: bold;
-      font-family: '黑体';
+      font-family: "黑体";
       font-size: 16px;
       color: white;
     }
-    
+
     &-content {
       flex: 1;
     }
@@ -345,7 +387,6 @@ export default {
 
     //   }
     // }
-
   }
 }
 </style>

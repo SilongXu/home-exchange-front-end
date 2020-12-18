@@ -1,6 +1,10 @@
 <template>
   <el-dialog :title="'失败原因'" :visible='visible' @close="onClose">
-      <div class="content">{{errorContent}}</div>
+      <div class="content">
+          <pre>
+            {{'\n' + errorContent}}
+          </pre>
+          </div>
   </el-dialog>
 </template>
 

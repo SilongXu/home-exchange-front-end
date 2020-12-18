@@ -21,7 +21,7 @@
             type="datetimerange" 
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            value-format="yyyy-MM-dd">
+            value-format="yyyy-MM-dd-HH-mm-ss">
           </el-date-picker>
         </div>
         <div class="monitorArchive-filters-bottomFilter-satellite">
@@ -328,7 +328,7 @@ export default {
   },
   mounted(){
     this.dateType = "DAY";//"日";
-    this.chartType = "折线图";
+    this.chartType = "柱状图";
 
     apiService.getArchiveBottomOptions("CHDL")
     .then((data) => {

@@ -28,7 +28,8 @@
           @size-change="onSizeChange"
           @current-change="onCurrentPage"
           :current-page="pagination.page"
-          :page-sizes="[5,10, 20]"
+          :page-sizes="[5, 10, 20]"
+          :page-size.sync="pagination.size"
           layout="total, sizes, prev, pager, next, jumper"
           :total="pagination.total">
         </el-pagination>
@@ -64,6 +65,8 @@ export default {
       this.$parent.runInterface();
     },
     onclose() {
+      this.pagination.page = 1;
+      this.pagination.size = 10;
       this.$emit("close");
     },
     goInterfaceContentPage(){
