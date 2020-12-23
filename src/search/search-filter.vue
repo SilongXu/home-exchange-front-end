@@ -440,12 +440,12 @@ export default {
         }
       ],
       filterDigitalEarth: {
-        fieldCode: "meta.image.corners",
+        fieldCode: "meta.imageInfo.corners",
         fieldName: "",
         dataType: null,
         queryType: 55,
-        shape: "",
-      },
+        shape: ""
+      }
     };
   },
   methods: {
@@ -677,7 +677,7 @@ export default {
         shape = shape + " " + point[1];
       } else if (getdata.argument.type === 2) {
         // Polygon
-        shape = shape + "POLYGON(";
+        shape = shape + "POLYGON((";
         let points = pointsStr.split(";");
         for (let i = 0; i < points.length; i++) {
           let element = points[i];
@@ -695,6 +695,7 @@ export default {
           shape = shape + "," + point_0[0];
           shape = shape + " " + point_0[1];
         }
+        shape = shape + ")";
       }
       shape = shape + ")";
       return shape;

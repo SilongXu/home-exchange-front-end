@@ -39,14 +39,15 @@
       </div>
       <div class="input-group">
         <span>归档时间</span>
-        <el-date-picker
-          v-model="dateRangeImportListContent"
-          type="datetimerange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          value-format="yyyy-MM-dd HH:mm:ss"
-        >
+        <el-date-picker v-model="searchObj.startTime" placeholder="请选择开始时间"
+        format="yyyy-MM-dd HH:mm:ss"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        type="datetime">
         </el-date-picker>
+        至
+        <el-date-picker v-model="searchObj.endTime" type="datetime" placeholder="请选择结束时间"
+        format="yyyy-MM-dd HH:mm:ss"
+        value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
       </div>
       <div class="input-group">
         <span>业务流水号</span>
@@ -246,7 +247,6 @@ export default {
       interfaceTableData: null,
       flowNo: null,
       firstDialogVisible: false,
-      dateRangeImportListContent: ""
     };
   },
   mounted: function() {
@@ -310,10 +310,6 @@ export default {
     },
 
     search() {
-      if (this.dateRangeImportListContent) {
-        this.searchObj.startTime = this.dateRangeImportListContent[0];
-        this.searchObj.endTime = this.dateRangeImportListContent[1];
-      }
       apiService
         .getImportListContentTables(
           this.pagination.page,

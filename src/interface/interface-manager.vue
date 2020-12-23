@@ -40,13 +40,20 @@
       <div class="input-group">
         <span>发送时间</span>
         <el-date-picker
-          v-model="dateRangeInterfaceManage"
-          type="datetimerange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
+          v-model="searchObj.fromTime"
+          placeholder="请选择开始时间"
+          type="datetime"
+          format="yyyy-MM-dd HH:mm:ss"
           value-format="yyyy-MM-dd HH:mm:ss"
-        >
-        </el-date-picker>
+        ></el-date-picker>
+        至
+        <el-date-picker
+          v-model="searchObj.toTime"
+          placeholder="请选择结束时间"
+          type="datetime"
+          format="yyyy-MM-dd HH:mm:ss"
+          value-format="yyyy-MM-dd HH:mm:ss"
+        ></el-date-picker>
       </div>
       <div class="input-group">
         <span>业务流水号</span>
@@ -170,8 +177,7 @@ export default {
         page: 1,
         size: 10,
         total: 0
-      },
-      dateRangeInterfaceManage: ""
+      }
     };
   },
   components: {
@@ -215,10 +221,6 @@ export default {
     },
     getResponseBody() {
       var obj = {};
-      if (this.dateRangeInterfaceManage) {
-        this.searchObj.fromTime = this.dateRangeInterfaceManage[0];
-        this.searchObj.toTime = this.dateRangeInterfaceManage[1];
-      }
       if (this.searchObj.interfaceType) {
         obj["messageType"] = this.searchObj.interfaceType;
       }

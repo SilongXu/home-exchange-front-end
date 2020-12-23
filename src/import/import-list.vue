@@ -34,7 +34,7 @@
     </div>
     </el-tab-pane>
     <el-tab-pane label="导出任务" name="export">
-
+      <export-page></export-page>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -43,9 +43,8 @@
 export default {
   name: "ImportList",
   components: {
-    // processing: () => import("./el-pane/processing"),
-    // done: () => import("./el-pane/done"),
     "import-content": () => import("./import-list-content"),
+    "export-page": () => import("./export"),
   },
   data() {
     return {
