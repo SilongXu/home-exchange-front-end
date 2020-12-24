@@ -13,101 +13,243 @@
         <div class="dialog-content-main">
           <el-tree
             ref="searchConditionTree"
+            lazy
+            :load="loadTemplateTree"
+            :props="treeProps"
             :expand-on-click-node="false"
             :render-content="renderSearchCondition"
-            :data="searchConditionTreeData"
+            node-key="id"
+            @node-click="onNodeClick"
           >
           </el-tree>
         </div>
         <div class="dialog-content-footer">
           <div class="input-group">
             <span>选择文件路径:</span>
-            <el-input style="width: 250px" size="mini"></el-input>
+            <el-input
+              style="width: 250px"
+              size="mini"
+              v-model="newFilePath"
+            ></el-input>
           </div>
           <div class="input-group">
             <span>搜索模板名称:</span>
-            <el-input style="width: 250px" size="mini"></el-input>
+            <el-input
+              style="width: 250px"
+              size="mini"
+              v-model="newFileName"
+            ></el-input>
           </div>
         </div>
       </div>
       <span slot="footer">
-        <el-button type="primary">确认</el-button>
-        <el-button>取消</el-button>
+        <el-button type="primary" @click="confirmOperation">确认</el-button>
+        <el-button @click="onClose">取消</el-button>
       </span>
     </el-dialog>
-    <add-directory :visible="addDirDialogVisible" @closeAddDirectoryDialog="closeAddDirectoryDialog"></add-directory>
-    <delete-dirctory :visible="deleteDirDialogVisible" @closeDeleteDirectoryDialog="closeDeleteDirectoryDialog" :content="currentTreeNode"></delete-dirctory>
+    <add-directory
+      :visible="addDirDialogVisible"
+      :currentNodeParentId="addDirByParentId"
+      @closeAddDirectoryDialog="closeAddDirectoryDialog"
+    ></add-directory>
+    <rename-dir-or-file :visible="renameDirOrFileDialogVisible" ref="rename" @closeRenameDialog="closeRenameDialog" :currentTreeNode="renameTreeNode"></rename-dir-or-file>
+    <file-content :visible="fileContentDialogVisible" :fileContent="fileContent" @closeFileContentDialog="closeFileContentDialog"></file-content>
+    <delete-dirctory
+      :visible="deleteDirDialogVisible"
+      @closeDeleteDirectoryDialog="closeDeleteDirectoryDialog"
+      :currentNodeId="deleteTreeNodeById"
+      :currentNodeName="deleteTreeNodeName"
+    ></delete-dirctory>
   </div>
 </template>
 
 <script>
+import apiService from "@/search/search.service";
 export default {
   props: ["visible"],
   data() {
     return {
-      searchConditionTreeData: [
-        {
-          label: "全部",
-          isLeaf: false,
-          children: [
-            {
-              label: "东部战区",
-              isLeaf: false,
-              children: [
-                {
-                  label: "上海",
-                  isLeaf: false,
-                },
-                {
-                  label: "江苏",
-                  isLeaf: false,
-                  children: [
-                    {
-                      label: "南京",
-                      isLeaf: true,
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
+      treeProps: {
+        id: "id",
+        label: "name",
+        children: "children",
+        disabled: "disabled",
+        isLeaf: "isLeaf",
+      },
       addDirDialogVisible: false,
-      deleteDirDialogVisible:false,
-      currentTreeNode:null,
+      deleteDirDialogVisible: false,
+      renameDirOrFileDialogVisible:false,
+      fileContentDialogVisible:false,
+
+      deleteTreeNodeById: "", //通过此id删除节点
+      deleteTreeNodeName: "", //删除树节点的名字
+
+      addDirByParentId: "", //添加文件夹时需要的父节点的id
+
+      newFilePathList: [],
+      newFilePath: "",
+      newFileName: "",
+      currentClickNodeId: "", //保存当前点击节点,供创建文件或者更新文件之后刷新节点使用
+      currentClickNode: "",
+      updateFile: false, //作为添加文件和更新文件的标志
+      renameTreeNode:'', //通过当前节点的id重命名当前节点的名字,然后通过此节点找到父节点并刷新
+      
+      fileContent:''
     };
   },
   components: {
     "add-directory": () => import("./search-menu-add-directory"),
-    "delete-dirctory":()=> import("./search-menu-delete-directory")
+    "delete-dirctory": () => import("./search-menu-delete-directory"),
+    "rename-dir-or-file":()=>import("./search-menu-rename"),
+    'file-content':()=>import("./search-menu-file-content"),
   },
   methods: {
+    onNodeClick(obj, node) {
+      this.newFilePath = "";
+      this.newFilePathList = [];
+
+      this.currentClickNodeId = node.data.id;
+      this.currentClickNode = node;
+      //如果点击的是文件夹,就直接获取当前电机的路径,作为新建文件的保存路径;
+      //如果点击的是文件,就把当前文件的名字填进input中,获取他上级的父节点的路径,更新当前文件的内容
+      if (node.data.nodeType == "FILE") {
+        this.updateFile = true;
+        this.newFileName = node.data.name;
+      } else {
+        this.updateFile = false;
+        this.newFileName = "";
+      }
+
+      while (node.data.id != -1) {
+        if (node.data.nodeType == "dir") {
+          this.newFilePathList.unshift(node.data.name);
+        }
+        node = node.parent;
+      }
+      this.newFilePath = this.newFilePathList.join("\\");
+    },
     onClose() {
       this.$emit("closeMenuTemplateDialog");
     },
-    addDir() {
-      console.log("添加dir");
+    addDir(node) {
+      this.addDirByParentId = node.data.id;
       this.addDirDialogVisible = true;
     },
-    closeAddDirectoryDialog(){
+    closeAddDirectoryDialog() {
       this.addDirDialogVisible = false;
     },
+    getFileContent(node){
+      this.fileContentDialogVisible = true;
+      apiService.getFileContentById(node.data.id).then((response)=>{
+        this.fileContent = response.data;
+      })
+    },
+    closeFileContentDialog(){
+      this.fileContentDialogVisible = false;
+    },
+    renameDirOrFile(node){
+      this.renameDirOrFileDialogVisible = true;
+      this.renameTreeNode = node;
+      this.$refs.rename.initInput(node.data.name)
+    },
+    closeRenameDialog(){
+      this.renameDirOrFileDialogVisible = false;
+    },
     deleteDir(node) {
-      console.log("删除dir");
-      console.log(node)
-      this.currentTreeNode = node.label;
+      this.deleteTreeNodeById = node.data.id;
+      this.deleteTreeNodeName = node.data.name;
       this.deleteDirDialogVisible = true;
     },
-    closeDeleteDirectoryDialog(){
+    closeDeleteDirectoryDialog() {
       this.deleteDirDialogVisible = false;
+    },
+    confirmOperation() {
+      let request = {};
+      if (!this.updateFile) {
+        //创建新的文件
+        if (this.newFileName.trim()) {
+          request.content = JSON.stringify(
+            this.$parent.$parent.getFilterForResult()
+          );
+          request.name = this.newFileName.trim();
+          request.parentId = this.currentClickNodeId;
+          apiService.createFileByParentId(request).then((response) => {
+            if (response.data.result == "true") {
+              this.refreshNode(this.currentClickNodeId);
+              // this.onClose();
+            }
+          });
+        } else {
+          alert("新建的文件名不能为空");
+        }
+      } else {
+        //更新已有的文件内容
+        request.id = this.currentClickNodeId;
+        request.content = JSON.stringify(
+          this.$parent.$parent.getFilterForResult()
+        );
+        apiService.updateCurrentFileContent(request).then((response) => {
+          if (response.data.result == "true") {
+            this.refreshNode(this.currentClickNode.parent.data.id);
+            // this.onClose();
+          }
+        });
+      }
+    },
+    refreshNode(nodeId) {
+      let leftConditionTree = this.$parent.$parent.$refs.menu.$refs
+        .searchConditionTree;
+      if (leftConditionTree) {
+        let leftNode = leftConditionTree.getNode(nodeId);
+        if (leftNode) {
+          leftNode.loaded = false;
+          leftNode.expand();
+        }
+      }
+      let rightConditionTree = this.$refs.searchConditionTree;
+      if (rightConditionTree) {
+        let rightNode = rightConditionTree.getNode(nodeId);
+        if (rightNode) {
+          rightNode.loaded = false;
+          rightNode.expand();
+        }
+      }
+    },
+    loadTemplateTree(node, resolve) {
+      if (node.level === 0) {
+        return resolve([{ name: "全部", id: -1 }]);
+      }
+      if (node.level == 1) {
+        apiService
+          .getTemplateTreeNodeByParentId(-1)
+          .then((tree) => {
+            return resolve(tree.data);
+          })
+          .catch(() => {
+            resolve([]);
+          });
+        return;
+      }
+
+      if (!node.isLeaf) {
+        apiService
+          .getTemplateTreeNodeByParentId(node.data.id)
+          .then((tree) => {
+            return resolve(tree.data);
+          })
+          .catch(() => {
+            resolve([]);
+          });
+
+        return;
+      }
     },
     renderSearchCondition(h, { node }) {
       return (
         <span class="search-menu-node">
           {(() => {
-            if (node.isLeaf) {
-              return null;
+            if (node.data.nodeType == "FILE") {
+              return <svg-icon icon="file"></svg-icon>;
             } else {
               return node.expanded ? (
                 <svg-icon icon="folder-open"></svg-icon>
@@ -118,16 +260,35 @@ export default {
           })()}
           <span domPropsTitle={node.label}>{node.label}</span>
           {(() => {
-            return (
-              <span class="menuOperation">
-                <span on-click={() => this.addDir()}>
-                  <svg-icon icon="new-folder"></svg-icon>
+            if (node.data.nodeType == "FILE") {
+              return (
+                <span class="menuOperation">
+                  <span on-click={() => this.getFileContent(node)}>
+                    <svg-icon icon="view-detail"></svg-icon>
+                  </span>
+                  <span on-click={() => this.renameDirOrFile(node)}>
+                    <svg-icon icon="rename"></svg-icon>
+                  </span>
+                  <span on-click={() => this.deleteDir(node)}>
+                    <svg-icon icon="delete"></svg-icon>
+                  </span>
                 </span>
-                <span on-click={() => this.deleteDir(node)}>
-                  <svg-icon icon="delete"></svg-icon>
+              );
+            } else {
+              return (
+                <span class="menuOperation">
+                  <span on-click={() => this.addDir(node)}>
+                    <svg-icon icon="new-folder"></svg-icon>
+                  </span>
+                  <span on-click={() => this.renameDirOrFile(node)}>
+                    <svg-icon icon="rename"></svg-icon>
+                  </span>
+                  <span on-click={() => this.deleteDir(node)}>
+                    <svg-icon icon="delete"></svg-icon>
+                  </span>
                 </span>
-              </span>
-            );
+              );
+            }
           })()}
         </span>
       );

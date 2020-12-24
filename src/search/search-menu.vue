@@ -1,6 +1,6 @@
 <template>
   <el-tabs type="card" :stretch="true">
-    <el-tab-pane label="用户管理">
+    <el-tab-pane label="目录管理">
       <el-tree
         ref="searchMenuTree"
         :props="treeProps"
@@ -16,13 +16,16 @@
       >
       </el-tree
     ></el-tab-pane>
-    <el-tab-pane label="搜索条件"> 
+    <el-tab-pane label="搜索条件">
       <el-tree
         ref="searchConditionTree"
+        lazy
+        :load="loadTemplateTree"
+        :props="treeProps"
+        node-key="id"
         :expand-on-click-node="false"
         :render-content="renderSearchCondition"
-        :data="searchConditionTreeData"
-        
+        @node-click="nodeClick"
       >
       </el-tree>
     </el-tab-pane>
@@ -42,36 +45,6 @@ export default {
         disabled: "disabled",
         isLeaf: "isLeaf",
       },
-       searchConditionTreeData: [
-          {
-            label: "全部",
-            isLeaf: false,
-            children: [
-              {
-                label: "东部战区",
-                isLeaf: false,
-                children: [
-                  {
-                    label: "上海",
-                    isLeaf: false,
-                  },
-                  {
-                    label: "江苏",
-                    isLeaf: false,
-                    children: [
-                      {
-                        label: "南京",
-                        isLeaf: true,
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      //   addDirDialogVisible: false,
-      // deleteDirDialogVisible:false,
     };
   },
   mounted() {
@@ -87,12 +60,29 @@ export default {
     onNodeClick(node) {
       this.$emit("menuChange", node);
     },
-    addDir(){
-      this.$parent.$refs.result.$refs.searchMenuTemplate.addDir();
-      // console.log(this.$parent.$refs.result.$refs.searchMenuTemplate)
+    nodeClick(obj, node) {
+      if (node.data.nodeType == "FILE") {
+        let request = null;
+        apiService.getFileContentById(node.data.id).then((response) => {
+          request = JSON.parse(response.data.content);
+          this.$parent.$refs.result.fetchResult(request);
+        });
+      }
     },
-    deleteDir(node){
-       this.$parent.$refs.result.$refs.searchMenuTemplate.deleteDir(node);
+    addDir(node) {
+      this.$parent.$refs.result.$refs.searchMenuTemplate.addDir(node);
+    },
+    getFileContent(node) {
+      this.$parent.$refs.result.$refs.searchMenuTemplate.getFileContent(node);
+      event.stopPropagation();
+    },
+    renameDirOrFile(node,event) {
+      this.$parent.$refs.result.$refs.searchMenuTemplate.renameDirOrFile(node);
+      event.stopPropagation();
+    },
+    deleteDir(node) {
+      this.$parent.$refs.result.$refs.searchMenuTemplate.deleteDir(node);
+      event.stopPropagation();
     },
     loadNode(node, resolve) {
       if (node.level === 0) {
@@ -114,6 +104,35 @@ export default {
       if (!node.isLeaf) {
         apiService
           .getMenuNodeByParentId(node.data.id)
+          .then((tree) => {
+            return resolve(tree.data);
+          })
+          .catch(() => {
+            resolve([]);
+          });
+
+        return;
+      }
+    },
+    loadTemplateTree(node, resolve) {
+      if (node.level === 0) {
+        return resolve([{ name: "全部", id: -1 }]);
+      }
+      if (node.level == 1) {
+        apiService
+          .getTemplateTreeNodeByParentId(-1)
+          .then((tree) => {
+            return resolve(tree.data);
+          })
+          .catch(() => {
+            resolve([]);
+          });
+        return;
+      }
+
+      if (!node.isLeaf) {
+        apiService
+          .getTemplateTreeNodeByParentId(node.data.id)
           .then((tree) => {
             return resolve(tree.data);
           })
@@ -146,8 +165,8 @@ export default {
       return (
         <span class="search-menu-node">
           {(() => {
-            if (node.isLeaf) {
-              return null;
+            if (node.data.nodeType == "FILE") {
+              return <svg-icon icon="file"></svg-icon>;
             } else {
               return node.expanded ? (
                 <svg-icon icon="folder-open"></svg-icon>
@@ -158,16 +177,35 @@ export default {
           })()}
           <span domPropsTitle={node.label}>{node.label}</span>
           {(() => {
-            return (
-              <span class="menuOperation">
-                <span on-click={() => this.addDir()}>
-                  <svg-icon icon="new-folder"></svg-icon>
+            if (node.data.nodeType == "FILE") {
+              return (
+                <span class="menuOperation">
+                  <span on-click={($event) => this.getFileContent(node,$event)}>
+                    <svg-icon icon="view-detail"></svg-icon>
+                  </span>
+                  <span on-click={($event) => this.renameDirOrFile(node,$event)}>
+                    <svg-icon icon="rename"></svg-icon>
+                  </span>
+                  <span on-click={($event) => this.deleteDir(node,$event)}>
+                    <svg-icon icon="delete"></svg-icon>
+                  </span>
                 </span>
-                <span on-click={() => this.deleteDir(node)}>
-                  <svg-icon icon="delete"></svg-icon>
+              );
+            } else {
+              return (
+                <span class="menuOperation">
+                  <span on-click={() => this.addDir(node)}>
+                    <svg-icon icon="new-folder"></svg-icon>
+                  </span>
+                  <span on-click={() => this.renameDirOrFile(node)}>
+                    <svg-icon icon="rename"></svg-icon>
+                  </span>
+                  <span on-click={() => this.deleteDir(node)}>
+                    <svg-icon icon="delete"></svg-icon>
+                  </span>
                 </span>
-              </span>
-            );
+              );
+            }
           })()}
         </span>
       );
