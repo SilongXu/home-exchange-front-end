@@ -47,7 +47,7 @@ const TREND_LINE_OPTIONS = {
   grid: {
     left: 16,
     right: 30,
-    top: 20,
+    top: 40,
     bottom: 48,
     containLabel: true
   },
@@ -76,6 +76,7 @@ const TREND_LINE_OPTIONS = {
     boundaryGap: false
   },
   yAxis: {
+    name: "个数",
     type: "value",
     axisLine: {
       lineStyle: {
@@ -335,12 +336,11 @@ export default {
 .monitor-chart {
   display: flex;
   justify-content: space-between;
-  height: 332px;
+  height: 400px;
   margin-top: 20px;
 
   &-left,
-  &-right,
-  &-error {
+  &-right{
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -367,26 +367,6 @@ export default {
   }
   &-error {
     margin-left: 20px;
-
-    // .monitor-error-table {
-    //   overflow: auto;
-    //   text-align: center;
-
-    //   .reason {
-    //       @include flex-align(center, flex-start);
-    //       color: $brand-primary;
-    //       cursor: pointer;
-
-    //       &:hover {
-    //         text-decoration: underline;
-    //       }
-
-    //       &:not(:last-of-type) {
-    //         margin-right: 24px;
-    //       }
-
-    //   }
-    // }
   }
 }
 </style>

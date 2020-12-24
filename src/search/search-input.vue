@@ -17,28 +17,29 @@
 import throttle from "lodash-es/throttle";
 
 export default {
-  name: 'SearchInput',
+  name: "SearchInput",
   data() {
     return {
-      inputFilter: '',
-    }
+      inputFilter: "",
+      drawVisible: false,
+    };
   },
   methods: {
     search: throttle(function() {
-      this.$emit('inputChange', this.inputFilter);
-    }, 1000),
-  },
-}
+      this.$emit("inputChange", this.inputFilter);
+    }, 1000)
+  }
+};
 </script>
 <style lang="scss" scoped>
-@import '@/styles/util.scss';
+@import "@/styles/util.scss";
 
 .search-input {
-  position: fixed;  
+  position: fixed;
   padding: 20px 0;
   z-index: 200;
   background-color: black;
-  width: 100% ;
+  width: 100%;
 }
 .search-input-group {
   position: relative;

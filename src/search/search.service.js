@@ -65,6 +65,22 @@ const SearchService = {
   getExportAllAsShapefile(requestBody){
     return http.post(`${prefix}/system/search/export/shapefile`,requestBody,{responseType: 'blob'})
   },
+  //购物车
+  addInShoppingTrolley(dataIdParams){
+    return http.put(`${prefix}/data/cart`,dataIdParams);
+  },
+  checkShoppingTrolley(page, size){
+    return http.get(`${prefix}/data/cart?page=${page}&size=${size}`)
+  },
+  deleteAllItemsShoppingTrolley(){
+    return http.delete(`${prefix}/data/cart`)
+  },
+  deleteSelectedItemsShoppingTrolley(dataIds){
+    return http.post(`${prefix}/data/cart/delete`,dataIds)
+  },
+  exportShoppingTrolley(path){
+    return http.post(`${prefix}/data/cart/export`, path)
+  },
 };
 
 export default SearchService;
