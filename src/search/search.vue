@@ -7,7 +7,7 @@
         class="search-content-left"
         :style="{ height: clientHeight - 240 + 'px' }"
       >
-        <search-menu @menuChange="onMenuChange"></search-menu>
+        <search-menu @menuChange="onMenuChange" ref="menu"></search-menu>
       </div>
       <div
         class="search-content-right"
