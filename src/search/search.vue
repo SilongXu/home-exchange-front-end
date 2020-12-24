@@ -29,6 +29,10 @@
         ></search-result>
       </div>
     </div>
+    <span class="drawerIcon" @click="checkShoppingTrolley()">
+      <svg-icon icon="angle-left" size="16px"></svg-icon>
+    </span>
+    <drawer ref="drawer"></drawer>
   </div>
 </template>
 <script>
@@ -36,6 +40,8 @@ import SearchFilter from "./search-filter";
 import SearchInput from "./search-input";
 import SearchMenu from "./search-menu";
 import SearchResult from "./search-result";
+import drawer from "./modal/drawer";
+import apiService from "./search.service";
 
 export default {
   name: "Search",
@@ -43,7 +49,8 @@ export default {
     SearchFilter,
     SearchInput,
     SearchMenu,
-    SearchResult
+    SearchResult,
+    drawer
   },
   data: () => {
     return {
@@ -80,6 +87,14 @@ export default {
     }
   },
   methods: {
+    checkShoppingTrolley(){
+      apiService.checkShoppingTrolley(this.$refs.drawer.pagination.page, this.$refs.drawer.pagination.size)
+      .then((data) => {
+        this.$refs.drawer.pagination = data.data.pagination
+        this.$refs.drawer.drawerTableData = data.data.data;
+        this.$refs.drawer.drawerVisible = true;
+      })
+    },
     //通过监听接收子节点传送来的数据
     acceptCountriesCache(countriesCache) {
       this.countriesCache = countriesCache ? countriesCache : [];
@@ -331,6 +346,15 @@ export default {
 
   &-filter {
     border-bottom: 1px solid $border-dark;
+  }
+}
+.drawerIcon {
+  position: fixed;
+  right: 0px;
+  bottom: 50%;
+  .svg-icon:hover {
+    fill: $brand-primary;
+    cursor: pointer;
   }
 }
 </style>

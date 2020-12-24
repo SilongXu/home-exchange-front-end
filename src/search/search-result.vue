@@ -30,14 +30,33 @@
         <el-button type="primary" size="mini" @click="goSearchMenuTemplate()">
           保存搜索条件
         </el-button>
-        <search-menu-template :visible="searchMenutemplateDialogVisible" @closeMenuTemplateDialog="closeMenuTemplateDialog" ref="searchMenuTemplate"></search-menu-template>
+        <search-menu-template
+          :visible="searchMenutemplateDialogVisible"
+          @closeMenuTemplateDialog="closeMenuTemplateDialog"
+          ref="searchMenuTemplate"
+        ></search-menu-template>
       </div>
       <div class="search-result-operation-right">
         <span class="search-result-operation-right-btn">
-          <el-button type="primary" size="mini" @click="exportAllAsExcel"> 导出全部为Excel </el-button>
-          <el-button type="primary" size="mini" @click="exportSelectedAsExcel"> 导出选中为Excel </el-button>
-          <el-button type="primary" size="mini" @click="exportAllAsShapefile">导出全部为Shapefile</el-button>
-          <el-button type="primary" size="mini" @click="exportSelectedAsShapefile"> 导出选中为Shapefile</el-button>
+          <el-button type="primary" size="mini" @click="exportAllAsExcel">
+            导出全部为Excel
+          </el-button>
+          <el-button type="primary" size="mini" @click="exportSelectedAsExcel">
+            导出选中为Excel
+          </el-button>
+          <el-button type="primary" size="mini" @click="exportAllAsShapefile"
+            >导出全部为Shapefile</el-button
+          >
+          <el-button
+            type="primary"
+            size="mini"
+            @click="exportSelectedAsShapefile"
+          >
+            导出选中为Shapefile</el-button
+          >
+          <el-button type="primary" size="mini" @click="addInShoppingTrolley"
+            >选中文件加入购物车</el-button
+          >
         </span>
         <span>
           <el-checkbox
@@ -145,7 +164,7 @@ export default {
     "add-tag-modal": () => import("./modal/add-tag"),
     "search-detail": () => import("./modal/search-detail"),
     "xml-detail": () => import("./modal/xml-detail"),
-    "search-menu-template": () => import("./modal/search-menu-template"),
+    "search-menu-template": () => import("./modal/search-menu-template")
   },
   props: ["filters"],
   data() {
@@ -157,33 +176,49 @@ export default {
       pagination: {
         page: 1,
         size: 10,
-        total: 0,
+        total: 0
       },
       resultLoading: false,
       selectAll: false, //是否全选
-      isIndeterminate: false,  //半选状态
-      searchResult: [], 
-      currentEntry: {}, 
-      checkedList: [],  //全选的数据列表,保存选中的项的dataId和productType数据,
-      searchConditions:null,
-      searchMenutemplateDialogVisible:false,
-      lockReconnectSearchResult: null,
+      isIndeterminate: false, //半选状态
+      searchResult: [],
+      currentEntry: {},
+      checkedList: [], //全选的数据列表,保存选中的项的dataId和productType数据,
+      searchConditions: null,
+      searchMenutemplateDialogVisible: false,
+      lockReconnectSearchResult: null
     };
   },
   mounted() {
     document.documentElement.scrollTop = 0;
   },
   methods: {
-    goSearchMenuTemplate(){
+    addInShoppingTrolley() {
+      apiService
+        .addInShoppingTrolley(this.checkedList)
+        .then(data => {
+          console.log(data);
+          this.$message({
+            message: "加入购物车成功",
+            type: "success"
+          });
+        })
+        .catch(e => {});
+    },
+
+    goSearchMenuTemplate() {
       this.searchMenutemplateDialogVisible = true;
     },
-    closeMenuTemplateDialog(){
+    closeMenuTemplateDialog() {
       this.searchMenutemplateDialogVisible = false;
     },
     changeBoxState(entry) {
       entry.checked = !entry.checked;
       if (entry.checked) {
-        this.checkedList.push({ dataId: entry.id, productType: entry.productType });
+        this.checkedList.push({
+          dataId: entry.id,
+          productType: entry.productType
+        });
       } else {
         for (var j = 0; j < this.checkedList.length; j++) {
           if (this.checkedList[j].dataId == entry.id) {
@@ -196,9 +231,12 @@ export default {
         this.isIndeterminate = false;
       } else {
         this.selectAll = false;
-        if (this.checkedList.length > 0 && this.checkedList.length < this.pagination.size) {
+        if (
+          this.checkedList.length > 0 &&
+          this.checkedList.length < this.pagination.size
+        ) {
           this.isIndeterminate = true;
-        }else{
+        } else {
           this.isIndeterminate = false;
         }
       }
@@ -218,7 +256,7 @@ export default {
           if (flag) {
             this.checkedList.push({
               dataId: this.searchResult[i].id,
-              productType: this.searchResult[i].productType,
+              productType: this.searchResult[i].productType
             });
           }
         }
@@ -229,49 +267,99 @@ export default {
           this.checkedList = [];
         }
       }
-      
+
       if (this.checkedList.length == this.pagination.size) {
         this.isIndeterminate = false;
       }
     },
-    exportSelectedAsExcel(){
-      apiService.getExportSelectedAsExcel(this.checkedList).then((href) => {
-        const blob = new Blob([href.data], {type: href.header['content-type']});
-        const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
-        saveAs(blob, fileName);
-      }).catch(() => {
-      });
+    exportSelectedAsExcel() {//判断是否选中
+      if(this.checkedList.length == 0){
+        this.$message("请勾选想要导出的数据");
+      }else{
+
+        this.$confirm("确认导出此" + this.checkedList.length + "条数据为Excel文件?")
+          .then(() => {
+            apiService
+              .getExportSelectedAsExcel(this.checkedList)
+              .then(href => {
+                const blob = new Blob([href.data], {
+                  type: href.header["content-type"]
+                });
+                const fileName = href.header["content-disposition"]
+                  .split(";")[1]
+                  .split("filename=")[1];
+                saveAs(blob, fileName);
+              })
+              .catch(() => {});
+          })
+          .catch(() => {});
+      }
     },
-    exportAllAsExcel(){
-      apiService.getExportAllAsExcel(this.searchConditions).then((href) => {
-        const blob = new Blob([href.data], {type: href.header['content-type']});
-        const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
-        saveAs(blob, fileName);
-      }).catch(() => {
-      });
+    exportAllAsExcel() {
+      this.$confirm("确认导出此" + this.pagination.total + "条数据为Excel文件?")
+        .then(() => {
+          apiService
+            .getExportAllAsExcel(this.searchConditions)
+            .then(href => {
+              const blob = new Blob([href.data], {
+                type: href.header["content-type"]
+              });
+              const fileName = href.header["content-disposition"]
+                .split(";")[1]
+                .split("filename=")[1];
+              saveAs(blob, fileName);
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
     },
-    exportSelectedAsShapefile(){
-      apiService.getExportSelectedAsShapefile(this.checkedList).then((href) => {
-        const blob = new Blob([href.data], {type: href.header['content-type']});
-        const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
-        saveAs(blob, fileName);
-      }).catch(() => {
-      });
+    exportSelectedAsShapefile() {//判断是否选中
+      if(this.checkedList.length == 0){
+        this.$message("请勾选想要导出的数据");
+      }else{
+
+        this.$confirm("确认导出此" + this.checkedList.length + "条数据为Shapefile文件?")
+          .then(() => {
+            apiService
+              .getExportSelectedAsShapefile(this.checkedList)
+              .then(href => {
+                const blob = new Blob([href.data], {
+                  type: href.header["content-type"]
+                });
+                const fileName = href.header["content-disposition"]
+                  .split(";")[1]
+                  .split("filename=")[1];
+                saveAs(blob, fileName);
+              })
+              .catch(() => {});
+          })
+          .catch(() => {});
+      }
     },
-    exportAllAsShapefile(){
-      apiService.getExportAllAsShapefile(this.searchConditions).then((href) => {
-        const blob = new Blob([href.data], {type: href.header['content-type']});
-        const fileName = href.header['content-disposition'].split(";")[1].split("filename=")[1];
-        saveAs(blob, fileName);
-      }).catch(() => {
-      });
+    exportAllAsShapefile() {
+      this.$confirm("确认导出此" + this.pagination.total + "条数据为Shapefile文件?")
+        .then(() => {
+          apiService
+            .getExportAllAsShapefile(this.searchConditions)
+            .then(href => {
+              const blob = new Blob([href.data], {
+                type: href.header["content-type"]
+              });
+              const fileName = href.header["content-disposition"]
+                .split(";")[1]
+                .split("filename=")[1];
+              saveAs(blob, fileName);
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
     },
     download(entry) {
       apiService
         .getDetailDownload(entry.id, entry.productType)
-        .then((href) => {
+        .then(href => {
           const blob = new Blob([href.data], {
-            type: href.header["content-type"],
+            type: href.header["content-type"]
           });
           const fileName = href.header["content-disposition"]
             .split(";")[1]
@@ -308,7 +396,7 @@ export default {
             this.tagDialogVisible = false;
             this.$message({
               message: "批量添加标签成功",
-              type: "success",
+              type: "success"
             });
           })
           .catch(() => {
@@ -342,15 +430,15 @@ export default {
       this.resultLoading = true;
       apiService
         .getSearchResults(page - 1 === -1 ? 0 : page - 1, size, searchParam)
-        .then((results) => {
+        .then(results => {
           this.resultLoading = false;
           if (results.data) {
             // this.searchResult = results.data.data
-            this.searchResult = results.data.data.map(function (item) {
+            this.searchResult = results.data.data.map(function(item) {
               item.checked = false;
               return item;
             });
-            this.searchResult.forEach((target) => {
+            this.searchResult.forEach(target => {
               if (target.fileSize > 1024) {
                 if (target.fileSize > 1024 * 1024) {
                   if (target.fileSize > 1024 * 1024 * 1024) {
@@ -371,23 +459,23 @@ export default {
             this.pagination = results.data.pagination || {
               page: 1,
               size: 10,
-              total: 0,
+              total: 0
             };
           }
           document.getElementsByClassName(
-            "search-content-right" 
+            "search-content-right"
           )[0].scrollTop = 0;
-          
+
           //把搜索结果传递给QA
           this.lockReconnectSearchResult = getLockReconnect();
-          if(this.lockReconnectSearchResult == true){
+          if (this.lockReconnectSearchResult == true) {
             this.$parent.$refs.filter.circleArea(0, 3, null);
             this.$parent.$refs.filter.circleArea(0, 4, this.searchResult);
           }
         })
         .catch(() => {});
-    },
-  },
+    }
+  }
 };
 </script>
 
