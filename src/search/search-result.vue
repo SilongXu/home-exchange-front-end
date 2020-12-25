@@ -469,8 +469,10 @@ export default {
           //把搜索结果传递给QA
           this.lockReconnectSearchResult = getLockReconnect();
           if (this.lockReconnectSearchResult == true) {
+            //清空所选的区域
             this.$parent.$refs.filter.circleArea(0, 3, null);
-            this.$parent.$refs.filter.circleArea(0, 4, this.searchResult);
+            //清空落位图,每次触发搜索结果之后,都会让数字地球清空落位图
+            this.$parent.$refs.filter.circleArea(0, 5, null);
           }
         })
         .catch(() => {});

@@ -9,7 +9,7 @@
   >
     <div>
       <span class="labelName">请输入新的名称:</span>
-      <el-input v-model="newName"></el-input>
+      <el-input v-model="newName" ref="nameInput"></el-input>
     </div>
     <span slot="footer">
       <el-button type="primary" @click="confirmAddDir">确认</el-button>
@@ -30,6 +30,11 @@ export default {
   methods: {
     onClose() {
       this.$emit("closeRenameDialog");
+    },
+    getFocus(){
+      this.$nextTick(function(){
+        this.$refs.nameInput.focus();
+      })
     },
     initInput(value){
       this.newName = value;
