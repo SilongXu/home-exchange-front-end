@@ -16,6 +16,7 @@
             lazy
             :load="loadTemplateTree"
             :props="treeProps"
+            :default-expanded-keys="[-1]"
             :expand-on-click-node="false"
             :render-content="renderSearchCondition"
             node-key="id"
@@ -48,6 +49,7 @@
       </span>
     </el-dialog>
     <add-directory
+      ref="addDir"
       :visible="addDirDialogVisible"
       :currentNodeParentId="addDirByParentId"
       @closeAddDirectoryDialog="closeAddDirectoryDialog"
@@ -110,6 +112,14 @@ export default {
 
       this.currentClickNodeId = node.data.id;
       this.currentClickNode = node;
+      
+      while (node.data.id != -1) {
+        if (node.data.nodeType == "DIR") {
+          this.newFilePathList.unshift(node.data.name);
+        }
+        node = node.parent;
+      }
+      this.newFilePath = this.newFilePathList.join("\\");
       //如果点击的是文件夹,就直接获取当前电机的路径,作为新建文件的保存路径;
       //如果点击的是文件,就把当前文件的名字填进input中,获取他上级的父节点的路径,更新当前文件的内容
       if (node.data.nodeType == "FILE") {
@@ -119,14 +129,6 @@ export default {
         this.updateFile = false;
         this.newFileName = "";
       }
-
-      while (node.data.id != -1) {
-        if (node.data.nodeType == "dir") {
-          this.newFilePathList.unshift(node.data.name);
-        }
-        node = node.parent;
-      }
-      this.newFilePath = this.newFilePathList.join("\\");
     },
     onClose() {
       this.$emit("closeMenuTemplateDialog");
@@ -134,6 +136,7 @@ export default {
     addDir(node) {
       this.addDirByParentId = node.data.id;
       this.addDirDialogVisible = true;
+      this.$refs.addDir.getFocus();
     },
     closeAddDirectoryDialog() {
       this.addDirDialogVisible = false;
@@ -151,6 +154,7 @@ export default {
       this.renameDirOrFileDialogVisible = true;
       this.renameTreeNode = node;
       this.$refs.rename.initInput(node.data.name)
+      this.$refs.rename.getFocus();
     },
     closeRenameDialog(){
       this.renameDirOrFileDialogVisible = false;
@@ -223,7 +227,16 @@ export default {
         apiService
           .getTemplateTreeNodeByParentId(-1)
           .then((tree) => {
-            return resolve(tree.data);
+            let responseData = tree.data;
+            let result = responseData.map(function(item,index){
+              if(item.nodeType == 'FILE'){
+                item.isLeaf = true;
+              }else{
+                item.isLeaf = false;
+              }
+              return item;
+            })
+            return resolve(result);
           })
           .catch(() => {
             resolve([]);
@@ -231,11 +244,21 @@ export default {
         return;
       }
 
-      if (!node.isLeaf) {
+      if (!node.data.isLeaf) {
         apiService
           .getTemplateTreeNodeByParentId(node.data.id)
           .then((tree) => {
-            return resolve(tree.data);
+            let responseData = tree.data;
+            let result = responseData.map(function(item,index){
+              if(item.nodeType == 'FILE'){
+                item.isLeaf = true;
+              }else{
+                item.isLeaf = false;
+              }
+              return item;
+            })
+
+            return resolve(result);
           })
           .catch(() => {
             resolve([]);

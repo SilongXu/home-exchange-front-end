@@ -34,7 +34,14 @@
           type="primary"
           size="small"
           style="width:500px"
+          clearable
         ></el-input>
+        <el-button type="primary" @click="resetDigitalEarth()" size="small"
+          >清空落位图</el-button
+        >
+        <el-button type="primary" @click="createDigitalEarth()" size="small"
+          >生成落位图</el-button
+        >
       </div>
     </div>
     <div
@@ -661,7 +668,12 @@ export default {
         this.circleArea(0, 2, null);
       }
     },
-
+    resetDigitalEarth(){
+      this.circleArea(0, 5, null);
+    },
+    createDigitalEarth(){
+      this.circleArea(0, 4, this.$parent.getFilterForResult());
+    },
     shapeConvert(getdata) {
       let pointsStr = getdata.argument.points;
       pointsStr = pointsStr.replace(/\s/g, "");
@@ -700,7 +712,13 @@ export default {
       shape = shape + ")";
       return shape;
     },
-
+    /*flag标志字段,
+      flag == 1,按点搜索;
+      flag == 2,按区域搜索;
+      flag == 3,清空所选的区域;
+      flag == 4,把搜索结果发送给数字地球;
+      flag == 5,清空数字地球绘制的落位图;
+      */
     circleArea(index, flag, args) {
       console.log(flag);
       let name = "SG";
@@ -737,6 +755,12 @@ export default {
           name: name,
           use: "DataTransmit",
           argument: args
+        };
+      }else if (flag == 5) {
+        params = {
+          name: name,
+          use: "Clear",
+          argument: "",
         };
       }
       this.websocket = createWebSocket(this.wsUri);

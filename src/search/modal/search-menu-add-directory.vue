@@ -9,7 +9,7 @@
   >
     <div>
       <span class="labelName">请输入目录的名称:</span>
-      <el-input v-model="dirName"></el-input>
+      <el-input v-model="dirName" ref="nameInput" id="nameInput"></el-input>
     </div>
     <span slot="footer">
       <el-button type="primary" @click="confirmAddDir">确认</el-button>
@@ -30,6 +30,11 @@ export default {
   methods: {
     onClose() {
       this.$emit("closeAddDirectoryDialog");
+    },
+    getFocus(){
+      this.$nextTick(function(){
+        this.$refs.nameInput.focus()
+      })
     },
     confirmAddDir() {
       //设置请求体

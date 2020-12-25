@@ -23,6 +23,7 @@
         :load="loadTemplateTree"
         :props="treeProps"
         node-key="id"
+        :default-expanded-keys="[-1]"
         :expand-on-click-node="false"
         :render-content="renderSearchCondition"
         @node-click="nodeClick"
@@ -32,6 +33,7 @@
   </el-tabs>
 </template>
 <script>
+import { forIn } from 'lodash-es';
 import apiService from "./search.service";
 
 export default {
@@ -74,15 +76,21 @@ export default {
     },
     getFileContent(node) {
       this.$parent.$refs.result.$refs.searchMenuTemplate.getFileContent(node);
-      event.stopPropagation();
+      if(event){
+         event.stopPropagation();
+      }
     },
     renameDirOrFile(node,event) {
       this.$parent.$refs.result.$refs.searchMenuTemplate.renameDirOrFile(node);
-      event.stopPropagation();
+      if(event){
+         event.stopPropagation();
+      }
     },
     deleteDir(node) {
       this.$parent.$refs.result.$refs.searchMenuTemplate.deleteDir(node);
-      event.stopPropagation();
+      if(event){
+         event.stopPropagation();
+      }
     },
     loadNode(node, resolve) {
       if (node.level === 0) {
@@ -122,7 +130,19 @@ export default {
         apiService
           .getTemplateTreeNodeByParentId(-1)
           .then((tree) => {
-            return resolve(tree.data);
+            //后端的数据中没有设置isleaf属性,手动遍历response返回的数组,
+            //如果当前对象的nodeType是FILE,则设置isLeaf为true;
+            //如果当前对象的nodeType是DIR,则设置isLeaf为false;
+            let responseData = tree.data;
+            let result = responseData.map(function(item,index){
+              if(item.nodeType == 'FILE'){
+                item.isLeaf = true;
+              }else{
+                item.isLeaf = false;
+              }
+              return item;
+            })
+            return resolve(result);
           })
           .catch(() => {
             resolve([]);
@@ -130,11 +150,21 @@ export default {
         return;
       }
 
-      if (!node.isLeaf) {
+      if (!node.data.isLeaf) {
         apiService
           .getTemplateTreeNodeByParentId(node.data.id)
           .then((tree) => {
-            return resolve(tree.data);
+            let responseData = tree.data;
+            let result = responseData.map(function(item,index){
+              if(item.nodeType == 'FILE'){
+                item.isLeaf = true;
+              }else{
+                item.isLeaf = false;
+              }
+              return item;
+            })
+
+            return resolve(result);
           })
           .catch(() => {
             resolve([]);
