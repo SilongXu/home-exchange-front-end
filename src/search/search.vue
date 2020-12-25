@@ -88,11 +88,11 @@ export default {
   },
   methods: {
     checkShoppingTrolley(){
+      this.$refs.drawer.drawerVisible = true;
       apiService.checkShoppingTrolley(this.$refs.drawer.pagination.page, this.$refs.drawer.pagination.size)
       .then((data) => {
         this.$refs.drawer.pagination = data.data.pagination
         this.$refs.drawer.drawerTableData = data.data.data;
-        this.$refs.drawer.drawerVisible = true;
       })
     },
     //通过监听接收子节点传送来的数据

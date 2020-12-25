@@ -1,5 +1,10 @@
 <template>
-  <el-drawer :visible.sync="drawerVisible" size="45%" title="购物车">
+  <el-drawer
+    :visible.sync="drawerVisible"
+    size="45%"
+    title="购物车"
+    :before-close="handleCloseDrawer"
+  >
     <div class="drawer-operation">
       <div class="drawer-operation-top">
         <el-input v-model="exportPath" placeholder="请输入导出路径"></el-input>
@@ -16,11 +21,11 @@
         >
       </div>
     </div>
-    <div
-      class="drawer-content_Pagination"
-      :style="{ height: clientHeight - 200 + 'px' }"
-    >
-      <div class="drawer-content">
+    <div class="drawer-content_Pagination">
+      <div
+        class="drawer-content"
+        :style="{ height: clientHeight - 240 + 'px' }"
+      >
         <el-table
           :data="drawerTableData"
           style="width: 100%"
@@ -35,7 +40,7 @@
           <el-table-column type="selection" min-width="10%"> </el-table-column>
         </el-table>
       </div>
-      <div class="drawer-pagination">
+      <div class="drawer-pagination" style="float:right">
         <el-pagination
           @size-change="onSizeChange"
           @current-change="onCurrentPage"
@@ -92,6 +97,13 @@ export default {
     }
   },
   methods: {
+    handleCloseDrawer(done) {
+      this.$confirm("确认关闭购物车？")
+        .then(() => {
+          done()
+        }).catch(() =>{
+        })
+    },
     resetPagination() {
       this.pagination = {
         page: 1,
@@ -108,16 +120,42 @@ export default {
         });
     },
     CreateExportMission() {
-      this.resetPagination();
-      apiService.exportShoppingTrolley(this.exportPath).then(data => {
-        this.$message({
-          message: "创建导出任务成功",
-          type: "success"
+      if (this.exportPath == "") {
+        this.$message("导入路径不能为空");
+      } else {
+        apiService.exportShoppingTrolley(this.exportPath).then(data => {
+          if (data.data.result == "true") {
+            // const dataMsg = data.data.msg.split("，");
+            // console.log(dataMsg);
+            // const newDatas = []
+            // const h = this.$createElement
+            // for (const i in dataMsg){
+            //   newDatas.push(h('p', null, dataMsg[i]))
+            // }
+            this.$confirm("提示", {
+              title: "提示",
+              // message: h('div', null, newDatas),
+              message: data.data.msg,
+              showCancelButton: false,
+              confirmButtonText: "确定",
+              // cancelButtonText: '取消',
+              type: "success"
+            });
+          } else if ((data.data.result = "false")) {
+            this.$confirm("导出失败", {
+              title: "导出失败",
+              // message: h('div', null, newDatas),
+              message: data.data.msg,
+              showCancelButton: false,
+              confirmButtonText: "确定",
+              type: "error"
+            });
+          }
+          this.pagination.page = 1;
+          this.pagination.size = 10;
+          this.updateDrawer();
         });
-        this.pagination.page = 1;
-        this.pagination.size = 10;
-        this.updateDrawer();
-      });
+      }
     },
     ClearShoppingTrolley() {
       apiService
@@ -130,7 +168,9 @@ export default {
         .catch(e => {});
     },
     handleSelectionChange(val) {
+      this.checkedList = [];
       this.checkedList = val;
+      this.SelectedDeleteList = [];
       this.checkedList.forEach(item => {
         this.SelectedDeleteList.push(item.id);
       });
@@ -184,7 +224,15 @@ export default {
   }
 }
 .drawer-content_Pagination {
-  overflow: auto;
+  position: relative;
+  height: calc(100vh - 250px);
+  bottom: 2px;
+  .drawer-content {
+    overflow: auto;
+  }
+  .drawer-pagination {
+    position: relative;
+  }
 }
 ::v-deep :focus {
   outline: 0;

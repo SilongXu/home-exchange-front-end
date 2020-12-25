@@ -438,24 +438,6 @@ export default {
               item.checked = false;
               return item;
             });
-            this.searchResult.forEach(target => {
-              if (target.fileSize > 1024) {
-                if (target.fileSize > 1024 * 1024) {
-                  if (target.fileSize > 1024 * 1024 * 1024) {
-                    target.fileSize = target.fileSize / (1024 * 1024 * 1024);
-                    target.fileSize = parseInt(target.fileSize) + "GB";
-                  } else {
-                    target.fileSize = target.fileSize / (1024 * 1024);
-                    target.fileSize = parseInt(target.fileSize) + "MB";
-                  }
-                } else {
-                  target.fileSize = target.fileSize / 1024;
-                  target.fileSize = parseInt(target.fileSize) + "KB";
-                }
-              } else {
-                target.fileSize = parseInt(target.fileSize) + "bytes";
-              }
-            });
             this.pagination = results.data.pagination || {
               page: 1,
               size: 10,

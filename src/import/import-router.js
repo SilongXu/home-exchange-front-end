@@ -4,6 +4,7 @@ import ImportList from './import-list';
 import ImportNew from './import-new';
 import ImportNewSpecial from './import-new-special';
 import ImportNewBatch from './import-new-batch'
+import exportStat from "./export-stat"
 
 export default new Router({
   routes: [
@@ -26,6 +27,11 @@ export default new Router({
       path: '/import/newBatch',
       name: 'newBatch',
       component: ImportNewBatch
+    },
+    {
+      path: '/import/exportStat',
+      name: 'exportStat',
+      component: exportStat
     }
   ]
 })
