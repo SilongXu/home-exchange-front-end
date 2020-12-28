@@ -54,8 +54,17 @@
       :currentNodeParentId="addDirByParentId"
       @closeAddDirectoryDialog="closeAddDirectoryDialog"
     ></add-directory>
-    <rename-dir-or-file :visible="renameDirOrFileDialogVisible" ref="rename" @closeRenameDialog="closeRenameDialog" :currentTreeNode="renameTreeNode"></rename-dir-or-file>
-    <file-content :visible="fileContentDialogVisible" :fileContent="fileContent" @closeFileContentDialog="closeFileContentDialog"></file-content>
+    <rename-dir-or-file
+      :visible="renameDirOrFileDialogVisible"
+      ref="rename"
+      @closeRenameDialog="closeRenameDialog"
+      :currentTreeNode="renameTreeNode"
+    ></rename-dir-or-file>
+    <file-content
+      :visible="fileContentDialogVisible"
+      :fileContent="fileContent"
+      @closeFileContentDialog="closeFileContentDialog"
+    ></file-content>
     <delete-dirctory
       :visible="deleteDirDialogVisible"
       @closeDeleteDirectoryDialog="closeDeleteDirectoryDialog"
@@ -71,6 +80,7 @@ export default {
   props: ["visible"],
   data() {
     return {
+      //参数列表:指定标签节点的属性与对象节点的属性对应
       treeProps: {
         id: "id",
         label: "name",
@@ -78,48 +88,45 @@ export default {
         disabled: "disabled",
         isLeaf: "isLeaf",
       },
+      //控制弹窗的显示与隐藏
       addDirDialogVisible: false,
       deleteDirDialogVisible: false,
-      renameDirOrFileDialogVisible:false,
-      fileContentDialogVisible:false,
+      renameDirOrFileDialogVisible: false,
+      fileContentDialogVisible: false,
 
       deleteTreeNodeById: "", //通过此id删除节点
       deleteTreeNodeName: "", //删除树节点的名字
 
       addDirByParentId: "", //添加文件夹时需要的父节点的id
 
-      newFilePathList: [],
+      newFilePathList: [], //保存文件的路径
       newFilePath: "",
-      newFileName: "",
+      newFileName: "", //新建文件的名字
       currentClickNodeId: "", //保存当前点击节点,供创建文件或者更新文件之后刷新节点使用
       currentClickNode: "",
       updateFile: false, //作为添加文件和更新文件的标志
-      renameTreeNode:'', //通过当前节点的id重命名当前节点的名字,然后通过此节点找到父节点并刷新
-      
-      fileContent:''
+      renameTreeNode: "", //通过当前节点的id重命名当前节点的名字,然后通过此节点找到父节点并刷新
+
+      fileContent: "", //保存文件的内容,用于显示搜索的条件
     };
   },
+  //懒加载组件
   components: {
     "add-directory": () => import("./search-menu-add-directory"),
     "delete-dirctory": () => import("./search-menu-delete-directory"),
-    "rename-dir-or-file":()=>import("./search-menu-rename"),
-    'file-content':()=>import("./search-menu-file-content"),
+    "rename-dir-or-file": () => import("./search-menu-rename"),
+    "file-content": () => import("./search-menu-file-content"),
   },
   methods: {
+    //点击树节点
     onNodeClick(obj, node) {
+      //每次点击的时候重置文件名和勒颈路径
       this.newFilePath = "";
       this.newFilePathList = [];
-
+      //保存当前点击节点
       this.currentClickNodeId = node.data.id;
       this.currentClickNode = node;
-      
-      while (node.data.id != -1) {
-        if (node.data.nodeType == "DIR") {
-          this.newFilePathList.unshift(node.data.name);
-        }
-        node = node.parent;
-      }
-      this.newFilePath = this.newFilePathList.join("\\");
+
       //如果点击的是文件夹,就直接获取当前电机的路径,作为新建文件的保存路径;
       //如果点击的是文件,就把当前文件的名字填进input中,获取他上级的父节点的路径,更新当前文件的内容
       if (node.data.nodeType == "FILE") {
@@ -129,34 +136,47 @@ export default {
         this.updateFile = false;
         this.newFileName = "";
       }
+      //把当前节点的nodeType是DIR的父节点的名字放入newFilePathList中
+      while (node.data.id != -1) {
+        if (node.data.nodeType == "DIR") {
+          this.newFilePathList.unshift(node.data.name);
+        }
+        node = node.parent;
+      }
+      //生成路径
+      this.newFilePath = this.newFilePathList.join("\\");
     },
+    //关闭弹窗
     onClose() {
       this.$emit("closeMenuTemplateDialog");
     },
+    //添加文件
     addDir(node) {
       this.addDirByParentId = node.data.id;
       this.addDirDialogVisible = true;
       this.$refs.addDir.getFocus();
     },
+    //关闭添加文件夹弹窗
     closeAddDirectoryDialog() {
       this.addDirDialogVisible = false;
     },
-    getFileContent(node){
+    //获取搜索文件的内容
+    getFileContent(node) {
       this.fileContentDialogVisible = true;
-      apiService.getFileContentById(node.data.id).then((response)=>{
+      apiService.getFileContentById(node.data.id).then((response) => {
         this.fileContent = response.data;
-      })
+      });
     },
-    closeFileContentDialog(){
+    closeFileContentDialog() {
       this.fileContentDialogVisible = false;
     },
-    renameDirOrFile(node){
+    renameDirOrFile(node) {
       this.renameDirOrFileDialogVisible = true;
       this.renameTreeNode = node;
-      this.$refs.rename.initInput(node.data.name)
+      this.$refs.rename.initInput(node.data.name);
       this.$refs.rename.getFocus();
     },
-    closeRenameDialog(){
+    closeRenameDialog() {
       this.renameDirOrFileDialogVisible = false;
     },
     deleteDir(node) {
@@ -167,6 +187,7 @@ export default {
     closeDeleteDirectoryDialog() {
       this.deleteDirDialogVisible = false;
     },
+    //确定执行添加操作
     confirmOperation() {
       let request = {};
       if (!this.updateFile) {
@@ -180,11 +201,13 @@ export default {
           apiService.createFileByParentId(request).then((response) => {
             if (response.data.result == "true") {
               this.refreshNode(this.currentClickNodeId);
-              // this.onClose();
             }
           });
         } else {
-          alert("新建的文件名不能为空");
+          this.$alert("新建的文件名不能为空!", "警告", {
+            confirmButtonText: "确定",
+            callback: () => {},
+          });
         }
       } else {
         //更新已有的文件内容
@@ -192,14 +215,26 @@ export default {
         request.content = JSON.stringify(
           this.$parent.$parent.getFilterForResult()
         );
-        apiService.updateCurrentFileContent(request).then((response) => {
-          if (response.data.result == "true") {
-            this.refreshNode(this.currentClickNode.parent.data.id);
-            // this.onClose();
+        this.$confirm(
+          `确认要覆盖 “${this.currentClickNode.data.name}” 文件下的搜索条件吗?`,
+          "更新搜索条件",
+          {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "error",
           }
-        });
+        )
+          .then(() => {
+            apiService.updateCurrentFileContent(request).then((response) => {
+              if (response.data.result == "true") {
+                this.refreshNode(this.currentClickNode.parent.data.id);
+              }
+            });
+          })
+          .catch(() => {});
       }
     },
+    //刷新节点
     refreshNode(nodeId) {
       let leftConditionTree = this.$parent.$parent.$refs.menu.$refs
         .searchConditionTree;
@@ -219,6 +254,7 @@ export default {
         }
       }
     },
+    //懒加载树节点的办法
     loadTemplateTree(node, resolve) {
       if (node.level === 0) {
         return resolve([{ name: "全部", id: -1 }]);
@@ -228,14 +264,14 @@ export default {
           .getTemplateTreeNodeByParentId(-1)
           .then((tree) => {
             let responseData = tree.data;
-            let result = responseData.map(function(item,index){
-              if(item.nodeType == 'FILE'){
+            let result = responseData.map(function (item, index) {
+              if (item.nodeType == "FILE") {
                 item.isLeaf = true;
-              }else{
+              } else {
                 item.isLeaf = false;
               }
               return item;
-            })
+            });
             return resolve(result);
           })
           .catch(() => {
@@ -249,14 +285,14 @@ export default {
           .getTemplateTreeNodeByParentId(node.data.id)
           .then((tree) => {
             let responseData = tree.data;
-            let result = responseData.map(function(item,index){
-              if(item.nodeType == 'FILE'){
+            let result = responseData.map(function (item, index) {
+              if (item.nodeType == "FILE") {
                 item.isLeaf = true;
-              }else{
+              } else {
                 item.isLeaf = false;
               }
               return item;
-            })
+            });
 
             return resolve(result);
           })
