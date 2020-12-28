@@ -9,7 +9,11 @@
   >
     <div>
       <span class="labelName">请输入新的名称:</span>
-      <el-input v-model="newName" ref="nameInput"></el-input>
+      <el-input
+        v-model="newName"
+        ref="nameInput"
+        @keyup.enter.native="confirmAddDir"
+      ></el-input>
     </div>
     <span slot="footer">
       <el-button type="primary" @click="confirmAddDir">确认</el-button>
@@ -21,7 +25,7 @@
 <script>
 import apiService from "@/search/search.service";
 export default {
-  props: ["visible",'currentTreeNode'],
+  props: ["visible", "currentTreeNode"],
   data() {
     return {
       newName: "",
@@ -31,25 +35,30 @@ export default {
     onClose() {
       this.$emit("closeRenameDialog");
     },
-    getFocus(){
-      this.$nextTick(function(){
+    getFocus() {
+      this.$nextTick(function () {
         this.$refs.nameInput.focus();
-      })
+      });
     },
-    initInput(value){
+    initInput(value) {
       this.newName = value;
     },
     confirmAddDir() {
       if (this.newName) {
-        apiService.renameDirOrFileById(this.currentTreeNode.data.id,this.newName).then((response)=>{
-          if(response.data.result == 'true'){
-             this.refreshNode(this.currentTreeNode.parent.data.id);
-             this.newName = '';
-             this.onClose();
-          }
-        })
+        apiService
+          .renameDirOrFileById(this.currentTreeNode.data.id, this.newName)
+          .then((response) => {
+            if (response.data.result == "true") {
+              this.refreshNode(this.currentTreeNode.parent.data.id);
+              this.newName = "";
+              this.onClose();
+            }
+          });
       } else {
-        alert("输入的文件夹名字不能为空");
+        this.$alert("重命名文件名不能为空!", "警告", {
+          confirmButtonText: "确定",
+          callback: () => {},
+        });
       }
     },
     refreshNode(nodeId) {
