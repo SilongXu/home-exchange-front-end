@@ -9,7 +9,12 @@
   >
     <div>
       <span class="labelName">请输入目录的名称:</span>
-      <el-input v-model="dirName" ref="nameInput" id="nameInput"></el-input>
+      <el-input
+        v-model="dirName"
+        ref="nameInput"
+        id="nameInput"
+        @keyup.enter.native="confirmAddDir"
+      ></el-input>
     </div>
     <span slot="footer">
       <el-button type="primary" @click="confirmAddDir">确认</el-button>
@@ -31,10 +36,10 @@ export default {
     onClose() {
       this.$emit("closeAddDirectoryDialog");
     },
-    getFocus(){
-      this.$nextTick(function(){
-        this.$refs.nameInput.focus()
-      })
+    getFocus() {
+      this.$nextTick(function () {
+        this.$refs.nameInput.focus();
+      });
     },
     confirmAddDir() {
       //设置请求体
@@ -47,7 +52,7 @@ export default {
         apiService.createDirByParentId(request).then((response) => {
           if (response.data.result === "true") {
             //刷新节点
-            this.refreshNode(this.currentNodeParentId)
+            this.refreshNode(this.currentNodeParentId);
             //添加成功后,清空input
             this.dirName = "";
             //添加成功后关闭dialog
@@ -55,7 +60,10 @@ export default {
           }
         });
       } else {
-        alert("输入的文件夹名字不能为空");
+        this.$alert("新建的文件名不能为空!", "警告", {
+          confirmButtonText: "确定",
+          callback: () => {},
+        });
       }
     },
     refreshNode(nodeId) {
