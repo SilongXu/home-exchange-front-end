@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     handleTabClick(tab){
-      console.log(tab);
+      this.$refs.export.arrayProductType = [];
       if(tab.paneName == "export"){
         this.$refs.export.search();
         

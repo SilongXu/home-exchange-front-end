@@ -77,6 +77,7 @@
         <el-button type="primary" @click="goExportStas">导出统计 > </el-button>
       </div>
     </div>
+
     <div class="export-bottomSide">
       <el-table :data="exportTableData" @row-click="getCurrentRowMsg">
         <el-table-column
@@ -102,8 +103,19 @@
 
         <el-table-column label="产品类型" prop="productType" min-width="150px">
           <template slot-scope="scope">
-            <span class="rowProductType">
-              {{fetchProductType(scope.row.flowNo)}}
+            <span>
+              <el-collapse v-model="scope.$index" >
+                <el-collapse-item :name="scope.row.productType">
+                  <template slot="title">
+                    <span v-text="scope.row.productType">
+                    </span>
+                  </template>   
+                  <div v-for="collapseItem in arrayProductType[scope.$index]">
+                    {{collapseItem}}
+                  </div>
+                </el-collapse-item>
+              </el-collapse>
+              <!-- {{JSON.stringify(arrayProductType[scope.$index])}} -->
 
             </span>
           </template>
@@ -111,10 +123,22 @@
         <el-table-column
           label="数据ID"
           prop="dataId"
-          min-width="150px">
-          <template>
-            <span @click="fetchDataId(scope.row.flowNo)">
+          min-width="300px">
+          <template slot-scope="scope">
+            <span>
+              <!-- {{JSON.stringify(arrayDataId[scope.$index])}} -->
+              <el-collapse v-model="scope.$index">
+                <el-collapse-item :name="scope.row.dataId">
+                  <template slot="title">
+                    <span v-text="scope.row.dataId">
 
+                    </span>
+                  </template>
+                  <div v-for="collapseItem in arrayDataId[scope.$index]">
+                    {{collapseItem}}
+                  </div>
+                </el-collapse-item>
+              </el-collapse>
             </span>
           </template>
         </el-table-column>
@@ -133,7 +157,7 @@
         <el-table-column
           label="创建时间"
           prop="createTime"
-          min-width="300px"
+          min-width="200px"
         ></el-table-column>
         <el-table-column label="任务状态" prop="resultType" min-width="100px">
           <template slot-scope="scope">
@@ -263,9 +287,17 @@ export default {
         workNumber: null
       },
       flowNo: null,
-      paramsDataIdProductType: {
-        flowNo: ""
+
+      objProductType: {},
+      arrayProductType: [],
+      objDataId: {},
+      arrayDataId: [],
+
+      productTypeProps: {
+        children: '',
+        label: '',
       },
+      arrayDataId: [],
     };
   },
   mounted() {
@@ -288,15 +320,31 @@ export default {
           document.getElementsByClassName("export-bottomSide")[0].scrollTop = 0;
           this.pagination.total = res.data.detail.total;
           this.exportTableData = res.data.detail.list;
-          // .map(item => {
-          //   return {
-          //     ...item,
-          //     taskTypeDesc: this.getSourceTypeDesc(item.taskType),
-          //     taskModeDesc: this.getResultTypeDesc(item.taskMode),
-          //     createTimeDesc: moment(item.createTime).format("YYYY-MM-DD HH:mm:ss")
-          //   };
-          // });
-          // document.getElementsByTagName('rowProductType')[0].click();
+
+          this.exportTableData.forEach((list) => {
+            const obj = {flowNo: list.flowNo}
+            apiService.getExportProductTypeAndDataId(obj)
+            .then((data) => {
+              
+              // console.log(data.data.detail.list);
+              this.objProductType={}
+              this.objDataId ={}
+              data.data.detail.list.forEach((itemList,index) => {
+                this.objProductType.[index]=itemList.productType
+                this.objDataId.[index] = itemList.dataId
+                // this.objDataId.(index) = itemList.dataId
+              })
+              // console.log(this.objProductType);
+              this.arrayProductType.push(this.objProductType);
+              this.arrayDataId.push(this.objDataId);
+              // console.log(this.arrayProductType);
+              console.log(this.arrayDataId);
+            })
+            
+          })
+          // this.arrayDataId.push(this.objDataId);
+          // console.log(this.arrayProductType);
+
         });
     },
     getSourceTypeDesc(taskType) {
@@ -405,31 +453,6 @@ export default {
       }
       return obj;
     },
-
-    fetchProductType(No){
-      const obj = {flowNo: No}
-      const objProductTypeList = [];
-      apiService.getExportProductTypeAndDataId(obj)
-      .then((data) => {
-        console.log(data.data.detail.list);
-        data.data.detail.list.forEach((item) => {
-          objProductTypeList.push(item.productType)
-        })
-        // console.log(objProductTypeList)
-        return objProductTypeList;
-      })
-    },
-    fetchDataId(No){
-      const obj = {flowNo: No}
-      const objDataId = [];
-      apiService.getExportProductTypeAndDataId(obj)
-      .then((data) => {
-        data.data.detail.list.forEach((item) => {
-          objDataId.push(item.dataId)
-        })
-        return objDataId;
-      })
-    }
   }
 };
 </script>
@@ -475,5 +498,8 @@ export default {
 }
 ::v-deep .el-table th > .cell {
   padding: 0 28px;
+}
+::v-deep .el-collapse{
+  border: 0px;
 }
 </style>
