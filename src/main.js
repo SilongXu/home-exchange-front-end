@@ -2,22 +2,42 @@ import Vue from 'vue'
 import ElementUI from 'element-ui'
 import './styles/index.scss'
 import echarts from 'echarts'
-import Shared from './shared'
+import App from './app.vue'
 import router from './router'
-import app from './app.vue'
-import store from './store';
-import './shared/dialogDrag';
+import store from './store'
+import Shared from './shared'
+import viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
 
 Vue.use(ElementUI)
 Vue.prototype.$echarts = echarts
 Vue.use(Shared)
 
-new Vue({
-  render: h => h(app),
-  store,
-  router
-}).$mount('#app')
+Vue.use(viewer)
+viewer.setDefaults({
+  Options: { 
+    'inline': true, 
+    'button': true, 
+    'navbar': false, 
+    'title': false, 
+    'toolbar': false, 
+    'tooltip': false, 
+    'movable': false, 
+    'zoomable': true, 
+    'rotatable': true, 
+    'scalable': true, 
+    'transition': true, 
+    'fullscreen': false, 
+    'keyboard': true, 
+    'url': 'data-source' 
+  }
 
-location.hash = '/search';
+})
+
+new Vue({
+  router,
+  store,
+  render: h => h(App)
+}).$mount('#app')
 
 Vue.config.productionTip = false

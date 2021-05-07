@@ -1,47 +1,5 @@
 @import './variables.scss';
 
-/* Color
--------------------------- */
-/// color|1|Brand Color|0
-$--color-primary: $brand-primary;
-/// color|1|Background Color|4
-$--color-white: $bg-light;
-
-/// color|1|Font Color|2
-$--color-text-primary: $text-default;
-/// color|1|Font Color|2
-$--color-text-regular: $text-default;
-/// color|1|Font Color|2
-$--color-text-secondary: $text-mute;
-/// color|1|Font Color|2
-$--color-text-placeholder: $text-mute;
-
-/// color|1|Border Color|3
-$--border-color-base: $border-default;
-/// color|1|Border Color|3
-$--border-color-light: $border-default;
-/// color|1|Border Color|3
-$--border-color-lighter: $border-default;
-/// color|1|Border Color|3
-$--border-color-extra-light: $border-default;
-
-// Background
-/// color|1|Background Color|4
-$--background-color-base: $bg-hover;
-
-/* DatePicker
---------------------------*/
-$--datepicker-inner-border-color: $border-default;
-
-/* Checkbox
--------------------------- */
-/// color||Color|0
-$--checkbox-checked-icon-color: $text-light;
-
-/* Button
--------------------------- */
-/// color||Color|0
-$--button-primary-font-color: $text-light;
 
 /* 改变 icon 字体路径变量，必需 */
 $--font-path: '~element-ui/lib/theme-chalk/fonts';

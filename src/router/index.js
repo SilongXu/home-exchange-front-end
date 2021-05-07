@@ -1,62 +1,60 @@
 import Vue from 'vue'
-import Router from 'vue-router'
-import layout from '@/layout/layout'
+import VueRouter from 'vue-router'
 
-const search = () => import(/* webpackChunkName: "search" */ '@/search/search')
-const _import = () => import(/* webpackChunkName: "import" */ '@/import/import')
-const menu = () => import(/* webpackChunkName: "menu" */ '@/menu/menu')
-const monitor = () => import(/* webpackChunkName: "monitor" */ '@/monitor/monitor')
-const userAuthority = () => import(/* webpackChunkName: "userAuthority" */ '@/userAuthority/userAuthority')
-const transfer = () => import(/* webpackChunkName: "transfer" */ '@/transfer/transfer')
-const interfaceManager = () => import(/* webpackChunkName: "interface" */ '@/interface/interface')
+import welcome from '../views/welcome/welcome.vue'
+import signIn from '../views/SignIn/signIn.vue'
+import signUp from '../views/SignUp/signUp.vue'
+import search from '../views/Search/search.vue'
+import message from '../views/Message/Message.vue'
+import profile from '../views/profile/profile.vue'
+import logOut from '../views/LogOut/logOut.vue'
 
+Vue.use(VueRouter)
 
-Vue.use(Router)
+const routes = [
+  {
+    path: '/',
+    name: 'welcome',
+    component: welcome
+  },
+  {
+    path: '/signIn',
+    name: 'signIn',
+    component: signIn
+  },
+  {
+    path: '/signUp',
+    name: 'signUp',
+    component: signUp
+  },
+  {
+    path: '/search',
+    name: 'search',
+    component: search,
+  },
+  {
+    path: '/message',
+    name: 'massage',
+    component: message,
+    meta:{auth:true},  
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: profile,
+  },
+  {
+    path: '/logOut',
+    name: 'logOut',
+    component: logOut,
+  },
+  
+]
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'layout',
-      component: layout,
-      children: [
-        {
-          path: 'search',
-          name: 'search',
-          component: search
-        },
-        {
-          path: 'import**',
-          name: 'import',
-          component: _import,
-        },
-        {
-          path: 'transfer',
-          name: 'transfer',
-          component: transfer,
-          
-        },
-        {
-          path: 'menu**',
-          name: 'menu',
-          component: menu,
-        },
-        {
-          path: 'monitor**',
-          name: 'monitor',
-          component: monitor,
-        },
-        {
-          path: 'userAuthority**',
-          name: 'userAuthority',
-          component: userAuthority,
-        },
-        {
-          path: 'interface',
-          name: 'interface',
-          component: interfaceManager,
-        },
-      ],
-    }
-  ]
+const router = new VueRouter({
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes
 })
+
+export default router
